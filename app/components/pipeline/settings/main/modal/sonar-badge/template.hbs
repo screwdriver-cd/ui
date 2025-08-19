@@ -1,0 +1,52 @@
+<BsModal
+  id="edit-sonar-badge-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">
+      Edit sonar badge configuration
+    </div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    <div class="configuration-container">
+      <label>
+        Name
+        <Input
+          id="sonar-badge-name-input"
+          @type="text"
+          @value={{this.badgeName}}
+          placeholder="Sonar badge name"
+        />
+      </label>
+      <label>
+        URI
+        <Input
+          id="sonar-badge-uri-input"
+          @type="text"
+          @value={{this.badgeUri}}
+          placeholder="Sonar badge URI"
+        />
+      </label>
+    </div>
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-action"
+      @type="primary"
+      @defaultText="Update"
+      @pendingText="Updating..."
+      @onClick={{fn this.updateBadge}}
+      disabled={{this.isDisabled}}
+    />
+  </modal.footer>
+</BsModal>

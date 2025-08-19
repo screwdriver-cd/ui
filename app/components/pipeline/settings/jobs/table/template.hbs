@@ -1,0 +1,86 @@
+<ModelsTable
+  class="pipeline-settings-job-table{{if @isToggleMultiple " toggle-multiple"}}"
+  @data={{this.data}}
+  @columns={{this.columns}}
+  @columnComponents={{hash
+    dateCell=(component "pipeline/settings/jobs/table/cell/date")
+    toggleCell=(component "pipeline/settings/jobs/table/cell/toggle")
+  }}
+  @themeInstance={{this.theme}}
+  @multipleSelect={{@isToggleMultiple}}
+  @onDisplayDataChanged={{this.onDisplayDataChanged}}
+
+  {{did-insert this.initialize}}
+
+  as |MT|
+>
+  <div class="toggle-jobs-container">
+    {{#if @isToggleMultiple}}
+      <BsButton
+        id="toggle-multiple-jobs-button"
+        @type="primary"
+        @defaultText={{if (eq @jobState "ENABLED") "Disable selected jobs" "Enable selected jobs"}}
+        @onClick={{fn this.toggleMultipleJobs}}
+        disabled={{if (eq this.selectedJobs.length 0) true false}}
+      />
+      {{this.selectedJobs.length}} job(s) selected.
+
+      {{#if this.isToggleMultipleModalOpen}}
+        <Pipeline::Modal::ToggleJob
+          @jobs={{this.selectedJobs}}
+          @toggleAction={{if (eq @jobState "ENABLED") "Disable" "Enable"}}
+          @closeModal={{this.closeToggleMultipleModal}}
+        />
+      {{/if}}
+    {{/if}}
+  </div>
+
+  <div class="table-main">
+    <MT.Table />
+  </div>
+
+  <div class="table-footer">
+    <MT.Summary
+      class="entry-summary"
+      as |Summary|
+    >
+      {{Summary.summary}}
+    </MT.Summary>
+
+    <MT.PageSizeSelect class="select-pagination-size"/>
+
+    <MT.PaginationSimple class="pagination-controls" as |PS|>
+      <div class="page-navigation">
+        <BsButton
+          disabled={{if PS.goToBackEnabled false true}}
+          @onClick={{fn PS.goToFirst}}
+        >
+          <FaIcon @icon="angle-double-left"/>
+        </BsButton>
+        <BsButton
+          disabled={{if PS.goToBackEnabled false true}}
+          @onClick={{fn PS.goToPrev}}
+        >
+          <FaIcon @icon="angle-left"/>
+        </BsButton>
+        <BsButton
+          disabled={{if PS.goToForwardEnabled false true}}
+          @onClick={{fn PS.goToNext}}
+        >
+          <FaIcon @icon="angle-right"/>
+        </BsButton>
+        <BsButton
+          disabled={{if PS.goToForwardEnabled false true}}
+          @onClick={{fn PS.goToLast}}
+        >
+          <FaIcon @icon="angle-double-right"/>
+        </BsButton>
+      </div>
+
+      <div class="page-select">
+        <label class="input-group-text">Page:</label>
+        <PS.PageNumberSelect/>
+      </div>
+    </MT.PaginationSimple>
+  </div>
+</ModelsTable>

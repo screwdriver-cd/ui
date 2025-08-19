@@ -1,0 +1,42 @@
+<BsModal
+  id="edit-pipeline-alias-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">
+      Edit pipeline alias
+    </div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    <div class="configuration-container">
+      <label>
+        Alias
+        <Input
+          @type="text"
+          @value={{this.alias}}
+          placeholder="Pipeline alias"
+        />
+      </label>
+    </div>
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-action"
+      @type="primary"
+      @defaultText="Update"
+      @pendingText="Updating..."
+      @onClick={{fn this.updateAlias}}
+      disabled={{this.isDisabled}}
+    />
+  </modal.footer>
+</BsModal>

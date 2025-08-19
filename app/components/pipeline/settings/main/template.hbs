@@ -1,0 +1,196 @@
+<div id="pipeline-settings-main-tab-contents">
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Checkout URL and source directory
+      </div>
+      <div>
+        Update your checkout URL and / or source directory.
+      </div>
+
+      <div class="configuration">
+        <div id="pipeline-settings-main-checkout-url">Checkout URL: <b>{{this.checkoutUrl}}</b></div>
+        <div id="pipeline-settings-main-checkout-directory">Source directory: <b>{{this.pipeline.scmRepo.rootDir}}</b></div>
+      </div>
+    </div>
+
+    <BsButton
+      @type="primary"
+      @onClick={{this.showUpdatePipelineModal}}
+      @outline={{true}}
+      title="Edit pipeline alias"
+    >
+      <FaIcon @icon="pen" />
+      {{#if this.isUpdatePipelineModalOpen}}
+        <Pipeline::Settings::Main::Modal::Pipeline
+          @closeModal={{this.closeUpdatePipelineModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Pipeline alias
+      </div>
+      <div>
+        Set your preferred pipeline name for the dashboard view.
+      </div>
+
+      <div class="configuration">
+        <div id="pipeline-settings-main-alias">Alias: <b>{{this.pipeline.settings.aliasName}}</b></div>
+      </div>
+    </div>
+
+    <BsButton
+      @type="primary"
+      @onClick={{this.showUpdatePipelineAliasModal}}
+      @outline={{true}}
+      title="Edit pipeline alias"
+    >
+      <FaIcon @icon="pen" />
+      {{#if this.isUpdatePipelineAliasModalOpen}}
+        <Pipeline::Settings::Main::Modal::PipelineAlias
+          @closeModal={{this.closeUpdatePipelineAliasModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Sonar Badge
+      </div>
+      <div>
+        Customize your sonar badge dashboard and link
+      </div>
+
+      <div class="configuration">
+        <div id="pipeline-settings-main-sonar-badge-name">Badge name: <b>{{this.sonarBadgeName}}</b></div>
+        <div id="pipeline-settings-main-sonar-badge-uri">Badge URI: <b>{{this.sonarBadgeUri}}</b></div>
+      </div>
+    </div>
+
+    <BsButton
+      @type="primary"
+      @onClick={{this.showUpdateSonarBadgeModal}}
+      @outline={{true}}
+      title="Edit pipeline alias"
+    >
+      <FaIcon @icon="pen" />
+      {{#if this.isUpdateSonarBadgeModalOpen}}
+        <Pipeline::Settings::Main::Modal::SonarBadge
+          @closeModal={{this.closeUpdateSonarBadgeModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+
+  <div>
+    <div class="section">
+      <div class="text-container">
+        <div class="title">
+          Sync SCM Webhooks
+        </div>
+        <div>
+          Update the webhooks if they are not working correctly.
+        </div>
+      </div>
+      <BsButton
+        @type="primary"
+        @outline="true"
+        @onClick={{fn this.sync "webhooks"}}
+      >
+        <FaIcon @icon="rotate" />
+      </BsButton>
+    </div>
+
+    <div class="section">
+      <div class="text-container">
+        <div class="title">
+          Sync Pull requests
+        </div>
+        <div>
+          Create or update pull request jobs if they are not displaying properly.
+        </div>
+      </div>
+      <BsButton
+        @type="primary"
+        @outline="true"
+        @onClick={{fn this.sync "pullrequests"}}
+      >
+        <FaIcon @icon="rotate" />
+      </BsButton>
+    </div>
+
+    <div class="section">
+      <div class="text-container">
+        <div class="title">
+          Sync Pipeline
+        </div>
+        <div>
+          Update jobs if they are not displaying properly.
+        </div>
+      </div>
+      <BsButton
+        @type="primary"
+        @outline="true"
+        @onClick={{fn this.sync "pipeline"}}
+      >
+        <FaIcon @icon="rotate" />
+      </BsButton>
+    </div>
+
+    {{#if this.isSyncModalOpen}}
+      <Pipeline::Settings::Main::Modal::Sync
+        @syncType={{this.syncType}}
+        @closeModal={{this.closeSyncModal}}
+      />
+    {{/if}}
+  </div>
+
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
+        Admins
+      </div>
+      <div>
+        Users with admin permission to this pipeline.
+        <FaIcon
+          @icon="circle-question"
+          @title="If you have write access to the repository, you can become a pipeline admin by starting/stopping builds or syncing the pipeline."
+        />
+      </div>
+
+      <div class="pipeline-admin-list">
+        {{this.pipelineAdmins}}
+      </div>
+    </div>
+  </div>
+
+  <div class="section pipeline-settings-danger-zone">
+    <div class="text-container">
+      <div class="title">
+        Delete this pipeline
+      </div>
+      <div>
+        Once you delete a pipeline, there is no going back.
+      </div>
+    </div>
+    <BsButton
+      @type="danger"
+      @onClick={{this.showDeletePipelineModal}}
+      title="Delete pipeline"
+    >
+      <FaIcon @icon="trash" />
+      {{#if this.isDeletePipelineModalOpen}}
+        <Pipeline::Modal::DeletePipeline
+          @pipeline={{this.pipeline}}
+          @closeModal={{this.closeDeletePipelineModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+</div>

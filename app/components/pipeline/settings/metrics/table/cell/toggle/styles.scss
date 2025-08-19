@@ -1,0 +1,24 @@
+@use 'screwdriver-colors' as colors;
+@use 'screwdriver-toggle' as toggle;
+
+@mixin styles {
+  .downtime-job-toggle-container {
+    display: flex;
+    justify-content: center;
+
+    svg {
+      &.enabled {
+        color: colors.$sd-success;
+      }
+      &.not-enabled {
+        color: colors.$sd-failure;
+      }
+    }
+
+    .sr-only {
+      display: none;
+    }
+
+    @include toggle.styles;
+  }
+}

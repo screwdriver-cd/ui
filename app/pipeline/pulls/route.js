@@ -17,7 +17,9 @@ export default EventsRoute.extend({
   },
   beforeModel() {
     if (localStorage.getItem('newUI') === 'true') {
-      this.transitionTo('v2.pipeline.pulls', this.get('pipeline.id'));
+      const { pipeline_id: pipelineId } = this.paramsFor('pipeline');
+
+      this.transitionTo('v2.pipeline.pulls', pipelineId);
     } else {
       const { pipeline } = this.modelFor('pipeline');
 

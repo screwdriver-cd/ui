@@ -7,6 +7,10 @@ import sinon from 'sinon';
 module('Integration | Component | pipeline/workflow', function (hooks) {
   setupRenderingTest(hooks);
 
+  let router;
+
+  let shuttle;
+
   let pipelinePageState;
   const pipelineId = 1234;
   const pipeline = { id: pipelineId };
@@ -15,11 +19,14 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     const workflowDataReload = this.owner.lookup(
       'service:workflow-data-reload'
     );
+    const settings = this.owner.lookup('service:settings');
 
+    router = this.owner.lookup('service:router');
+    shuttle = this.owner.lookup('service:shuttle');
     pipelinePageState = this.owner.lookup('service:pipeline-page-state');
 
     sinon.stub(workflowDataReload, 'start').callsFake(() => {});
-
+    sinon.stub(settings, 'getSettings').returns({});
     sinon.stub(pipelinePageState, 'getPipeline').returns(pipeline);
     sinon.stub(pipelinePageState, 'getPipelineId').returns(pipelineId);
     sinon.stub(pipelinePageState, 'getTriggers').returns([]);
@@ -30,13 +37,8 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   test('it renders for pipeline with no events', async function (assert) {
     sinon.stub(pipelinePageState, 'getIsPr').returns(false);
 
-    this.setProperties({
-      userSettings: {}
-    });
-
     await render(
       hbs`<Pipeline::Workflow
-        @userSettings={{this.userSettings}}
         @noEvents={{true}}
       />`
     );
@@ -49,18 +51,11 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   });
 
   test('it renders for pipeline with no PRs', async function (assert) {
-    const shuttle = this.owner.lookup('service:shuttle');
-
     sinon.stub(pipelinePageState, 'getIsPr').returns(true);
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
-    this.setProperties({
-      userSettings: {}
-    });
-
     await render(
       hbs`<Pipeline::Workflow
-        @userSettings={{this.userSettings}}
         @noEvents={{true}}
       />`
     );
@@ -75,15 +70,11 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   });
 
   test('it renders for pipeline with invalid event', async function (assert) {
-    const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
-
     sinon.stub(pipelinePageState, 'getIsPr').returns(false);
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/events/11');
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
     this.setProperties({
-      userSettings: {},
       latestEvent: {
         id: 123,
         sha: 'abc123def456',
@@ -95,7 +86,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     await render(
       hbs`<Pipeline::Workflow
-        @userSettings={{this.userSettings}}
         @latestEvent={{this.latestCommitEvent}}
         @invalidEvent={{true}}
       />`
@@ -111,20 +101,12 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   });
 
   test('it renders for pipeline with invalid pull request', async function (assert) {
-    const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
-
     sinon.stub(pipelinePageState, 'getIsPr').returns(true);
     sinon.stub(router, 'currentURL').value('/v2/pipelines/1/pulls/11');
     sinon.stub(shuttle, 'fetchFromApi').resolves([]);
 
-    this.setProperties({
-      userSettings: {}
-    });
-
     await render(
       hbs`<Pipeline::Workflow
-        @userSettings={{this.userSettings}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @invalidEvent={{true}}
       />`
@@ -140,8 +122,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   });
 
   test('it renders for pipeline with event', async function (assert) {
-    const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
     const eventId = 123;
 
     sinon.stub(pipelinePageState, 'getIsPr').returns(false);
@@ -161,14 +141,12 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     };
 
     this.setProperties({
-      userSettings: {},
       latestEvent: event,
       event
     });
 
     await render(
       hbs`<Pipeline::Workflow
-        @userSettings={{this.userSettings}}
         @stages={{this.stages}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
@@ -182,8 +160,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   });
 
   test('it renders for pipeline with pull request', async function (assert) {
-    const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
     const eventId = 123;
     const prNum = 4;
 
@@ -206,7 +182,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     };
 
     this.setProperties({
-      userSettings: {},
       latestEvent: event,
       event,
       prNums: []
@@ -214,7 +189,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     await render(
       hbs`<Pipeline::Workflow
-        @userSettings={{this.userSettings}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
         @prNums={{this.prNums}}
@@ -228,9 +202,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
   });
 
   test('it renders pipeline PR restriction message', async function (assert) {
-    const router = this.owner.lookup('service:router');
-    const shuttle = this.owner.lookup('service:shuttle');
-
     const prNum = 4;
 
     pipeline.annotations = { 'screwdriver.cd/restrictPR': 'all' };
@@ -254,7 +225,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
     };
 
     this.setProperties({
-      userSettings: {},
       latestEvent: event,
       event,
       prNums: []
@@ -262,7 +232,6 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
     await render(
       hbs`<Pipeline::Workflow
-        @userSettings={{this.userSettings}}
         @latestCommitEvent={{this.latestCommitEvent}}
         @event={{this.event}}
         @prNums={{this.prNums}}

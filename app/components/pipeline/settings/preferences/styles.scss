@@ -1,0 +1,46 @@
+@use 'screwdriver-colors' as colors;
+@use 'screwdriver-toggle' as toggle;
+@use 'variables';
+
+@mixin styles {
+  .pipeline-settings-preferences-tab-contents {
+    @include toggle.styles;
+
+    .section-header {
+      margin-left: 1rem;
+      margin-bottom: 1.25rem;
+
+      .section-header-title {
+        font-size: 1.25rem;
+        font-weight: variables.$weight-bold;
+      }
+
+      .section-header-description {
+        margin-left: 1rem;
+      }
+    }
+
+    .configuration-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+
+      &:hover {
+        background-color: colors.$sd-highlight;
+      }
+
+      .x-toggle-component {
+        margin-right: 1rem;
+
+        label {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+@use 'screwdriver-colors' as colors;
+@use 'variables';
+
+@mixin styles {
+  #pipeline-settings-tab {
+    display: flex;
+    align-items: center;
+
+    a {
+      color: colors.$sd-text-med;
+      padding: 0.5rem 2rem;
+
+      &:hover {
+        color: colors.$sd-link;
+        text-decoration: none;
+      }
+
+      &.active {
+        color: colors.$sd-link;
+        font-weight: variables.$weight-bold;
+        border-bottom: 0.2rem solid colors.$sd-link;
+      }
+    }
+  }
+}

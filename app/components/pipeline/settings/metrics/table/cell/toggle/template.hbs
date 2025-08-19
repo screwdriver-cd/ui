@@ -1,0 +1,21 @@
+<div class="downtime-job-toggle-container">
+  <XToggle
+    @size="small"
+    @theme="light"
+    @showLabels={{false}}
+    @value={{@record.included}}
+    @onToggle={{fn this.toggleJob}}
+
+    as |toggle|
+  >
+    <label for={{this.elementId}} class="sr-only">Toggle {{@record.name}}</label>
+    <toggle.switch id={{this.elementId}}/>
+    {{#if this.showModal}}
+      <Pipeline::Settings::Metrics::Modal::Toggle
+        @jobs={{this.jobs}}
+        @isInclude={{(not @record.included)}}
+        @closeModal={{this.closeModal}}
+      />
+    {{/if}}
+  </XToggle>
+</div>

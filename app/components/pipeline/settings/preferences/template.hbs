@@ -1,0 +1,126 @@
+{{#if this.errorMessage}}
+  <InfoMessage
+    id="settings-error-message"
+    @message={{this.errorMessage}}
+    @type="warning"
+    @icon="triangle-exclamation"
+    @dismissible={{false}}
+  />
+{{/if}}
+
+<div class="pipeline-settings-preferences-tab-contents">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-header-title">
+        Pipeline preferences
+      </div>
+      <div class="section-header-description">
+        Configuration settings that apply to the pipeline for all users
+      </div>
+    </div>
+
+    <div class="configuration-container">
+      <div class="text-container">
+        <div class="title">
+          Show triggers
+        </div>
+        <div>
+          Show event triggers in the pipeline graph by default
+        </div>
+      </div>
+      <XToggle
+        @size="small"
+        @theme="light"
+        @showLabels={{false}}
+        @value={{this.isShowTriggers}}
+        @onToggle={{fn this.toggleShowTriggers}}
+
+        as |toggle|
+      >
+        <label for="toggle-show-triggers" class="sr-only">Toggle show triggers in pipeline graph</label>
+        <toggle.switch id="toggle-show-triggers"/>
+      </XToggle>
+    </div>
+
+    <div class="configuration-container">
+      <div class="text-container">
+        <div class="title">
+          Filter scheduler events
+        </div>
+        <div>
+          Hide the events started by Scheduler
+        </div>
+      </div>
+      <XToggle
+        @size="small"
+        @theme="light"
+        @showLabels={{false}}
+        @value={{this.isFilterSchedulerEvents}}
+        @onToggle={{fn this.toggleFilterSchedulerEvents}}
+
+        as |toggle|
+      >
+        <label for="toggle-filter-scheduler-events" class="sr-only">Toggle filtering of scheduler events</label>
+        <toggle.switch id="toggle-filter-scheduler-events"/>
+      </XToggle>
+    </div>
+
+    <div class="configuration-container">
+      <div class="text-container">
+        <div class="title">
+          Filter events with no builds
+        </div>
+        <div>
+          Hide events with no builds. If the latest event has no builds, then it is not hidden.
+        </div>
+      </div>
+      <XToggle
+        @size="small"
+        @theme="light"
+        @showLabels={{false}}
+        @value={{this.isFilterEventsForNoBuilds}}
+        @onToggle={{fn this.toggleFilterEventsForNoBuilds}}
+
+        as |toggle|
+      >
+        <label for="toggle-filter-no-builds" class="sr-only">Toggle filtering of events with no builds</label>
+        <toggle.switch id="toggle-filter-no-builds"/>
+      </XToggle>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-header-title">
+        User preferences
+      </div>
+      <div class="section-header-description">
+        Configuration settings that apply to the pipeline for yourself
+      </div>
+    </div>
+
+    <div class="configuration-container">
+      <div class="text-container">
+        <div class="title">
+          Show PR Jobs
+        </div>
+        <div>
+          Show jobs that are associated with pull requests in the pipeline graph
+        </div>
+      </div>
+      <XToggle
+        @size="small"
+        @theme="light"
+        @showLabels={{false}}
+        @value={{this.isShowPrJobs}}
+        @onToggle={{fn this.toggleShowPrJobs}}
+        @disabled={{this.isUserSettingsDisabled}}
+
+        as |toggle|
+      >
+        <label for="toggle-show-pr-jobs" class="sr-only">Toggle show PR jobs pipeline graph</label>
+        <toggle.switch id="toggle-show-pr-jobs"/>
+      </XToggle>
+    </div>
+  </div>
+</div>

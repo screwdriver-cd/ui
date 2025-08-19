@@ -1,0 +1,41 @@
+<BsModal
+  id="toggle-multiple-downtime-jobs-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">
+      {{this.modalTitle}}
+    </div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    <div id="modal-downtime-jobs-message">
+      {{this.toggleJobsMessage}}
+    </div>
+
+    {{#if (gt this.jobs.length 1)}}
+      <div class="toggle-jobs-list">
+        {{this.jobNames}}
+      </div>
+    {{/if}}
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-action"
+      @type="primary"
+      @defaultText={{this.toggleAction}}
+      @pendingText={{this.pendingActionText}}
+      @onClick={{fn this.toggleJobs}}
+      disabled={{this.isDisabled}}
+    />
+  </modal.footer>
+</BsModal>

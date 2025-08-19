@@ -6,6 +6,7 @@
 @use 'nav/styles' as nav;
 @use 'parameters/styles' as parameters;
 @use 'secrets-and-tokens/styles' as secretsAndTokens;
+@use 'settings/styles' as settings;
 @use 'tab/styles' as tab;
 @use 'workflow/styles' as workflow;
 
@@ -18,6 +19,7 @@
   @include nav.styles;
   @include parameters.styles;
   @include secretsAndTokens.styles;
+  @include settings.styles;
   @include tab.styles;
   @include workflow.styles;
 }

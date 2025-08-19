@@ -99,6 +99,7 @@ export default Model.extend(ModelReloaderMixin, {
 
       if (this.isComplete) {
         lastEndTime = builds
+          .filter(item => item.endTime)
           .map(item => item.endTime)
           .sort()
           .pop();

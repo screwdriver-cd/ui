@@ -2,16 +2,11 @@ import Route from '@ember/routing/route';
 import { service } from '@ember/service';
 
 export default class NewPipelineEventsRoute extends Route {
-  @service shuttle;
+  @service('settings') settings;
 
   async model() {
-    const userSettings = await this.shuttle.fetchFromApi(
-      'get',
-      '/users/settings'
-    );
-
-    return {
-      userSettings
-    };
+    if (!this.settings.getSettings()) {
+      await this.settings.fetchSettings();
+    }
   }
 }

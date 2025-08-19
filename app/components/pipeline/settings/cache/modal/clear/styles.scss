@@ -1,0 +1,11 @@
+@mixin styles {
+  #clear-cache-modal {
+    .modal-body {
+      .clear-jobs-cache-list {
+        height: 4rem;
+        overflow: auto;
+        margin: 1rem 0;
+      }
+    }
+  }
+}

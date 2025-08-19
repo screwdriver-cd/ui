@@ -16,11 +16,13 @@ const RESTRICT_PR_ANNOTATION = 'screwdriver.cd/restrictPR';
 export default class PipelineWorkflowComponent extends Component {
   @service router;
 
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
-  @service workflowDataReload;
+  @service('workflow-data-reload') workflowDataReload;
+
+  @service('settings') settings;
 
   @tracked showDownstreamTriggers = false;
 
@@ -66,7 +68,7 @@ export default class PipelineWorkflowComponent extends Component {
     super(...arguments);
 
     this.pipeline = this.pipelinePageState.getPipeline();
-    this.userSettings = this.args.userSettings;
+    this.userSettings = this.settings.getSettings();
     this.latestEvent = this.args.latestEvent;
     this.dataReloadId = this.workflowDataReload.start(
       this.pipeline.id,

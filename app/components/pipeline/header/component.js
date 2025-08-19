@@ -4,9 +4,11 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 
 export default class PipelineHeaderComponent extends Component {
-  @service scm;
+  @service('scm') scm;
 
-  @service shuttle;
+  @service('shuttle') shuttle;
+
+  @service('pipeline-page-state') pipelinePageState;
 
   @tracked addToCollectionModalOpen = false;
 
@@ -23,6 +25,9 @@ export default class PipelineHeaderComponent extends Component {
 
     this.pipeline = this.args.pipeline;
     this.getPipelinesWithSameRepo().then(() => {});
+    this.pipelinePageState.setOnForceReloadPipelineHeader(() => {
+      this.pipeline = this.pipelinePageState.getPipeline();
+    });
   }
 
   get pipelineDescription() {

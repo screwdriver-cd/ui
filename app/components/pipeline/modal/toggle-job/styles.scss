@@ -3,6 +3,12 @@
 @mixin styles {
   #toggle-job-modal {
     .modal-body {
+      .toggle-jobs-list {
+        height: 4rem;
+        overflow: auto;
+        margin-bottom: 1rem;
+      }
+
       label {
         display: flex;
         flex-direction: column;

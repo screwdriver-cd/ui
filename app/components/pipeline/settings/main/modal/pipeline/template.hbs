@@ -1,0 +1,52 @@
+<BsModal
+  id="edit-pipeline-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">
+      Edit pipeline configuration
+    </div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    <div class="configuration-container">
+      <label>
+        Checkout URL
+        <Input
+          id="checkout-url-input"
+          @type="text"
+          @value={{this.checkoutUrl}}
+          placeholder="Checkout URL is required"
+        />
+      </label>
+      <label>
+        Source directory
+        <Input
+          id="source-directory-input"
+          @type="text"
+          @value={{this.sourceDir}}
+          placeholder="Source directory is relative to the checkout URL (e.g., 'src')"
+        />
+      </label>
+    </div>
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-action"
+      @type="primary"
+      @defaultText="Update"
+      @pendingText="Updating..."
+      @onClick={{fn this.updatePipeline}}
+      disabled={{this.isDisabled}}
+    />
+  </modal.footer>
+</BsModal>

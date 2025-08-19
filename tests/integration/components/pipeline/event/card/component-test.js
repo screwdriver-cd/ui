@@ -14,6 +14,8 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   let event;
 
   hooks.beforeEach(function () {
+    const settings = this.owner.lookup('service:settings');
+
     router = this.owner.lookup('service:router');
     workflowDataReload = this.owner.lookup('service:workflow-data-reload');
 
@@ -25,6 +27,8 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       creator: { name: 'batman' },
       meta: {}
     };
+
+    sinon.stub(settings, 'getSettings').returns({});
   });
 
   test('it renders title when event is first in group', async function (assert) {
@@ -37,14 +41,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       .callsFake(() => {});
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
       />`
     );
 
@@ -63,14 +65,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     event.groupEventId = 3;
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
       />`
     );
 
@@ -89,14 +89,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       });
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
       />`
     );
 
@@ -138,8 +136,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       });
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
@@ -147,7 +144,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
         @event={{this.event}}
         @builds={{this.builds}}
         @latestCommitEvent={{this.latestCommitEvent}}
-        @userSettings={{this.userSettings}}
       />`
     );
 
@@ -167,14 +163,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
     event.meta = { label: 'Testing 123' };
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
       />`
     );
 
@@ -199,14 +193,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     };
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
         @showParameters={{true}}
       />`
     );
@@ -232,14 +224,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     };
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
         @showEventGroup={{true}}
       />`
     );
@@ -261,14 +251,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       });
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
         @allowEventAction={{true}}
       />`
     );
@@ -292,14 +280,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       });
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
       />`
     );
 
@@ -319,14 +305,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       });
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
       />`
     );
 
@@ -351,14 +335,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       });
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
       />`
     );
 
@@ -384,14 +366,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       });
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
       />`
     );
 
@@ -427,14 +407,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     event.prNum = 4;
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
       />`
     );
 
@@ -455,14 +433,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     event.type = 'pr';
     event.prNum = 4;
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
-        @userSettings={{this.userSettings}}
         @allowEventAction={{true}}
       />`
     );
@@ -482,15 +458,13 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       });
 
     this.setProperties({
-      event,
-      userSettings: {}
+      event
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
         @baseEvent={{this.event}}
-        @userSettings={{this.userSettings}}
       />`
     );
 

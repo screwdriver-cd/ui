@@ -6,8 +6,12 @@ import { dom } from '@fortawesome/fontawesome-svg-core';
 import _ from 'lodash';
 import { statuses } from 'screwdriver-ui/utils/build';
 import { isComplete } from 'screwdriver-ui/utils/pipeline/event';
+import {
+  getDisplayName,
+  getStageName
+} from 'screwdriver-ui/utils/pipeline/job';
 import DataReloader from './dataReloader';
-import { getDisplayName, getStageName, sortJobs } from './util';
+import sortJobs from './util';
 
 const INITIAL_PAGE_SIZE = 10;
 
@@ -19,8 +23,6 @@ export default class PipelineJobsTableComponent extends Component {
   @service workflowDataReload;
 
   @service('emt-themes/ember-bootstrap-v5') emberModelTableBootstrapTheme;
-
-  userSettings;
 
   event;
 
@@ -38,7 +40,6 @@ export default class PipelineJobsTableComponent extends Component {
     super(...arguments);
 
     this.event = this.args.event;
-    this.userSettings = this.args.userSettings;
     this.data = null;
     this.previousBuilds = new Map();
 
@@ -262,8 +263,7 @@ export default class PipelineJobsTableComponent extends Component {
           build: buildsForJob ? _.last(buildsForJob) : null,
           builds: buildsForJob,
           jobName: getDisplayName(job, this.event?.prNum),
-          stageName: getStageName(job),
-          timestampFormat: this.userSettings.timestampFormat
+          stageName: getStageName(job)
         });
       });
 

@@ -1,0 +1,42 @@
+<BsModal
+  id="clear-cache-modal"
+  @onHide={{this.closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">
+      {{this.modalTitle}}
+    </div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        id="error-message"
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    <div>
+      {{this.clearCacheMessage}}
+    </div>
+
+    {{#if (gt this.jobNames.length 1)}}
+      <div class="clear-jobs-cache-list">
+        {{this.jobNames}}
+      </div>
+    {{/if}}
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-action"
+      @type="primary"
+      @defaultText="Clear"
+      @pendingText="Clearing..."
+      @onClick={{fn this.clearCache}}
+      disabled={{this.isDisabled}}
+    />
+  </modal.footer>
+</BsModal>
