@@ -1,5 +1,6 @@
 @use 'events/styles' as events;
 @use 'jobs/styles' as jobs;
+@use 'settings/styles' as settings;
 
 @mixin styles {
   #pipeline-page-contents {
@@ -32,6 +33,10 @@
 
       &.jobs {
         @include jobs.styles;
+      }
+
+      &.settings {
+        @include settings.styles;
       }
     }
   }

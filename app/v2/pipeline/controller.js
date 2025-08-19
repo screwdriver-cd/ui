@@ -17,12 +17,19 @@ export default class NewPipelineController extends Controller {
     return this.router.currentRouteName === 'v2.pipeline.jobs';
   }
 
+  isSettingsRoute() {
+    return this.router.currentRouteName.startsWith('v2.pipeline.settings');
+  }
+
   get routeClasses() {
     if (this.isEventsPullsRoute()) {
       return 'events-pulls';
     }
     if (this.isJobsRoute()) {
       return 'jobs';
+    }
+    if (this.isSettingsRoute()) {
+      return 'settings';
     }
 
     return null;
