@@ -2,6 +2,7 @@ import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { NotFoundError } from '../../../../utils/not-found-error';
 
 export default class TemplatesPipelineDetailVersionRoute extends Route.extend(
   AuthenticatedRouteMixin
@@ -19,7 +20,7 @@ export default class TemplatesPipelineDetailVersionRoute extends Route.extend(
     const tagExists = tagPayload.filter(t => t.tag === pVersion);
 
     if (tagExists.length === 0 && versionExists.length === 0) {
-      this.router.transitionTo('/404');
+      throw new NotFoundError('Pipeline template not found');
     }
 
     if (versionExists.length > 0) {

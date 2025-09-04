@@ -1,5 +1,9 @@
-<ErrorView
-  @statusCode={{this.model.reason.errors.statusCode}}
-  @statusMessage={{this.model.reason.errors.error}}
-  @errorMessage={{this.model.reason.errors.message}}
-/>
+{{#if this.is404}}
+  {{404-display}}
+{{else}}
+  <ErrorView
+    @statusCode={{this.model.reason.errors.statusCode}}
+    @statusMessage={{this.model.reason.errors.error}}
+    @errorMessage={{this.model.reason.errors.message}}
+  />
+{{/if}}

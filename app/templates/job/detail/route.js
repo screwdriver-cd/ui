@@ -3,6 +3,7 @@ import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
 import timeRange from 'screwdriver-ui/utils/time-range';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { NotFoundError } from '../../../utils/not-found-error';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   router: service(),
@@ -64,7 +65,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
       templateData = templateData.filter(t => t.namespace === params.namespace);
 
       if (templateData.length === 0) {
-        this.router.transitionTo('/404');
+        throw new NotFoundError('Template not found');
       }
 
       [...templateData, ...templateDataFiltered].forEach(template => {
@@ -112,13 +113,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
     refreshModel: function refreshModel() {
       this.set('fetchAll', true);
       this.refresh();
-    },
-    error(error) {
-      if (error.status === 404) {
-        this.router.transitionTo('/404');
-      }
-
-      return true;
     }
   }
 });

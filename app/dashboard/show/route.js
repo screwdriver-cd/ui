@@ -2,6 +2,7 @@ import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
+import { is404 } from '../../utils/not-found-error';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   store: service(),
@@ -17,10 +18,10 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   actions: {
-    error(/* error, transition */) {
+    error(error) {
       localStorage.removeItem('lastViewedCollectionId');
 
-      return this.router.transitionTo('/404');
+      return is404(error);
     }
   }
 });
