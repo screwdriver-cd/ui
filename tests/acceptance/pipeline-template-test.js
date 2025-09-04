@@ -436,4 +436,13 @@ module('Acceptance | pipeline template', function (hooks) {
       .dom('table.table td div.version-cell')
       .includesText('1.0.3 - latest');
   });
+
+  test('visiting /templates/pipeline/not/exist', async function (assert) {
+    await authenticateSession({ token: fakeToken });
+
+    await visit('/templates/pipeline/not/exist');
+
+    assert.strictEqual(currentURL(), '/templates/pipeline/not/exist');
+    assert.dom('.code').hasText('404');
+  });
 });

@@ -36,6 +36,11 @@ module('Acceptance | pipeline build', function (hooks) {
       JSON.stringify(pipeline)
     ]);
 
+    server.get('http://localhost:8080/v4/pipelines/404', () => [
+      404,
+      { 'Content-Type': 'application/json' }
+    ]);
+
     server.get('http://localhost:8080/v4/pipelines/4/jobs', () => [
       200,
       { 'Content-Type': 'application/json' },
@@ -115,6 +120,11 @@ module('Acceptance | pipeline build', function (hooks) {
         JSON.stringify(build)
       ];
     });
+
+    server.get('http://localhost:8080/v4/builds/404', () => [
+      404,
+      { 'Content-Type': 'application/json' }
+    ]);
 
     server.get('http://localhost:8080/v4/builds/statuses', () => [
       200,
@@ -260,5 +270,25 @@ module('Acceptance | pipeline build', function (hooks) {
     await visit('/pipelines/4/pulls');
     assert.equal(currentURL(), '/pipelines/4/pulls');
     assert.dom('.column-tabs-view .nav-link.active').hasText('Pull Requests');
+  });
+
+  test('visiting /pipelines/404', async function (assert) {
+    injectScmServiceStub(this);
+
+    await authenticateSession({ token: 'fakeToken' });
+    await visit('/pipelines/404');
+
+    assert.equal(currentURL(), '/pipelines/404');
+    assert.dom('.code').hasText('404');
+  });
+
+  test('visiting /builds/404', async function (assert) {
+    injectScmServiceStub(this);
+
+    await authenticateSession({ token: 'fakeToken' });
+    await visit('/builds/404');
+
+    assert.equal(currentURL(), '/builds/404');
+    assert.dom('.code').hasText('404');
   });
 });

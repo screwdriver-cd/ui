@@ -88,9 +88,8 @@ module('Unit | Route | commands/detail/version', function (hooks) {
     this.owner.unregister('service:router');
     this.owner.register('service:router', routerServiceMock);
 
-    route.model({ version: '9.9.9' });
-
-    assert.ok(stub.calledOnce, 'transitionTo was called once');
+    assert.throws(() => route.model({ version: '9.9.9' }));
+    assert.ok(stub.notCalled);
   });
 
   test('it asks for the command for a given name and non-exist tag', function (assert) {
@@ -110,8 +109,7 @@ module('Unit | Route | commands/detail/version', function (hooks) {
     this.owner.unregister('service:router');
     this.owner.register('service:router', routerServiceMock);
 
-    route.model({ version: 'foo' });
-
-    assert.ok(stub.calledOnce, 'transitionTo was called once');
+    assert.throws(() => route.model({ version: 'foo' }));
+    assert.ok(stub.notCalled);
   });
 });

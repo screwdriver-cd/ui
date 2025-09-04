@@ -133,6 +133,18 @@ module('Acceptance | dashboards', function (hooks) {
     assert.dom('.pipeline-card').exists({ count: 2 });
   });
 
+  test('visiting /dashboards/404', async function (assert) {
+    server.get('http://localhost:8080/v4/collections/404', () => [
+      404,
+      { 'Content-Type': 'application/json' }
+    ]);
+    await authenticateSession({ token: 'fakeToken' });
+    await visit('/dashboards/404');
+
+    assert.equal(currentURL(), '/dashboards/404');
+    assert.dom('.code').hasText('404');
+  });
+
   test('creating a collection', async function (assert) {
     assert.expect(7);
 

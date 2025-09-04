@@ -108,7 +108,7 @@ module('Unit | Route | templates/job/detail', function (hooks) {
     });
   });
 
-  test('it asks for the list of templates for a non-exist name', function (assert) {
+  test('it asks for the list of templates for a non-exist name', async function (assert) {
     this.owner.register('service:template', templateServiceStub2);
     const route = this.owner.lookup('route:templates/job/detail');
     const stub = sinon.stub();
@@ -121,9 +121,7 @@ module('Unit | Route | templates/job/detail', function (hooks) {
     this.owner.register('service:router', routerServiceMock);
 
     assert.ok(route);
-
-    return route.model({ namespace: 'foo', name: 'hoge' }).then(() => {
-      assert.ok(stub.calledOnce, 'transitionTo was called once');
-    });
+    await assert.rejects(route.model({ namespace: 'foo', name: 'hoge' }));
+    assert.ok(stub.notCalled);
   });
 });
