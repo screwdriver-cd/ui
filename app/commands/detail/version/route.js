@@ -1,6 +1,7 @@
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
+import { NotFoundError } from '../../../utils/not-found-error';
 
 export default Route.extend({
   router: service(),
@@ -17,7 +18,7 @@ export default Route.extend({
     const tagExists = tagPayload.filter(c => c.tag === params.version);
 
     if (tagExists.length === 0 && versionExists.length === 0) {
-      this.router.transitionTo('/404');
+      throw new NotFoundError('Command not found');
     }
 
     if (versionExists.length > 0) {

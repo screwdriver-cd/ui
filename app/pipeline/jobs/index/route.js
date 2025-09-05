@@ -4,6 +4,7 @@ import ENV from 'screwdriver-ui/config/environment';
 import RSVP from 'rsvp';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import getErrorMessage from 'screwdriver-ui/utils/error-messages';
+import { NotFoundError } from '../../../utils/not-found-error';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   store: service(),
@@ -48,7 +49,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
       if (errorMessage !== '') {
         pipelineJobsIndexController.set('errorMessage', errorMessage);
       } else {
-        this.router.transitionTo('/404');
+        throw new NotFoundError('Job not found');
       }
     });
   },

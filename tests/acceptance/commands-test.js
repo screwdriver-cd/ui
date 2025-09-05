@@ -73,6 +73,21 @@ module('Acceptance | commands', function (hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
+    server.get('http://localhost:8080/v4/commands/not/exist', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+    server.get('http://localhost:8080/v4/commands/not/exist/tags', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+    server.get('http://localhost:8080/v4/commands/foo/bar/not-exist', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
   });
 
   hooks.afterEach(function () {
@@ -122,5 +137,21 @@ module('Acceptance | commands', function (hooks) {
       .includesText(
         'Commands share binaries (or scripts) across multiple jobs.'
       );
+  });
+
+  test('visiting /commands/not/exist', async assert => {
+    await authenticateSession({ token: adminJWT });
+    await visit('/commands/not/exist');
+
+    assert.equal(currentURL(), '/commands/not/exist');
+    assert.dom('.code').hasText('404');
+  });
+
+  test('visiting /commands/foo/bar/not-exist', async assert => {
+    await authenticateSession({ token: adminJWT });
+    await visit('/commands/foo/bar/not-exist');
+
+    assert.equal(currentURL(), '/commands/foo/bar/not-exist');
+    assert.dom('.code').hasText('404');
   });
 });

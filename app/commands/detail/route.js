@@ -1,6 +1,7 @@
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import Route from '@ember/routing/route';
+import { NotFoundError } from '../../utils/not-found-error';
 
 export default Route.extend({
   router: service(),
@@ -13,7 +14,7 @@ export default Route.extend({
       const [verPayload, tagPayload] = arr;
 
       if (verPayload.length === 0) {
-        this.router.transitionTo('/404');
+        throw new NotFoundError('Command not found');
       }
 
       tagPayload.forEach(tagObj => {
@@ -41,14 +42,5 @@ export default Route.extend({
   setupController(controller, model) {
     this._super(controller, model);
     controller.reset();
-  },
-  actions: {
-    error(error) {
-      if (error.status === 404) {
-        this.router.transitionTo('/404');
-      }
-
-      return true;
-    }
   }
 });

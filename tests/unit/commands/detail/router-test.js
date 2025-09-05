@@ -48,7 +48,7 @@ module('Unit | Route | commands/detail', function (hooks) {
     });
   });
 
-  test('it asks for the list of commands for a non-exist name', function (assert) {
+  test('it asks for the list of commands for a non-exist name', async function (assert) {
     this.owner.register('service:command', commandServiceStub2);
     const route = this.owner.lookup('route:commands/detail');
     const stub = sinon.stub();
@@ -62,8 +62,7 @@ module('Unit | Route | commands/detail', function (hooks) {
     this.owner.unregister('service:router');
     this.owner.register('service:router', routerServiceMock);
 
-    return route.model({ namespace: 'foo', name: 'baz' }).then(() => {
-      assert.ok(stub.calledOnce, 'transitionTo was called once');
-    });
+    await assert.rejects(route.model({ namespace: 'foo', name: 'baz' }));
+    assert.ok(stub.notCalled);
   });
 });

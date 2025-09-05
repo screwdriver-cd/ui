@@ -4,6 +4,7 @@ import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import ENV from 'screwdriver-ui/config/environment';
 import getErrorMessage from 'screwdriver-ui/utils/error-messages';
+import { NotFoundError } from '../../utils/not-found-error';
 
 export default Route.extend({
   store: service(),
@@ -79,17 +80,16 @@ export default Route.extend({
         count: ENV.APP.NUM_EVENTS_LISTED
       }),
       triggers: this.triggerService.getDownstreamTriggers(pipelineId),
-      pipelinePreference: await this.pipelineService.getUserPipelinePreference(
-        pipelineId
-      ),
-      desiredJobNameLength: await this.userSettings.getDisplayJobNameLength()
+      pipelinePreference:
+        this.pipelineService.getUserPipelinePreference(pipelineId),
+      desiredJobNameLength: this.userSettings.getDisplayJobNameLength()
     }).catch(err => {
       const errorMessage = getErrorMessage(err);
 
       if (errorMessage !== '') {
         pipelineEventsController.set('errorMessage', errorMessage);
       } else {
-        this.router.transitionTo('/404');
+        throw new NotFoundError('Pipeline not found');
       }
     });
   },

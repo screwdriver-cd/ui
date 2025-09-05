@@ -3,6 +3,7 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { compareVersions } from 'screwdriver-ui/helpers/compare-versions';
+import { NotFoundError } from '../../../utils/not-found-error';
 
 export default class TemplatesPipelineDetailRoute extends Route.extend(
   AuthenticatedRouteMixin
@@ -80,7 +81,7 @@ export default class TemplatesPipelineDetailRoute extends Route.extend(
         v.fullName = fullName;
       });
     } catch (err) {
-      this.router.transitionTo('/404');
+      throw new NotFoundError('Pipeline template not found');
     }
 
     return {

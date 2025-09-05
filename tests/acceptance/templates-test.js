@@ -80,6 +80,21 @@ module('Acceptance | templates', function (hooks) {
       { 'Content-Type': 'application/json' },
       JSON.stringify([])
     ]);
+    server.get('http://localhost:8080/v4/templates/not%2Fexist', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+    server.get('http://localhost:8080/v4/templates/not%2Fexist/metrics', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
+    server.get('http://localhost:8080/v4/templates/not%2Fexist/tags', () => [
+      200,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([])
+    ]);
   });
 
   hooks.afterEach(function () {
@@ -117,5 +132,21 @@ module('Acceptance | templates', function (hooks) {
       'Templates > foo/bar@1.0.0',
       'Page title is correct'
     );
+  });
+
+  test('visiting /templates/job/not/exist', async assert => {
+    await authenticateSession({ token: adminJWT });
+    await visit('/templates/job/not/exist');
+
+    assert.equal(currentURL(), '/templates/job/not/exist');
+    assert.dom('.code').hasText('404');
+  });
+
+  test('visiting /templates/job/foo/bar/not-exist', async assert => {
+    await authenticateSession({ token: adminJWT });
+    await visit('/templates/job/foo/bar/not-exist');
+
+    assert.equal(currentURL(), '/templates/job/foo/bar/not-exist');
+    assert.dom('.code').hasText('404');
   });
 });

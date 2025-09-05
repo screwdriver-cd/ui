@@ -2,6 +2,7 @@ import Route from '@ember/routing/route';
 import { get } from '@ember/object';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
+import { is404 } from '../utils/not-found-error';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   router: service(),
@@ -28,8 +29,14 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   actions: {
-    error(/* error, transition */) {
+    error(error) {
+      if (is404(error)) {
+        return true;
+      }
+
       this.router.replaceWith('home');
+
+      return false;
     }
   }
 });

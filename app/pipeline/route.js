@@ -3,6 +3,7 @@ import Route from '@ember/routing/route';
 import { set } from '@ember/object';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
+import { NotFoundError } from '../utils/not-found-error';
 
 export default Route.extend(AuthenticatedRouteMixin, {
   routeAfterAuthentication: 'pipeline',
@@ -19,14 +20,10 @@ export default Route.extend(AuthenticatedRouteMixin, {
     });
 
     return RSVP.hash({
-      pipeline: this.store
-        .findRecord('pipeline', params.pipeline_id)
-        .catch(() => {
-          this.router.transitionTo('/404');
-
-          return [];
-        }),
+      pipeline: this.store.findRecord('pipeline', params.pipeline_id),
       collections
+    }).catch(() => {
+      throw new NotFoundError('Pipeline not found');
     });
   },
   deactivate() {

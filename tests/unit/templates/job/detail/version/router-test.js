@@ -91,7 +91,7 @@ module('Unit | Route | templates/job/detail/version', function (hooks) {
     assert.equal(controller.versionOrTagFromUrl, 'stable');
   });
 
-  test('it asks for the template for a given name and non-exist version', function (assert) {
+  test('it asks for the template for a given name and non-exist version', async function (assert) {
     const route = this.owner.lookup('route:templates/job/detail/version');
 
     route.modelFor = () => {
@@ -108,13 +108,11 @@ module('Unit | Route | templates/job/detail/version', function (hooks) {
     this.owner.register('service:router', routerServiceMock);
 
     assert.ok(route);
-
-    route.model({ version: '9.9.9' });
-
-    assert.ok(stub.calledOnce, 'transitionTo was called once');
+    await assert.rejects(route.model({ version: '9.9.9' }));
+    assert.true(stub.notCalled);
   });
 
-  test('it asks for the template for a given name and non-exist tag', function (assert) {
+  test('it asks for the template for a given name and non-exist tag', async function (assert) {
     const route = this.owner.lookup('route:templates/job/detail/version');
 
     route.modelFor = () => {
@@ -131,9 +129,7 @@ module('Unit | Route | templates/job/detail/version', function (hooks) {
     this.owner.register('service:router', routerServiceMock);
 
     assert.ok(route);
-
-    route.model({ version: 'foo' });
-
-    assert.ok(stub.calledOnce, 'transitionTo was called once');
+    await assert.rejects(route.model({ version: 'foo' }));
+    assert.true(stub.notCalled);
   });
 });
