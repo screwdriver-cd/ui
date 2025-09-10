@@ -1,8 +1,8 @@
 import { get } from '@ember/object';
 import DS from 'ember-data';
 
-const edgeSrcBranchRegExp = new RegExp('^~(pr|commit):/(.+)/$');
-const triggerBranchRegExp = new RegExp('^~(pr|commit):(.+)$');
+const edgeSrcBranchRegExp = /^~(pr|commit):\/(.+)\/$/;
+const triggerBranchRegExp = /^~(pr|commit):(.+)$/;
 const STAGE_SETUP_PATTERN = /^stage@([\w-]+)(?::setup)$/;
 const STAGE_TEARDOWN_PATTERN = /^stage@([\w-]+)(?::teardown)$/;
 const STAGE_COLLAPSED_JOB_PATTERN = /^stage@([\w-]+) jobs.*$/;
@@ -129,9 +129,10 @@ const extractEventStages = graph => {
  * @method  decorateEventStages
  * @param  {Array|DS.PromiseArray} eventStages      List of stage metadata associated with the event
  * @param  {Array|DS.PromiseArray} pipelineStages   List of latest stage metadata associated with the pipeline
+ * @param  {number} prNum                           Pull Request number
  * @return {Array}                                  List of enriched stage metadata associated with the event
  */
-const decorateEventStages = (eventStages, pipelineStages) => {
+const decorateEventStages = (eventStages, pipelineStages, prNum) => {
   const stageToPipelineStageMap = pipelineStages
     ? pipelineStages.reduce(
         (obj, stage) => ({
@@ -143,10 +144,15 @@ const decorateEventStages = (eventStages, pipelineStages) => {
     : {};
 
   eventStages.forEach(eventStage => {
-    const pipelineStage = stageToPipelineStageMap[eventStage.name];
+    const stageName = prNum
+      ? `PR-${prNum}:${eventStage.name}`
+      : eventStage.name;
+    const pipelineStage = stageToPipelineStageMap[stageName];
 
-    eventStage.id = pipelineStage.id;
-    eventStage.description = pipelineStage.description;
+    if (pipelineStage) {
+      eventStage.id = pipelineStage.id;
+      eventStage.description = pipelineStage.description;
+    }
   });
 
   return eventStages;
@@ -749,7 +755,11 @@ const decorateGraph = ({
 
   const eventStages =
     pipelineStages && pipelineStages.length > 0
-      ? decorateEventStages(extractEventStages(inputGraph), pipelineStages)
+      ? decorateEventStages(
+          extractEventStages(inputGraph),
+          pipelineStages,
+          prNum
+        )
       : [];
 
   const hasStages = !!eventStages.length;
