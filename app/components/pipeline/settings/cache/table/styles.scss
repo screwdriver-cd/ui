@@ -17,6 +17,10 @@
       display: flex;
       align-items: center;
       height: $clear-cache-button-height;
+
+      #clear-jobs-cache-button {
+        margin-right: 1rem;
+      }
     }
 
     .table-main {
