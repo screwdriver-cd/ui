@@ -18,7 +18,7 @@
       @type="primary"
       @onClick={{this.showUpdatePipelineModal}}
       @outline={{true}}
-      title="Edit pipeline alias"
+      title="Edit pipeline"
     >
       <FaIcon @icon="pen" />
       {{#if this.isUpdatePipelineModalOpen}}
@@ -121,6 +121,7 @@
         @type="primary"
         @outline="true"
         @onClick={{fn this.sync "webhooks"}}
+        title="Sync SCM webhooks"
       >
         <FaIcon @icon="rotate" />
       </BsButton>
@@ -139,6 +140,7 @@
         @type="primary"
         @outline="true"
         @onClick={{fn this.sync "pullrequests"}}
+        title="Sync pull requests"
       >
         <FaIcon @icon="rotate" />
       </BsButton>
@@ -157,6 +159,7 @@
         @type="primary"
         @outline="true"
         @onClick={{fn this.sync "pipeline"}}
+        title="Sync pipeline"
       >
         <FaIcon @icon="rotate" />
       </BsButton>
