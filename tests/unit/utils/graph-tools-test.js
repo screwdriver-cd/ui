@@ -1084,6 +1084,240 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(result, expectedOutput);
   });
 
+  test('it processes graph with pr stages', function (assert) {
+    const GRAPH = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        {
+          name: 'stage@integration:setup',
+          id: 14,
+          stageName: 'integration',
+          virtual: true
+        },
+        { name: 'ci-deploy', id: 11, stageName: 'integration' },
+        { name: 'ci-test', id: 12, stageName: 'integration' },
+        { name: 'ci-certify', id: 13, stageName: 'integration' },
+        {
+          name: 'stage@integration:teardown',
+          id: 15,
+          stageName: 'integration',
+          virtual: true
+        }
+      ],
+      edges: [
+        { src: '~pr', dest: 'stage@integration:setup' },
+        { src: 'stage@integration:setup', dest: 'ci-deploy' },
+        { src: 'ci-deploy', dest: 'ci-test' },
+        { src: 'ci-test', dest: 'ci-certify' },
+        { src: 'ci-certify', dest: 'stage@integration:teardown' }
+      ]
+    };
+
+    const STAGES = [
+      {
+        id: 5,
+        name: 'integration',
+        jobIds: [11, 12, 13, 14, 15],
+        description: 'original description',
+        setup: 14,
+        teardown: 15
+      },
+      {
+        id: 10,
+        name: 'PR-123:integration',
+        description: 'PR description',
+        jobIds: [31, 32, 33, 34, 35],
+        setup: 34,
+        teardown: 35
+      }
+    ];
+
+    const COLLAPSED_STAGES = new Set([]);
+
+    const JOBS = [
+      { id: 11, name: 'ci-deploy', virtualJob: false },
+      { id: 12, name: 'ci-test', virtualJob: false },
+      { id: 13, name: 'ci-certify', virtualJob: false },
+      { id: 14, name: 'stage@integration:setup', virtualJob: true },
+      { id: 15, name: 'stage@integration:teardown', virtualJob: true },
+      { id: 31, name: 'PR-123:ci-deploy', virtualJob: false },
+      { id: 32, name: 'PR-123:ci-test', virtualJob: false },
+      { id: 33, name: 'PR-123:ci-certify', virtualJob: false },
+      { id: 34, name: 'PR-123:stage@integration:setup', virtualJob: true },
+      { id: 35, name: 'PR-123:stage@integration:teardown', virtualJob: true }
+    ];
+
+    const expectedOutput = {
+      nodes: [
+        {
+          name: '~pr',
+          pos: {
+            x: 0,
+            y: 0
+          },
+          isDisabled: false
+        },
+        {
+          name: '~commit',
+          pos: {
+            x: 0,
+            y: 1
+          },
+          isDisabled: false
+        },
+        {
+          name: 'ci-deploy',
+          id: 11,
+          stageName: 'integration',
+          pos: {
+            x: 1,
+            y: 0
+          },
+          isDisabled: false
+        },
+        {
+          name: 'ci-test',
+          id: 12,
+          stageName: 'integration',
+          pos: {
+            x: 2,
+            y: 0
+          },
+          isDisabled: false
+        },
+        {
+          name: 'ci-certify',
+          id: 13,
+          stageName: 'integration',
+          pos: {
+            x: 3,
+            y: 0
+          },
+          isDisabled: false
+        }
+      ],
+      edges: [
+        {
+          src: 'ci-deploy',
+          dest: 'ci-test',
+          from: {
+            x: 1,
+            y: 0
+          },
+          to: {
+            x: 2,
+            y: 0
+          }
+        },
+        {
+          src: 'ci-test',
+          dest: 'ci-certify',
+          from: {
+            x: 2,
+            y: 0
+          },
+          to: {
+            x: 3,
+            y: 0
+          }
+        },
+        {
+          src: '~pr',
+          dest: 'ci-deploy',
+          hidden: true,
+          from: {
+            x: 0,
+            y: 0
+          },
+          to: {
+            x: 1,
+            y: 0
+          }
+        }
+      ],
+      meta: {
+        height: 2,
+        width: 4
+      }
+    };
+
+    expectedOutput.stages = [
+      {
+        name: 'integration',
+        jobs: [
+          {
+            name: 'ci-deploy',
+            id: 11,
+            stageName: 'integration'
+          },
+          {
+            name: 'ci-test',
+            id: 12,
+            stageName: 'integration'
+          },
+          {
+            name: 'ci-certify',
+            id: 13,
+            stageName: 'integration'
+          }
+        ],
+        setup: {
+          name: 'stage@integration:setup',
+          id: 14,
+          stageName: 'integration',
+          virtual: true
+        },
+        teardown: {
+          name: 'stage@integration:teardown',
+          id: 15,
+          stageName: 'integration',
+          virtual: true
+        },
+        id: 10,
+        description: 'PR description',
+        isCollapsed: false,
+        graph: {
+          nodes: [
+            expectedOutput.nodes[2],
+            expectedOutput.nodes[3],
+            expectedOutput.nodes[4]
+          ],
+          edges: [expectedOutput.edges[0], expectedOutput.edges[1]],
+          meta: {
+            height: 1,
+            width: 3
+          }
+        },
+        pos: {
+          x: 1,
+          y: 0
+        }
+      }
+    ];
+
+    expectedOutput.stageEdges = [
+      {
+        src: '~pr',
+        dest: 'stage@integration:setup',
+        hidden: true,
+        destStageName: 'integration',
+        from: expectedOutput.nodes[0],
+        to: expectedOutput.stages[0]
+      }
+    ];
+
+    const result = decorateGraph({
+      inputGraph: GRAPH,
+      stages: STAGES,
+      collapsedStages: COLLAPSED_STAGES,
+      jobs: JOBS,
+      prNum: 123
+    });
+
+    assert.deepEqual(result, expectedOutput);
+  });
+
   test('it processes graph with collapsed stages', function (assert) {
     const GRAPH = {
       nodes: [
