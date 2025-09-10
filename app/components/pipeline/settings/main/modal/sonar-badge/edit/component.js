@@ -3,7 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 
-export default class PipelineSettingsMainModalSonarBadgeComponent extends Component {
+export default class PipelineSettingsMainModalSonarBadgeEditComponent extends Component {
   @service('shuttle') shuttle;
 
   @service('pipeline-page-state') pipelinePageState;
@@ -29,8 +29,8 @@ export default class PipelineSettingsMainModalSonarBadgeComponent extends Compon
 
     this.hasBadge = !!sonar;
     if (this.hasBadge) {
-      this.badgeName = sonar.name;
-      this.badgeUri = sonar.uri;
+      this.badgeName = sonar.name || sonar.defaultName;
+      this.badgeUri = sonar.uri || sonar.defaultUri;
     }
   }
 
@@ -42,31 +42,31 @@ export default class PipelineSettingsMainModalSonarBadgeComponent extends Compon
     if (this.hasBadge) {
       const { sonar } = this.pipeline.badges;
 
+      if (!this.badgeName || !this.badgeUri) {
+        return true;
+      }
+
       return this.badgeName === sonar.name && this.badgeUri === sonar.uri;
     }
 
-    return !this.badgeName && !this.badgeUri;
+    return !this.badgeName || !this.badgeUri;
   }
 
   @action
   async updateBadge() {
     this.isAwaitingResponse = true;
 
-    const body = {
-      badges: {
-        sonar: {}
-      }
-    };
-
-    if (this.badgeName) {
-      body.badges.sonar.name = this.badgeName;
-    }
-    if (this.badgeUri) {
-      body.badges.sonar.uri = this.badgeUri;
-    }
-
     return this.shuttle
-      .fetchFromApi('put', `/pipelines/${this.pipeline.id}`, body)
+      .fetchFromApi('put', `/pipelines/${this.pipeline.id}`, {
+        badges: {
+          sonar: {
+            name: this.badgeName,
+            uri: this.badgeUri,
+            defaultName: this.badgeName,
+            defaultUri: this.badgeUri
+          }
+        }
+      })
       .then(pipeline => {
         this.pipelinePageState.setPipeline(pipeline);
         this.pipelinePageState.forceReloadPipelineHeader();
