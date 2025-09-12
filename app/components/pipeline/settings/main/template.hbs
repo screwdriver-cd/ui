@@ -73,19 +73,38 @@
       </div>
     </div>
 
-    <BsButton
-      @type="primary"
-      @onClick={{this.showUpdateSonarBadgeModal}}
-      @outline={{true}}
-      title="Edit pipeline alias"
-    >
-      <FaIcon @icon="pen" />
-      {{#if this.isUpdateSonarBadgeModalOpen}}
-        <Pipeline::Settings::Main::Modal::SonarBadge
-          @closeModal={{this.closeUpdateSonarBadgeModal}}
-        />
+
+    <div>
+      <BsButton
+        @type="primary"
+        @onClick={{this.showUpdateSonarBadgeModal}}
+        @outline={{true}}
+        title="Edit Sonar badge"
+      >
+        <FaIcon @icon="pen" />
+        {{#if this.isUpdateSonarBadgeModalOpen}}
+          <Pipeline::Settings::Main::Modal::SonarBadge::Edit
+            @closeModal={{this.closeUpdateSonarBadgeModal}}
+          />
+        {{/if}}
+      </BsButton>
+
+      {{#if this.sonarBadge}}
+        <BsButton
+          @type="danger"
+          @onClick={{this.showDeleteSonarBadgeModal}}
+          @outline={{true}}
+          title="Delete Sonar badge"
+        >
+          <FaIcon @icon="trash" />
+          {{#if this.isDeleteSonarBadgeModalOpen}}
+            <Pipeline::Settings::Main::Modal::SonarBadge::Delete
+              @closeModal={{this.closeDeleteSonarBadgeModal}}
+            />
+          {{/if}}
+        </BsButton>
       {{/if}}
-    </BsButton>
+    </div>
   </div>
 
   <div>

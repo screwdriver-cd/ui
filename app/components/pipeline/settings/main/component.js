@@ -14,6 +14,8 @@ export default class PipelineSettingsMainComponent extends Component {
 
   @tracked isUpdatePipelineAliasModalOpen = false;
 
+  @tracked isDeleteSonarBadgeModalOpen = false;
+
   @tracked isUpdateSonarBadgeModalOpen = false;
 
   @tracked isSyncModalOpen = false;
@@ -24,10 +26,13 @@ export default class PipelineSettingsMainComponent extends Component {
 
   @tracked syncType;
 
+  sonarBadge;
+
   constructor() {
     super(...arguments);
 
     this.pipeline = this.pipelinePageState.getPipeline();
+    this.sonarBadge = this.pipeline.badges?.sonar;
   }
 
   get checkoutUrl() {
@@ -38,11 +43,19 @@ export default class PipelineSettingsMainComponent extends Component {
   }
 
   get sonarBadgeName() {
-    return this.pipeline.badges?.sonar?.name;
+    if (this.sonarBadge) {
+      return this.sonarBadge.name || this.sonarBadge.defaultName;
+    }
+
+    return null;
   }
 
   get sonarBadgeUri() {
-    return this.pipeline.badges?.sonar?.uri;
+    if (this.sonarBadge) {
+      return this.sonarBadge.uri || this.sonarBadge.defaultUri;
+    }
+
+    return null;
   }
 
   get pipelineAdmins() {
@@ -83,6 +96,20 @@ export default class PipelineSettingsMainComponent extends Component {
     this.isUpdatePipelineAliasModalOpen = false;
 
     if (wasUpdated) {
+      this.pipeline = this.pipelinePageState.getPipeline();
+    }
+  }
+
+  @action
+  showDeleteSonarBadgeModal() {
+    this.isDeleteSonarBadgeModalOpen = true;
+  }
+
+  @action
+  closeDeleteSonarBadgeModal(wasDeleted) {
+    this.isDeleteSonarBadgeModalOpen = false;
+
+    if (wasDeleted) {
       this.pipeline = this.pipelinePageState.getPipeline();
     }
   }

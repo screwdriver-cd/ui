@@ -5,7 +5,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
 module(
-  'Integration | Component | pipeline/settings/main/modal/sonar-badge',
+  'Integration | Component | pipeline/settings/main/modal/sonar-badge/edit',
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -14,13 +14,7 @@ module(
     let shuttle;
 
     const pipelineMock = {
-      id: 123,
-      badges: {
-        sonar: {
-          name: 'sonar',
-          uri: 'https://sonar.example.com/badge'
-        }
-      }
+      id: 123
     };
 
     hooks.beforeEach(function () {
@@ -28,6 +22,13 @@ module(
       shuttle = this.owner.lookup('service:shuttle');
 
       sinon.stub(pipelinePageState, 'getPipeline').returns(pipelineMock);
+
+      pipelineMock.badges = {
+        sonar: {
+          name: 'sonar',
+          uri: 'https://sonar.example.com/badge'
+        }
+      };
     });
 
     test('it renders', async function (assert) {
@@ -36,7 +37,7 @@ module(
       });
 
       await render(
-        hbs`<Pipeline::Settings::Main::Modal::SonarBadge
+        hbs`<Pipeline::Settings::Main::Modal::SonarBadge::Edit
             @closeModal={{this.closeModal}}
         />`
       );
@@ -47,13 +48,33 @@ module(
       assert.dom('#submit-action').exists();
     });
 
-    test('it enables submit button correctly', async function (assert) {
+    test('it enables submit button correctly for new sonar badge', async function (assert) {
+      pipelineMock.badges = {};
+
       this.setProperties({
         closeModal: () => {}
       });
 
       await render(
-        hbs`<Pipeline::Settings::Main::Modal::SonarBadge
+        hbs`<Pipeline::Settings::Main::Modal::SonarBadge::Edit
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      assert.dom('#submit-action').isDisabled();
+
+      await fillIn('#sonar-badge-name-input', 'new');
+      assert.dom('#submit-action').isDisabled();
+      await fillIn('#sonar-badge-uri-input', 'https://test.com');
+      assert.dom('#submit-action').isEnabled();
+    });
+
+    test('it enables submit button correctly for existing sonar badge', async function (assert) {
+      this.setProperties({
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Pipeline::Settings::Main::Modal::SonarBadge::Edit
             @closeModal={{this.closeModal}}
         />`
       );
@@ -61,16 +82,16 @@ module(
       assert.dom('#submit-action').isDisabled();
       await fillIn('#sonar-badge-name-input', 'updated');
       assert.dom('#submit-action').isEnabled();
+      await fillIn('#sonar-badge-name-input', '');
+      assert.dom('#submit-action').isDisabled();
       await fillIn('#sonar-badge-name-input', pipelineMock.badges.sonar.name);
       assert.dom('#submit-action').isDisabled();
       await fillIn('#sonar-badge-uri-input', 'https://test.com');
       assert.dom('#submit-action').isEnabled();
+      await fillIn('#sonar-badge-uri-input', '');
+      assert.dom('#submit-action').isDisabled();
       await fillIn('#sonar-badge-uri-input', pipelineMock.badges.sonar.uri);
       assert.dom('#submit-action').isDisabled();
-      await fillIn('#sonar-badge-name-input', '');
-      assert.dom('#submit-action').isEnabled();
-      await fillIn('#sonar-badge-uri-input', '');
-      assert.dom('#submit-action').isEnabled();
     });
 
     test('it handles failed API call correctly', async function (assert) {
@@ -85,7 +106,7 @@ module(
       });
 
       await render(
-        hbs`<Pipeline::Settings::Main::Modal::SonarBadge
+        hbs`<Pipeline::Settings::Main::Modal::SonarBadge::Edit
             @closeModal={{this.closeModal}}
         />`
       );
@@ -120,12 +141,11 @@ module(
       });
 
       await render(
-        hbs`<Pipeline::Settings::Main::Modal::SonarBadge
+        hbs`<Pipeline::Settings::Main::Modal::SonarBadge::Edit
             @closeModal={{this.closeModal}}
         />`
       );
-      await fillIn('#sonar-badge-name-input', '');
-      await fillIn('#sonar-badge-uri-input', '');
+      await fillIn('#sonar-badge-name-input', 'updated');
       await click('#submit-action');
 
       assert.equal(setPipelineSpy.calledOnceWith(updatedPipeline), true);

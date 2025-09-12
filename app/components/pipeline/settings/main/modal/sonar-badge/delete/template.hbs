@@ -1,0 +1,35 @@
+<BsModal
+  id="delete-sonar-badge-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">
+      Delete Sonar badge configuration
+    </div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    <div>
+      Are you sure you want to delete the Sonar badge configuration?
+    </div>
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="submit-action"
+      @type="primary"
+      @defaultText="Delete"
+      @pendingText="Deleting..."
+      @onClick={{fn this.deleteBadge}}
+      disabled={{this.isDisabled}}
+    />
+  </modal.footer>
+</BsModal>
