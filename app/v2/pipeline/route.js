@@ -1,5 +1,6 @@
 import Route from '@ember/routing/route';
 import { service } from '@ember/service';
+import { NotFoundError } from 'screwdriver-ui/utils/not-found-error';
 
 export default class NewPipelineRoute extends Route {
   @service shuttle;
@@ -21,9 +22,7 @@ export default class NewPipelineRoute extends Route {
         return response;
       })
       .catch(() => {
-        this.replaceWith('/404');
-
-        return null;
+        return Promise.reject(new NotFoundError('Pipeline not found'));
       });
 
     if (!pipeline) {

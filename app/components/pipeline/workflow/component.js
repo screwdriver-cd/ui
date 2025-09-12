@@ -24,7 +24,7 @@ export default class PipelineWorkflowComponent extends Component {
 
   @service('settings') settings;
 
-  @tracked showDownstreamTriggers = false;
+  @tracked showDownstreamTriggers;
 
   @tracked showTooltip = false;
 
@@ -69,6 +69,8 @@ export default class PipelineWorkflowComponent extends Component {
 
     this.pipeline = this.pipelinePageState.getPipeline();
     this.userSettings = this.settings.getSettings();
+    this.showDownstreamTriggers =
+      this.pipeline.settings?.showEventTriggers || false;
     this.latestEvent = this.args.latestEvent;
     this.dataReloadId = this.workflowDataReload.start(
       this.pipeline.id,
