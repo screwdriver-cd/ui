@@ -6,6 +6,13 @@ export default Route.extend({
   session: service(),
   router: service(),
   routeAfterAuthentication: 'pipeline.options',
+  beforeModel() {
+    if (localStorage.getItem('newUI') === 'true') {
+      const { pipeline_id: pipelineId } = this.paramsFor('pipeline');
+
+      this.transitionTo('v2.pipeline.settings.index', pipelineId);
+    }
+  },
   model() {
     // Guests should not access this page
     if (get(this, 'session.data.authenticated.isGuest')) {
