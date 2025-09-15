@@ -417,4 +417,46 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
     assert.dom('.outlined').exists();
   });
+
+  test('it renders event status correctly for warning status', async function (assert) {
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }, { status: 'WARNING' }]);
+    });
+
+    this.setProperties({
+      event
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+      />`
+    );
+
+    assert.dom('.event-card-title .event-status.WARNING').exists();
+  });
+
+  test('it renders event status correctly for failure status', async function (assert) {
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([
+        { status: 'SUCCESS' },
+        { status: 'WARNING' },
+        { status: 'FAILURE' }
+      ]);
+    });
+
+    this.setProperties({
+      event
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+      />`
+    );
+
+    assert.dom('.event-card-title .event-status.FAILURE').exists();
+  });
 });
