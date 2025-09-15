@@ -60,10 +60,19 @@ export default Component.extend({
 
         if (targetURL.includes('pulls')) {
           targetURL = `${targetURL.split('pulls/')[0]}pulls`;
+        } else if (targetURL.includes('settings')) {
+          targetURL = targetURL.split('settings')[0];
+          targetURL = targetURL.endsWith('/') ? targetURL : `${targetURL}/`;
+          targetURL = `${targetURL}options`;
         }
         localStorage.removeItem('newUI');
       } else {
         targetURL = `/v2${currentURL}`;
+
+        if (targetURL.endsWith('/options')) {
+          targetURL = targetURL.replace('/options', '/settings');
+        }
+
         localStorage.setItem('newUI', 'true');
       }
 
