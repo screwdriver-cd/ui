@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 
+import { hasSonarBadge } from 'screwdriver-ui/utils/pipeline';
 import { getCheckoutUrl } from 'screwdriver-ui/utils/git';
 
 export default class PipelineSettingsMainComponent extends Component {
@@ -26,13 +27,10 @@ export default class PipelineSettingsMainComponent extends Component {
 
   @tracked syncType;
 
-  sonarBadge;
-
   constructor() {
     super(...arguments);
 
     this.pipeline = this.pipelinePageState.getPipeline();
-    this.sonarBadge = this.pipeline.badges?.sonar;
   }
 
   get checkoutUrl() {
@@ -43,19 +41,27 @@ export default class PipelineSettingsMainComponent extends Component {
   }
 
   get sonarBadgeName() {
-    if (this.sonarBadge) {
-      return this.sonarBadge.name || this.sonarBadge.defaultName;
+    if (this.hasSonarBadge) {
+      const sonarBadge = this.pipeline.badges.sonar;
+
+      return sonarBadge.name || sonarBadge.defaultName;
     }
 
     return null;
   }
 
   get sonarBadgeUri() {
-    if (this.sonarBadge) {
-      return this.sonarBadge.uri || this.sonarBadge.defaultUri;
+    if (this.hasSonarBadge) {
+      const sonarBadge = this.pipeline.badges.sonar;
+
+      return sonarBadge.uri || sonarBadge.defaultUri;
     }
 
     return null;
+  }
+
+  get hasSonarBadge() {
+    return hasSonarBadge(this.pipeline);
   }
 
   get pipelineAdmins() {
