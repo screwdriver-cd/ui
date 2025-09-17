@@ -9,7 +9,13 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   let router;
 
+  let routerStub;
+
   let workflowDataReload;
+
+  let registerLatestCommitEventCallbackStub;
+
+  let registerBuildsCallbackStub;
 
   let event;
 
@@ -29,17 +35,24 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     };
 
     sinon.stub(settings, 'getSettings').returns({});
+
+    registerLatestCommitEventCallbackStub = sinon.stub(
+      workflowDataReload,
+      'registerLatestCommitEventCallback'
+    );
+    registerLatestCommitEventCallbackStub.callsFake(() => {});
+
+    registerBuildsCallbackStub = sinon.stub(
+      workflowDataReload,
+      'registerBuildsCallback'
+    );
+    registerBuildsCallbackStub.callsFake(() => {});
+
+    routerStub = sinon.stub(router, 'currentURL');
+    routerStub.value(`/pipelines/1/events/${event.id}`);
   });
 
   test('it renders title when event is first in group', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake(() => {});
-
     this.setProperties({
       event
     });
@@ -54,14 +67,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it renders title when event is in group', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake(() => {});
-
     event.groupEventId = 3;
 
     this.setProperties({
@@ -78,15 +83,10 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it renders core elements', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake((queueName, id, callback) => {
-        callback([{ status: 'SUCCESS' }]);
-      });
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }]);
+    });
 
     this.setProperties({
       event
@@ -125,15 +125,12 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it does not render highlight', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/99');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake((queueName, id, callback) => {
-        callback([{ status: 'SUCCESS' }]);
-      });
+    routerStub.reset();
+    routerStub.value('/pipelines/1/events/99');
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }]);
+    });
 
     this.setProperties({
       event
@@ -151,15 +148,10 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it renders event label', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake((queueName, id, callback) => {
-        callback([{ status: 'SUCCESS' }]);
-      });
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }]);
+    });
 
     event.meta = { label: 'Testing 123' };
     this.setProperties({
@@ -176,15 +168,10 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it renders button for parameters', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake((queueName, id, callback) => {
-        callback([{ status: 'SUCCESS' }]);
-      });
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }]);
+    });
 
     event.meta = {
       parameters: {
@@ -207,15 +194,10 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it renders button for event group', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake((queueName, id, callback) => {
-        callback([{ status: 'SUCCESS' }]);
-      });
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }]);
+    });
 
     event.meta = {
       parameters: {
@@ -240,15 +222,10 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it renders abort button for running event', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake((queueName, id, callback) => {
-        callback([{ status: 'RUNNING' }]);
-      });
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'RUNNING' }]);
+    });
 
     this.setProperties({
       event
@@ -267,17 +244,16 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   test('it renders latest commit badge', async function (assert) {
     const latestCommitSha = 'abc123def456';
 
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake((queueName, id, callback) => {
+    registerLatestCommitEventCallbackStub.reset();
+    registerLatestCommitEventCallbackStub.callsFake(
+      (queueName, id, callback) => {
         callback({ sha: latestCommitSha });
-      });
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake((queueName, id, callback) => {
-        callback([{ status: 'SUCCESS' }]);
-      });
+      }
+    );
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }]);
+    });
 
     this.setProperties({
       event
@@ -294,15 +270,10 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it does not render counts for collapsed event', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake((queueName, id, callback) => {
-        callback([{ status: 'COLLAPSED' }]);
-      });
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'COLLAPSED' }]);
+    });
 
     this.setProperties({
       event
@@ -318,21 +289,16 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it renders count values', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake((queueName, id, callback) => {
-        callback([
-          { status: 'SUCCESS' },
-          { status: 'UNSTABLE' },
-          { status: 'SUCCESS' },
-          { status: 'FAILURE' },
-          { status: 'CREATED' }
-        ]);
-      });
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([
+        { status: 'SUCCESS' },
+        { status: 'UNSTABLE' },
+        { status: 'SUCCESS' },
+        { status: 'FAILURE' },
+        { status: 'CREATED' }
+      ]);
+    });
 
     this.setProperties({
       event
@@ -350,12 +316,8 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it re-renders correctly when event changes', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub
       .onCall(0)
       .callsFake((queueName, id, callback) => {
         callback([{ status: 'SUCCESS' }]);
@@ -395,13 +357,8 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it renders PR title', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/pulls/2');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake(() => {});
+    routerStub.reset();
+    routerStub.value('/pipelines/1/pulls/2');
 
     event.type = 'pr';
     event.prNum = 4;
@@ -422,13 +379,8 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it renders start event button for PR', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/pulls/2');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake(() => {});
+    routerStub.reset();
+    routerStub.value('/pipelines/1/pulls/2');
 
     event.type = 'pr';
     event.prNum = 4;
@@ -447,15 +399,10 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it renders card outline', async function (assert) {
-    sinon.stub(router, 'currentURL').value('/pipelines/1/events/11');
-    sinon
-      .stub(workflowDataReload, 'registerLatestCommitEventCallback')
-      .callsFake(() => {});
-    sinon
-      .stub(workflowDataReload, 'registerBuildsCallback')
-      .callsFake((queueName, id, callback) => {
-        callback([{ status: 'SUCCESS' }]);
-      });
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }]);
+    });
 
     this.setProperties({
       event
@@ -469,5 +416,47 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     );
 
     assert.dom('.outlined').exists();
+  });
+
+  test('it renders event status correctly for warning status', async function (assert) {
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }, { status: 'WARNING' }]);
+    });
+
+    this.setProperties({
+      event
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+      />`
+    );
+
+    assert.dom('.event-card-title .event-status.WARNING').exists();
+  });
+
+  test('it renders event status correctly for failure status', async function (assert) {
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([
+        { status: 'SUCCESS' },
+        { status: 'WARNING' },
+        { status: 'FAILURE' }
+      ]);
+    });
+
+    this.setProperties({
+      event
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+      />`
+    );
+
+    assert.dom('.event-card-title .event-status.FAILURE').exists();
   });
 });

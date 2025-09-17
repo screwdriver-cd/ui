@@ -162,7 +162,31 @@ export default Model.extend(ModelReloaderMixin, {
           );
 
           if (validList.length) {
-            status = validList[0].status;
+            let runningCount = 0;
+
+            let failCount = 0;
+
+            let warningCount = 0;
+
+            validList.forEach(b => {
+              if (b.status === 'FAILURE') {
+                failCount += 1;
+              } else if (b.status === 'WARNING') {
+                warningCount += 1;
+              } else if (b.status === 'RUNNING') {
+                runningCount += 1;
+              }
+            });
+
+            if (runningCount > 0) {
+              status = 'RUNNING';
+            } else if (failCount > 0) {
+              status = 'FAILURE';
+            } else if (warningCount > 0) {
+              status = 'WARNING';
+            } else {
+              status = validList[0].status;
+            }
           } else {
             status = this.isComplete ? 'SUCCESS' : 'RUNNING';
           }
