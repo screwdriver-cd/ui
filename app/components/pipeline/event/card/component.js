@@ -184,10 +184,10 @@ export default class PipelineEventCardComponent extends Component {
       this.warningCount = getWarningCount(builds);
       this.successCount = getSuccessCount(builds);
 
-      if (this.warningCount > 0) {
-        this.aggregateStatus = 'WARNING';
-      } else if (this.failureCount > 0) {
+      if (this.failureCount > 0) {
         this.aggregateStatus = 'FAILURE';
+      } else if (this.warningCount > 0) {
+        this.aggregateStatus = 'WARNING';
       }
     }
 
