@@ -171,6 +171,10 @@ export default class PipelineWorkflowComponent extends Component {
   @action
   update(element, [event]) {
     if (this.event) {
+      if (this.event.id === event.id) {
+        return;
+      }
+
       this.workflowDataReload.removeBuildsCallback(
         BUILD_QUEUE_NAME,
         this.event.id
