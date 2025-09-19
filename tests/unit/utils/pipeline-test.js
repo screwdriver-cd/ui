@@ -5,7 +5,8 @@ const {
   isInactivePipeline,
   hasInactivePipelines,
   isActivePipeline,
-  hasActivePipelines
+  hasActivePipelines,
+  hasSonarBadge
 } = pipeline;
 
 module('Unit | Utility | pipeline', function () {
@@ -62,6 +63,41 @@ module('Unit | Utility | pipeline', function () {
     assert.notOk(hasActivePipelines([INACTIVE_PIPELINE_2]));
     assert.notOk(
       hasActivePipelines([INACTIVE_PIPELINE_1, INACTIVE_PIPELINE_2])
+    );
+  });
+
+  test('it checks if pipeline has sonar badge', assert => {
+    assert.equal(hasSonarBadge({}), false);
+    assert.equal(hasSonarBadge({ badges: {} }), false);
+    assert.equal(hasSonarBadge({ badges: { sonar: {} } }), false);
+    assert.equal(hasSonarBadge({ badges: { sonar: { name: null } } }), false);
+    assert.equal(hasSonarBadge({ badges: { sonar: { name: '' } } }), false);
+    assert.equal(hasSonarBadge({ badges: { sonar: { name: 'test' } } }), false);
+    assert.equal(hasSonarBadge({ badges: { sonar: { uri: null } } }), false);
+    assert.equal(hasSonarBadge({ badges: { sonar: { uri: '' } } }), false);
+    assert.equal(
+      hasSonarBadge({ badges: { sonar: { uri: 'test.com' } } }),
+      false
+    );
+    assert.equal(
+      hasSonarBadge({ badges: { sonar: { name: null, uri: null } } }),
+      false
+    );
+    assert.equal(
+      hasSonarBadge({ badges: { sonar: { name: '', uri: null } } }),
+      false
+    );
+    assert.equal(
+      hasSonarBadge({ badges: { sonar: { name: null, uri: '' } } }),
+      false
+    );
+    assert.equal(
+      hasSonarBadge({ badges: { sonar: { name: '', uri: '' } } }),
+      false
+    );
+    assert.equal(
+      hasSonarBadge({ badges: { sonar: { name: 'test', uri: 'test.com' } } }),
+      true
     );
   });
 });

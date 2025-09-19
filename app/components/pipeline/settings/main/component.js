@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 
+import { hasSonarBadge } from 'screwdriver-ui/utils/pipeline';
 import { getCheckoutUrl } from 'screwdriver-ui/utils/git';
 
 export default class PipelineSettingsMainComponent extends Component {
@@ -13,6 +14,8 @@ export default class PipelineSettingsMainComponent extends Component {
   @tracked isUpdatePipelineModalOpen = false;
 
   @tracked isUpdatePipelineAliasModalOpen = false;
+
+  @tracked isDeleteSonarBadgeModalOpen = false;
 
   @tracked isUpdateSonarBadgeModalOpen = false;
 
@@ -38,11 +41,27 @@ export default class PipelineSettingsMainComponent extends Component {
   }
 
   get sonarBadgeName() {
-    return this.pipeline.badges?.sonar?.name;
+    if (this.hasSonarBadge) {
+      const sonarBadge = this.pipeline.badges.sonar;
+
+      return sonarBadge.name || sonarBadge.defaultName;
+    }
+
+    return null;
   }
 
   get sonarBadgeUri() {
-    return this.pipeline.badges?.sonar?.uri;
+    if (this.hasSonarBadge) {
+      const sonarBadge = this.pipeline.badges.sonar;
+
+      return sonarBadge.uri || sonarBadge.defaultUri;
+    }
+
+    return null;
+  }
+
+  get hasSonarBadge() {
+    return hasSonarBadge(this.pipeline);
   }
 
   get pipelineAdmins() {
@@ -83,6 +102,20 @@ export default class PipelineSettingsMainComponent extends Component {
     this.isUpdatePipelineAliasModalOpen = false;
 
     if (wasUpdated) {
+      this.pipeline = this.pipelinePageState.getPipeline();
+    }
+  }
+
+  @action
+  showDeleteSonarBadgeModal() {
+    this.isDeleteSonarBadgeModalOpen = true;
+  }
+
+  @action
+  closeDeleteSonarBadgeModal(wasDeleted) {
+    this.isDeleteSonarBadgeModalOpen = false;
+
+    if (wasDeleted) {
       this.pipeline = this.pipelinePageState.getPipeline();
     }
   }

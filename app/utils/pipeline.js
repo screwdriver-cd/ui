@@ -36,10 +36,23 @@ const hasActivePipelines = pipelines => {
   return !!activePipeline;
 };
 
+const hasSonarBadge = pipeline => {
+  const sonar = pipeline.badges?.sonar;
+
+  if (sonar) {
+    if (sonar.name && sonar.uri) {
+      return sonar.name !== '' && sonar.uri !== '';
+    }
+  }
+
+  return false;
+};
+
 export {
   getStateIcon,
   isInactivePipeline,
   hasInactivePipelines,
   isActivePipeline,
-  hasActivePipelines
+  hasActivePipelines,
+  hasSonarBadge
 };

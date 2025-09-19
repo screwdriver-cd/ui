@@ -3,6 +3,8 @@ import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
 
+import { hasSonarBadge } from 'screwdriver-ui/utils/pipeline';
+
 export default class PipelineHeaderComponent extends Component {
   @service('scm') scm;
 
@@ -41,13 +43,14 @@ export default class PipelineHeaderComponent extends Component {
   }
 
   get sonarBadgeDescription() {
-    const sonarBadgeDescription = 'SonarQube project';
-    const sonarBadgeName =
-      this.pipeline.badges.sonar.name || this.pipeline.badges.sonar.defaultName;
+    const sonarBadge = this.pipeline.badges.sonar;
+    const sonarBadgeName = sonarBadge.name || sonarBadge.defaultName;
 
-    return sonarBadgeName
-      ? `SonarQube project: ${sonarBadgeName}`
-      : sonarBadgeDescription;
+    return `SonarQube project: ${sonarBadgeName}`;
+  }
+
+  get hasSonarBadge() {
+    return hasSonarBadge(this.pipeline);
   }
 
   get scmContext() {

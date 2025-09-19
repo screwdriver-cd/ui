@@ -57,9 +57,10 @@ module('Integration | Component | pipeline/header', function (hooks) {
   });
 
   test('it renders link to sonarqube project', async function (assert) {
+    const name = 'test-sonar';
     const uri = 'https://sonarqube.com/test';
 
-    pipeline.badges = { sonar: { uri } };
+    pipeline.badges = { sonar: { name, uri } };
 
     await render(
       hbs`<Pipeline::Header
@@ -68,20 +69,6 @@ module('Integration | Component | pipeline/header', function (hooks) {
     );
 
     assert.dom('#sonarqube-link').hasAttribute('href', `${uri}`);
-  });
-
-  test('it renders link to sonarqube', async function (assert) {
-    const defaultUri = 'https://sonarqube.com';
-
-    pipeline.badges = { sonar: { defaultUri } };
-
-    await render(
-      hbs`<Pipeline::Header
-        @pipeline={{this.pipeline}}
-      />`
-    );
-
-    assert.dom('#sonarqube-link').hasAttribute('href', `${defaultUri}`);
   });
 
   test('it renders branch with root directory', async function (assert) {
