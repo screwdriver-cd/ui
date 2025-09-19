@@ -52,10 +52,6 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked showEventJobsTable;
 
-  @tracked showBuildCostsTable;
-
-  @tracked isBuildClusterAws;
-
   @tracked collapsedStages = new Set([]);
 
   workflowGraph;
@@ -85,9 +81,6 @@ export default class PipelineWorkflowComponent extends Component {
 
     this.showGraph = true;
     this.showEventJobsTable = false;
-    this.showBuildCostsTable = false;
-
-    this.isBuildClusterAws = false;
   }
 
   monitorForNewEvents() {
@@ -195,8 +188,6 @@ export default class PipelineWorkflowComponent extends Component {
     this.showTooltip = false;
     this.showStageTooltip = false;
 
-    this.isEventInAws(builds);
-
     const hasEventCompleted = this.isEventComplete(builds);
 
     if (!hasEventCompleted) {
@@ -243,8 +234,6 @@ export default class PipelineWorkflowComponent extends Component {
   @action
   buildsCallback(builds) {
     this.builds = builds;
-
-    this.isEventInAws(builds);
 
     if (this.isEventComplete(builds)) {
       this.workflowDataReload.removeBuildsCallback(
@@ -374,37 +363,21 @@ export default class PipelineWorkflowComponent extends Component {
     this.collapsedStages = collapsedStages;
   }
 
-  isEventInAws(builds) {
-    this.isBuildClusterAws = false;
-
-    if (builds) {
-      // TODO: See if this is the best way to check if a build is in AWS
-      // builds.forEach(() => {
-      // if (build.buildClusterName.startsWith('aws')) {
-      //   this.isBuildClusterAws = true;
-      // }
-      // });
-    }
-  }
-
   @action
   setShowGraph() {
     this.showGraph = true;
     this.showEventJobsTable = false;
-    this.showBuildCostsTable = false;
   }
 
   @action
   setShowEventJobsTable() {
     this.showGraph = false;
     this.showEventJobsTable = true;
-    this.showBuildCostsTable = false;
   }
 
   @action
   setShowBuildCostsTable() {
     this.showGraph = false;
     this.showEventJobsTable = false;
-    this.showBuildCostsTable = true;
   }
 }
