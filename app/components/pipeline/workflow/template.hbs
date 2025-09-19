@@ -40,22 +40,6 @@
             @prefix="fa"
           />
         </BsButton>
-        {{#if this.isBuildClusterAws}}
-          <BsButton
-            id="show-build-costs-button"
-            @type="primary"
-            @outline={{true}}
-            @onClick={{fn this.setShowBuildCostsTable}}
-            disabled={{this.showBuildCostsTable}}
-            title="View event build costs"
-          >
-            <FaIcon
-              @icon="dollar-sign"
-              @fixedWidth="true"
-              @prefix="fa"
-            />
-          </BsButton>
-        {{/if}}
 
         {{#if (and this.showGraph this.hasDownstreamTriggers)}}
           <div
@@ -135,10 +119,6 @@
           {{/if}}
         {{else if this.showEventJobsTable}}
           <Pipeline::Jobs::Table
-            @event={{this.event}}
-          />
-        {{else if this.showBuildCostsTable}}
-          <Pipeline::Jobs::Table::CostTable
             @event={{this.event}}
           />
         {{/if}}

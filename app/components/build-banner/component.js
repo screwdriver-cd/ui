@@ -133,41 +133,6 @@ export default Component.extend({
     }
   }),
 
-  costMetrics: computed('buildId', 'buildMeta', {
-    get() {
-      const { buildId, buildMeta } = this;
-
-      return buildMeta?.build?.cost_metrics?.[buildId];
-    }
-  }),
-
-  buildCpu: computed('buildId', 'buildMeta', {
-    get() {
-      const { buildId, buildMeta } = this;
-      const cpu = buildMeta?.build?.cost_metrics?.[buildId].cpu;
-
-      return cpu ? String(`${cpu} vCPU`) : '';
-    }
-  }),
-
-  buildMemory: computed('buildId', 'buildMeta', {
-    get() {
-      const { buildId, buildMeta } = this;
-      const memory = buildMeta?.build?.cost_metrics?.[buildId].memory;
-
-      return memory ? String(`${memory} GiB`) : '';
-    }
-  }),
-
-  buildCost: computed('buildId', 'buildMeta', {
-    get() {
-      const { buildId, buildMeta } = this;
-      const cost = buildMeta?.build?.cost_metrics?.[buildId].cost;
-
-      return cost ? String(`$${cost.toFixed(4)}`) : '';
-    }
-  }),
-
   isWaiting: computed('buildStatus', {
     get() {
       return this.buildStatus === 'QUEUED';

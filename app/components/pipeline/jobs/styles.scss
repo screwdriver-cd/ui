@@ -1,7 +1,5 @@
 @use 'table/styles' as table;
-@use 'table/cost-table/styles' as cost-table;
 
 @mixin styles {
   @include table.styles;
-  @include cost-table.styles;
 }
