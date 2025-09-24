@@ -26,11 +26,11 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked showDownstreamTriggers;
 
-  @tracked showTooltip = false;
+  @tracked showTooltip;
 
-  @tracked showStageTooltip = false;
+  @tracked showStageTooltip;
 
-  @tracked d3Data = null;
+  @tracked d3Data;
 
   pipeline;
 
@@ -52,7 +52,7 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked showEventJobsTable;
 
-  @tracked collapsedStages = new Set([]);
+  @tracked collapsedStages;
 
   workflowGraph;
 
@@ -63,6 +63,21 @@ export default class PipelineWorkflowComponent extends Component {
   constructor() {
     super(...arguments);
 
+    this.initialize();
+  }
+
+  initialize() {
+    this.event = null;
+    this.selectedEvent = null;
+    this.builds = null;
+    this.stageBuilds = null;
+    this.workflowGraphToDisplay = null;
+    this.showGraph = true;
+    this.showEventJobsTable = false;
+    this.showTooltip = false;
+    this.showStageTooltip = false;
+    this.d3Data = null;
+    this.collapsedStages = new Set([]);
     this.pipeline = this.pipelinePageState.getPipeline();
     this.userSettings = this.settings.getSettings();
     this.showDownstreamTriggers =
@@ -78,9 +93,6 @@ export default class PipelineWorkflowComponent extends Component {
     } else {
       this.monitorForNewBuilds();
     }
-
-    this.showGraph = true;
-    this.showEventJobsTable = false;
   }
 
   monitorForNewEvents() {
