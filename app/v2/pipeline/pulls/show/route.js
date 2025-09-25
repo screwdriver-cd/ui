@@ -13,6 +13,7 @@ export default class V2PipelinePullsShowRoute extends Route {
   @service('pr-jobs') prJobs;
 
   async model(params, transition) {
+    const pipelineId = this.pipelinePageState.getPipelineId();
     const prNums = getPrNumbers(this.prJobs.getPullRequestJobs());
 
     let latestEvent;
@@ -43,8 +44,6 @@ export default class V2PipelinePullsShowRoute extends Route {
         const newestPrNum = newestPrNumber(prNums);
 
         if (newestPrNum) {
-          const pipelineId = this.pipelinePageState.getPipelineId();
-
           latestEvent = await this.shuttle
             .fetchFromApi(
               'get',
@@ -63,11 +62,22 @@ export default class V2PipelinePullsShowRoute extends Route {
 
     this.prJobs.setPipelinePageStateJobs(event);
 
-    return {
+    const model = {
+      pipelineId,
       event,
       latestEvent,
       prNums: Array.from(prNums).sort((a, b) => a - b),
       invalidEvent: event === undefined
     };
+
+    if (transition.from) {
+      const { attributes } = transition.from;
+
+      if (attributes && attributes.pipelineId !== pipelineId) {
+        model.reloadEventRail = true;
+      }
+    }
+
+    return model;
   }
 }

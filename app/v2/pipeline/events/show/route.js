@@ -56,10 +56,21 @@ export default class NewPipelineEventsShowRoute extends Route {
         this.pipelinePageState.setTriggers(triggers);
       });
 
-    return {
+    const model = {
+      pipelineId,
       event,
       latestEvent,
       invalidEvent: event === null
     };
+
+    if (transition.from) {
+      const { attributes } = transition.from;
+
+      if (attributes && attributes.pipelineId !== pipelineId) {
+        model.reloadEventRail = true;
+      }
+    }
+
+    return model;
   }
 }

@@ -17,6 +17,7 @@ export default class NewPipelineEventsIndexRoute extends Route {
       : null;
 
     return {
+      pipelineId: pipeline.id,
       latestEvent
     };
   }
