@@ -846,13 +846,16 @@ const decorateGraph = ({
     if (stageBuildsAvailable) {
       const stageName = prNum ? `PR-${prNum}:${s.name}` : s.name;
       const stage = findStage(pipelineStages, stageName);
-      const stageBuild = findStageBuild(stageBuilds, stage.id);
 
-      s.id = stage.id;
+      if (stage) {
+        const stageBuild = findStageBuild(stageBuilds, stage.id);
 
-      if (stageBuild) {
-        s.status = stageBuild.status;
-        s.stageBuildId = stageBuild.id;
+        s.id = stage.id;
+
+        if (stageBuild) {
+          s.status = stageBuild.status;
+          s.stageBuildId = stageBuild.id;
+        }
       }
     }
   });
