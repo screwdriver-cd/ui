@@ -64,6 +64,8 @@ export default class PipelineWorkflowComponent extends Component {
     super(...arguments);
 
     this.initialize();
+    this.showGraph = true;
+    this.showEventJobsTable = false;
   }
 
   initialize() {
@@ -72,8 +74,6 @@ export default class PipelineWorkflowComponent extends Component {
     this.builds = null;
     this.stageBuilds = null;
     this.workflowGraphToDisplay = null;
-    this.showGraph = true;
-    this.showEventJobsTable = false;
     this.showTooltip = false;
     this.showStageTooltip = false;
     this.d3Data = null;
@@ -174,7 +174,14 @@ export default class PipelineWorkflowComponent extends Component {
   }
 
   @action
-  update(element, [event]) {
+  update(element, [event, pipelineId]) {
+    if (this.pipeline.id !== pipelineId) {
+      this.workflowDataReload.stop(this.dataReloadId);
+      this.initialize();
+
+      return;
+    }
+
     if (this.event) {
       if (this.event.id === event.id) {
         return;

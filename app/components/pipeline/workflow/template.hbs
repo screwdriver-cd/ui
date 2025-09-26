@@ -1,6 +1,6 @@
 <div
   id="pipeline-workflow-container"
-  {{did-update this.update @event}}
+  {{did-update this.update @event @pipelineId}}
 >
   <Pipeline::Workflow::EventRail
     @event={{this.eventRailAnchor}}

@@ -13,6 +13,7 @@ export default class V2PipelinePullsIndexRoute extends Route {
   @service('pr-jobs') prJobs;
 
   async model() {
+    const pipelineId = this.pipelinePageState.getPipelineId();
     const pullRequestJobs = this.prJobs.getPullRequestJobs();
 
     let event;
@@ -24,7 +25,7 @@ export default class V2PipelinePullsIndexRoute extends Route {
       event = await this.shuttle
         .fetchFromApi(
           'get',
-          `/pipelines/${this.pipelinePageState.getPipelineId()}/events?prNum=${newestPrNum}`
+          `/pipelines/${pipelineId}/events?prNum=${newestPrNum}`
         )
         .then(events => {
           return events[0];
@@ -32,6 +33,7 @@ export default class V2PipelinePullsIndexRoute extends Route {
     }
 
     return {
+      pipelineId,
       event
     };
   }

@@ -228,12 +228,14 @@ export default class PipelineEventCardComponent extends Component {
         this.prJobs.setPipelinePageStateJobs(event);
         this.router.transitionTo(route, {
           event,
+          pipelineId: event.pipelineId,
           reloadEventRail: this.queueName !== 'eventRail',
           id: event.id
         });
       } else {
         this.router.transitionTo(route, {
           event,
+          pipelineId: event.pipelineId,
           reloadEventRail: this.queueName !== 'eventRail',
           id: event.id
         });
