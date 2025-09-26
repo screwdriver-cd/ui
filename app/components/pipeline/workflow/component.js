@@ -64,6 +64,8 @@ export default class PipelineWorkflowComponent extends Component {
     super(...arguments);
 
     this.initialize();
+    this.showGraph = true;
+    this.showEventJobsTable = false;
   }
 
   initialize() {
@@ -72,8 +74,6 @@ export default class PipelineWorkflowComponent extends Component {
     this.builds = null;
     this.stageBuilds = null;
     this.workflowGraphToDisplay = null;
-    this.showGraph = true;
-    this.showEventJobsTable = false;
     this.showTooltip = false;
     this.showStageTooltip = false;
     this.d3Data = null;
