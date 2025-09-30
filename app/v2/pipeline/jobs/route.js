@@ -20,5 +20,9 @@ export default class NewPipelineJobsRoute extends Route {
     if (!this.settings.getSettings()) {
       await this.settings.fetchSettings();
     }
+
+    return {
+      pipelineId
+    };
   }
 }

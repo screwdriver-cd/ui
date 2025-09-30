@@ -16,13 +16,15 @@ import sortJobs from './util';
 const INITIAL_PAGE_SIZE = 10;
 
 export default class PipelineJobsTableComponent extends Component {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipelinePageState') pipelinePageState;
 
-  @service workflowDataReload;
+  @service('workflowDataReload') workflowDataReload;
 
   @service('emt-themes/ember-bootstrap-v5') emberModelTableBootstrapTheme;
+
+  pipelineId;
 
   event;
 
@@ -39,20 +41,12 @@ export default class PipelineJobsTableComponent extends Component {
   constructor() {
     super(...arguments);
 
+    this.pipelineId = this.args.pipelineId;
     this.event = this.args.event;
     this.data = null;
     this.previousBuilds = new Map();
 
     this.setColumnData();
-    this.setJobs();
-
-    this.dataReloader = new DataReloader(
-      { shuttle: this.shuttle, workflowDataReload: this.workflowDataReload },
-      Array.from(this.jobs.keys()),
-      INITIAL_PAGE_SIZE,
-      this.args.event ? 1 : null,
-      this.setData
-    );
   }
 
   setColumnData() {
@@ -147,9 +141,16 @@ export default class PipelineJobsTableComponent extends Component {
     this.dataReloader.stop(this.event?.id);
   }
 
-  @action
-  initialize(element) {
-    dom.i2svg({ node: element });
+  initialize() {
+    this.setJobs();
+
+    this.dataReloader = new DataReloader(
+      { shuttle: this.shuttle, workflowDataReload: this.workflowDataReload },
+      Array.from(this.jobs.keys()),
+      INITIAL_PAGE_SIZE,
+      this.args.event ? 1 : null,
+      this.setData
+    );
 
     if (!this.event) {
       this.dataReloader.fetchBuildsForJobs().then(() => {});
@@ -171,11 +172,25 @@ export default class PipelineJobsTableComponent extends Component {
   }
 
   @action
-  update(element, [event]) {
+  insert(element) {
+    dom.i2svg({ node: element });
+
+    this.initialize();
+  }
+
+  @action
+  update(element, [pipelineId, event]) {
     this.data = [];
 
     this.dataReloader.stop(this.event.id);
     this.event = event;
+
+    if (this.pipelineId !== pipelineId) {
+      this.initialize();
+
+      return;
+    }
+
     this.dataReloader.start(this.event.id);
   }
 

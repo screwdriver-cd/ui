@@ -119,6 +119,7 @@
           {{/if}}
         {{else if this.showEventJobsTable}}
           <Pipeline::Jobs::Table
+            @pipelineId={{@pipelineId}}
             @event={{this.event}}
           />
         {{/if}}

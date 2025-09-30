@@ -16,8 +16,8 @@
   @themeInstance={{this.theme}}
   @onDisplayDataChanged={{this.onDisplayDataChanged}}
 
-  {{did-insert this.initialize}}
-  {{did-update this.update @event}}
+  {{did-insert this.insert}}
+  {{did-update this.update @pipelineId @event}}
 
   as |MT|
 >
