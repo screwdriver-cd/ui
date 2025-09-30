@@ -9,8 +9,6 @@ export default class TokensComponent extends Component {
 
   @service('tokens') tokensService;
 
-  @service pipelinePageState;
-
   @tracked errorMessage;
 
   @tracked isCreateTokenButtonDisabled;
@@ -19,15 +17,22 @@ export default class TokensComponent extends Component {
 
   @tracked tokens;
 
+  pipelineId;
+
   constructor() {
     super(...arguments);
 
+    this.pipelineId = this.args.pipelineId;
+    this.initialize();
+  }
+
+  initialize() {
     this.isCreateTokenButtonDisabled = true;
     this.isCreateTokenModalOpen = false;
     this.tokens = [];
 
     this.tokensService
-      .fetchTokens(this.pipelinePageState.getPipelineId())
+      .fetchTokens(this.pipelineId)
       .then(() => {
         this.isCreateTokenButtonDisabled = false;
         this.tokens = this.tokensService.tokens;
@@ -44,6 +49,12 @@ export default class TokensComponent extends Component {
 
   get scope() {
     return this.args.type === 'pipeline' ? 'this pipeline' : 'your account';
+  }
+
+  @action
+  update(element, [pipelineId]) {
+    this.pipelineId = pipelineId;
+    this.initialize();
   }
 
   @action

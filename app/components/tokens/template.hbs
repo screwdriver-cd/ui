@@ -1,4 +1,7 @@
-<div class="tokens-container">
+<div
+  class="tokens-container"
+  {{did-update this.update @pipelineId}}
+>
   {{#if this.errorMessage}}
     <InfoMessage
       id="error-message"
