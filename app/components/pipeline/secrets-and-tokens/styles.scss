@@ -1,6 +1,6 @@
+@use 'screwdriver-colors' as colors;
 @use 'variables' as variables;
 @use 'secrets/styles' as secrets;
-@use 'tab/styles' as tab;
 @use 'secrets/modal/create/styles' as modalCreate;
 @use 'secrets/modal/delete/styles' as modalDelete;
 @use 'secrets/modal/edit/styles' as modalEdit;
@@ -15,10 +15,35 @@
 
     $pipeline-tab-height: variables.$pipeline-tab-height;
 
-    @include tab.styles;
-
     #secrets-and-tokens-tab {
+      display: flex;
+      align-items: center;
       height: $pipeline-tab-height;
+
+      ul {
+        border: none;
+
+        li {
+          padding-left: 1rem;
+          padding-right: 1rem;
+          text-align: center;
+
+          &.active {
+            border-bottom: 0.2rem solid colors.$sd-link;
+          }
+
+          a {
+            color: colors.$sd-text-med;
+            border: none;
+            background-color: transparent;
+
+            &.active {
+              color: colors.$sd-link;
+              font-weight: variables.$weight-bold;
+            }
+          }
+        }
+      }
     }
 
     #secrets-and-tokens-container {

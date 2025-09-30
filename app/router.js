@@ -153,6 +153,7 @@ Router.map(function route() {
           this.route('metrics');
           this.route('preferences');
         });
+        this.route('tokens');
       }
     );
   });
