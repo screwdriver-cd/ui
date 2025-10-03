@@ -2,9 +2,9 @@ import Route from '@ember/routing/route';
 import { service } from '@ember/service';
 
 export default class V2PipelineChildPipelinesRoute extends Route {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
   beforeModel() {
     const pipeline = this.pipelinePageState.getPipeline();
@@ -22,5 +22,9 @@ export default class V2PipelineChildPipelinesRoute extends Route {
       .then(pipelines => {
         this.pipelinePageState.setChildPipelines(pipelines);
       });
+
+    return {
+      pipelineId
+    };
   }
 }

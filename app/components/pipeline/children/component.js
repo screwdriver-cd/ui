@@ -7,6 +7,29 @@ export default class PipelineChildrenComponent extends Component {
 
   @tracked childrenPipelineStarted = false;
 
+  @tracked showTable;
+
+  pipelineId;
+
+  constructor() {
+    super(...arguments);
+
+    this.pipelineId = this.args.pipelineId;
+    this.showTable = true;
+  }
+
+  rerenderTable() {
+    this.showTable = false;
+  }
+
+  @action
+  update(element, [pipelineId]) {
+    if (pipelineId !== this.pipelineId) {
+      this.pipelineId = pipelineId;
+      this.rerenderTable();
+    }
+  }
+
   @action
   showStartAllChildrenModal() {
     this.isStartAllChildrenModalOpen = true;
@@ -19,5 +42,10 @@ export default class PipelineChildrenComponent extends Component {
     if (childrenPipelineStarted) {
       this.childrenPipelineStarted = true;
     }
+  }
+
+  @action
+  onTableDestroy() {
+    this.showTable = true;
   }
 }
