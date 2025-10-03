@@ -192,6 +192,20 @@
       <div class="pipeline-admin-list">
         {{this.pipelineAdmins}}
       </div>
+
+      {{#each-in this.adminUsersFromOtherSCMContexts as |scmContext users|}}
+        <div class="pipeline-admins-subtitle">
+          Admins from {{scmContext}}.
+          <FaIcon
+            @icon="circle-question"
+            @title="These users have privilege to change the Checkout URL to a repository in {{scmContext}}."
+          />
+        </div>
+
+        <div class="pipeline-admin-list">
+          {{users}}
+        </div>
+      {{/each-in}}
     </div>
   </div>
 

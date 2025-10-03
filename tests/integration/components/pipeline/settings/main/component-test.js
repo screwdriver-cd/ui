@@ -21,6 +21,7 @@ module('Integration | Component | pipeline/settings/main', function (hooks) {
     };
 
     sinon.stub(pipelinePageState, 'getPipeline').returns(pipelineMock);
+    sinon.stub(pipelinePageState, 'getAdminUsers').returns([]);
   });
 
   test('it renders', async function (assert) {

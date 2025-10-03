@@ -23,10 +23,14 @@
           font-style: italic;
         }
 
+        .pipeline-admins-subtitle {
+          margin-top: 1rem;
+        }
+
         .pipeline-admin-list {
           font-weight: variables.$weight-bold;
-          margin-top: 1rem;
-          margin-left: 1rem;
+          margin-top: 0.5rem;
+          margin-left: 0.5rem;
           max-height: 5rem;
           overflow: auto;
         }

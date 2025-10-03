@@ -11,6 +11,8 @@ export default class PipelinePageStateService extends Service {
 
   jobs;
 
+  adminUsers;
+
   isPr;
 
   onForceReloadPipelineHeader;
@@ -20,6 +22,7 @@ export default class PipelinePageStateService extends Service {
     this.childPipelines = [];
     this.triggers = [];
     this.stages = [];
+    this.adminUsers = [];
     this.jobs = [];
     this.isPr = false;
     this.onForceReloadPipelineHeader = null;
@@ -67,6 +70,14 @@ export default class PipelinePageStateService extends Service {
 
   getJobs() {
     return this.jobs;
+  }
+
+  setAdminUsers(adminUsers) {
+    this.adminUsers = adminUsers;
+  }
+
+  getAdminUsers() {
+    return this.adminUsers;
   }
 
   setIsPr(isPr) {
