@@ -3,13 +3,46 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 export default class PipelineSettingsJobsComponent extends Component {
-  @tracked disableEnableMultipleJobsButton = false;
+  @tracked disableEnableMultipleJobsButton;
 
-  @tracked disableDisableMultipleJobsButton = false;
+  @tracked disableDisableMultipleJobsButton;
 
-  @tracked isToggleMultiple = false;
+  @tracked isToggleMultiple;
 
-  @tracked isEnable = false;
+  @tracked isEnable;
+
+  @tracked showTable;
+
+  pipelineId;
+
+  constructor() {
+    super(...arguments);
+
+    this.pipelineId = this.args.pipelineId;
+    this.initialize();
+    this.showTable = true;
+  }
+
+  initialize() {
+    this.disableEnableMultipleJobsButton = false;
+    this.disableDisableMultipleJobsButton = false;
+    this.isToggleMultiple = false;
+    this.isEnable = false;
+  }
+
+  rerenderTable() {
+    this.showTable = false;
+  }
+
+  @action
+  update(element, [pipelineId]) {
+    if (pipelineId !== this.pipelineId) {
+      this.pipelineId = pipelineId;
+
+      this.initialize();
+      this.rerenderTable();
+    }
+  }
 
   @action
   toggleMultiple(isEnable) {
@@ -23,6 +56,7 @@ export default class PipelineSettingsJobsComponent extends Component {
       this.disableEnableMultipleJobsButton = false;
       this.disableDisableMultipleJobsButton = true;
     }
+    this.rerenderTable();
   }
 
   @action
@@ -30,5 +64,11 @@ export default class PipelineSettingsJobsComponent extends Component {
     this.isToggleMultiple = false;
     this.disableEnableMultipleJobsButton = false;
     this.disableDisableMultipleJobsButton = false;
+    this.rerenderTable();
+  }
+
+  @action
+  onTableDestroy() {
+    this.showTable = true;
   }
 }

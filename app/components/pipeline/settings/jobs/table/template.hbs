@@ -19,7 +19,7 @@
       <BsButton
         id="toggle-multiple-jobs-button"
         @type="primary"
-        @defaultText={{if (eq @jobState "ENABLED") "Disable selected jobs" "Enable selected jobs"}}
+        @defaultText={{this.toggleText}}
         @onClick={{fn this.toggleMultipleJobs}}
         disabled={{if (eq this.selectedJobs.length 0) true false}}
       />
@@ -28,7 +28,7 @@
       {{#if this.isToggleMultipleModalOpen}}
         <Pipeline::Modal::ToggleJob
           @jobs={{this.selectedJobs}}
-          @toggleAction={{if (eq @jobState "ENABLED") "Disable" "Enable"}}
+          @toggleAction={{this.toggleAction}}
           @closeModal={{this.closeToggleMultipleModal}}
         />
       {{/if}}

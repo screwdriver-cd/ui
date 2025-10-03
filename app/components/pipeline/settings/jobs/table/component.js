@@ -47,6 +47,12 @@ export default class PipelineSettingsJobsTableComponent extends Component {
     this.stagesFilter = Array.from(stages).sort((a, b) => a.localeCompare(b));
   }
 
+  willDestroy() {
+    super.willDestroy();
+
+    this.args.onDestroy();
+  }
+
   get theme() {
     const theme = this.emberModelTableBootstrapTheme;
 
@@ -122,6 +128,14 @@ export default class PipelineSettingsJobsTableComponent extends Component {
     return this.selectedJobs.length;
   }
 
+  get toggleAction() {
+    return this.args.isEnable ? 'Enable' : 'Disable';
+  }
+
+  get toggleText() {
+    return `${this.toggleAction} selected jobs`;
+  }
+
   setJobsData() {
     this.jobIdsDisplaying = new Set();
     this.data = this.pipelinePageState
@@ -131,8 +145,10 @@ export default class PipelineSettingsJobsTableComponent extends Component {
           return false;
         }
 
-        if (this.args.jobState) {
-          return job.state === this.args.jobState;
+        if (this.args.isToggleMultiple) {
+          const jobState = this.args.isEnable ? 'DISABLED' : 'ENABLED';
+
+          return job.state === jobState;
         }
 
         return true;
