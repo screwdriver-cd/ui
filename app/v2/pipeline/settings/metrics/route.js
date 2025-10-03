@@ -7,14 +7,18 @@ export default class V2PipelineSettingsMetricsRoute extends Route {
   @service('pipeline-page-state') pipelinePageState;
 
   async model() {
-    if (this.pipelinePageState.getJobs().length === 0) {
-      const pipelineId = this.pipelinePageState.getPipelineId();
+    const pipelineId = this.pipelinePageState.getPipelineId();
 
+    if (this.pipelinePageState.getJobs().length === 0) {
       await this.shuttle
         .fetchFromApi('get', `/pipelines/${pipelineId}/jobs`)
         .then(jobs => {
           this.pipelinePageState.setJobs(jobs);
         });
     }
+
+    return {
+      pipelineId
+    };
   }
 }
