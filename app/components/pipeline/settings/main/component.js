@@ -78,6 +78,30 @@ export default class PipelineSettingsMainComponent extends Component {
     return admins.sort().join(', ');
   }
 
+  get adminUsersFromOtherSCMContexts() {
+    const pipelineSCMContext = this.pipelinePageState.getPipeline().scmContext;
+    const adminUsers = this.pipelinePageState.getAdminUsers();
+
+    const scmContextToAdminUserMap = adminUsers.reduce((map, user) => {
+      const context = user.scmContext;
+
+      if (!map[context]) {
+        map[context] = [];
+      }
+      map[context].push(user.username);
+
+      return map;
+    }, {});
+
+    delete scmContextToAdminUserMap[pipelineSCMContext];
+
+    return Object.fromEntries(
+      Object.entries(scmContextToAdminUserMap).map(([scmContext, users]) => {
+        return [scmContext, users.join(', ')];
+      })
+    );
+  }
+
   @action
   update(element, [pipelineId]) {
     if (pipelineId !== this.pipeline.id) {
