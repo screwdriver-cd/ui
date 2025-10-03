@@ -79,6 +79,13 @@ export default class PipelineSettingsMainComponent extends Component {
   }
 
   @action
+  update(element, [pipelineId]) {
+    if (pipelineId !== this.pipeline.id) {
+      this.pipeline = this.pipelinePageState.getPipeline();
+    }
+  }
+
+  @action
   showUpdatePipelineModal() {
     this.isUpdatePipelineModalOpen = true;
   }
