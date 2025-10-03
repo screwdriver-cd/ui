@@ -9,13 +9,22 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    let shuttle;
+
+    let pipelinePageState;
+
+    hooks.beforeEach(function () {
+      shuttle = this.owner.lookup('service:shuttle');
+      pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+    });
+
     test('it renders', async function (assert) {
       this.setProperties({
         closeModal: () => {}
       });
 
       await render(
-        hbs`<Pipeline::Modal::StartChildren
+        hbs`<Pipeline::Children::Modal::StartChildren
             @closeModal={{this.closeModal}}
         />`
       );
@@ -29,11 +38,6 @@ module(
     });
 
     test('it sets error message when starting child pipelines fails', async function (assert) {
-      const shuttle = this.owner.lookup('service:shuttle');
-      const pipelinePageState = this.owner.lookup(
-        'service:pipeline-page-state'
-      );
-
       sinon.stub(pipelinePageState, 'getPipelineId').returns(123);
       sinon
         .stub(shuttle, 'fetchFromApi')
@@ -44,7 +48,7 @@ module(
       });
 
       await render(
-        hbs`<Pipeline::Modal::StartChildren
+        hbs`<Pipeline::Children::Modal::StartChildren
             @closeModal={{this.closeModal}}
         />`
       );
@@ -54,10 +58,6 @@ module(
     });
 
     test('it closes modal with correct value on successful start', async function (assert) {
-      const shuttle = this.owner.lookup('service:shuttle');
-      const pipelinePageState = this.owner.lookup(
-        'service:pipeline-page-state'
-      );
       const closeModalSpy = sinon.spy();
 
       sinon.stub(pipelinePageState, 'getPipelineId').returns(123);
@@ -68,7 +68,7 @@ module(
       });
 
       await render(
-        hbs`<Pipeline::Modal::StartChildren
+        hbs`<Pipeline::Children::Modal::StartChildren
             @closeModal={{this.closeModal}}
         />`
       );
