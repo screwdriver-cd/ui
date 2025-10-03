@@ -51,6 +51,12 @@ export default class PipelineSettingsMetricsTableComponent extends Component {
     this.stagesFilter = Array.from(stages).sort((a, b) => a.localeCompare(b));
   }
 
+  willDestroy() {
+    super.willDestroy();
+
+    this.args.onDestroy();
+  }
+
   get theme() {
     const theme = this.emberModelTableBootstrapTheme;
 
