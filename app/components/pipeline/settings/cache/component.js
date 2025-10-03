@@ -7,6 +7,29 @@ export default class PipelineSettingsCacheComponent extends Component {
 
   @tracked isClearPipelineCacheButtonDisabled = false;
 
+  @tracked showTable;
+
+  pipelineId;
+
+  constructor() {
+    super(...arguments);
+
+    this.pipelineId = this.args.pipelineId;
+    this.showTable = true;
+  }
+
+  rerenderTable() {
+    this.showTable = false;
+  }
+
+  @action
+  update(element, [pipelineId]) {
+    if (pipelineId !== this.pipelineId) {
+      this.pipelineId = pipelineId;
+      this.rerenderTable();
+    }
+  }
+
   @action
   openClearPipelineCacheModal() {
     this.isClearPipelineCacheModalOpen = true;
@@ -19,5 +42,10 @@ export default class PipelineSettingsCacheComponent extends Component {
     if (wasSuccessful) {
       this.isClearPipelineCacheButtonDisabled = true;
     }
+  }
+
+  @action
+  onTableDestroy() {
+    this.showTable = true;
   }
 }
