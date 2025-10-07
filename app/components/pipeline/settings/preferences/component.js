@@ -10,6 +10,8 @@ export default class PipelineSettingsPreferencesComponent extends Component {
 
   @service('settings') settings;
 
+  @tracked pipeline;
+
   @tracked errorMessage;
 
   @tracked isShowTriggers;
@@ -20,13 +22,22 @@ export default class PipelineSettingsPreferencesComponent extends Component {
 
   @tracked isShowPrJobs;
 
-  @tracked isUserSettingsDisabled = false;
+  @tracked isUserSettingsDisabled;
 
   userSettings;
 
   constructor() {
     super(...arguments);
 
+    if (!this.settings.getSettings()) {
+      this.errorMessage = 'Settings not loaded, please refresh the page';
+      this.isUserSettingsDisabled = true;
+    } else {
+      this.initialize();
+    }
+  }
+
+  initialize() {
     this.pipeline = this.pipelinePageState.getPipeline();
     const { settings } = this.pipeline;
 
@@ -34,12 +45,18 @@ export default class PipelineSettingsPreferencesComponent extends Component {
     this.isFilterSchedulerEvents = !!settings?.filterSchedulerEvents;
     this.isFilterEventsForNoBuilds = !!settings?.filterEventsForNoBuilds;
 
-    if (!this.settings.getSettings()) {
-      this.errorMessage = 'Settings not loaded, please refresh the page';
-      this.isUserSettingsDisabled = true;
-    }
     this.userSettings = this.settings.getSettingsForPipeline(this.pipeline.id);
     this.isShowPrJobs = this.userSettings?.showPRJobs || false;
+
+    this.isUserSettingsDisabled = false;
+  }
+
+  @action
+  update(element, [pipelineId]) {
+    if (pipelineId !== this.pipeline.id) {
+      this.initialize();
+      this.errorMessage = null;
+    }
   }
 
   @action

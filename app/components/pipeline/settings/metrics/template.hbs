@@ -1,4 +1,7 @@
-<div id="pipeline-settings-metrics-tab-contents">
+<div
+  id="pipeline-settings-metrics-tab-contents"
+  {{did-update this.update @pipelineId}}
+>
   <div class="section">
     <div class="text-container">
       <div class="title">
@@ -38,21 +41,11 @@
   </div>
 
   <div id="metrics-table">
-    {{#if this.isToggleMultiple}}
-      {{#if this.isInclude}}
-        <Pipeline::Settings::Metrics::Table
-          @isToggleMultiple={{true}}
-          @isInclude={{true}}
-        />
-      {{else}}
-        <Pipeline::Settings::Metrics::Table
-          @isToggleMultiple={{true}}
-          @isInclude={{false}}
-        />
-      {{/if}}
-    {{else}}
+    {{#if this.showTable}}
       <Pipeline::Settings::Metrics::Table
-        @isToggleMultiple={{false}}
+        @isToggleMultiple={{this.isToggleMultiple}}
+        @isInclude={{this.isInclude}}
+        @onDestroy={{this.onDestroyTable}}
       />
     {{/if}}
   </div>

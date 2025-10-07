@@ -1,4 +1,7 @@
-<div id="pipeline-settings-cache-tab-contents">
+<div
+  id="pipeline-settings-cache-tab-contents"
+  {{did-update this.update @pipelineId}}
+>
   <div class="section">
     <div class="text-container">
       <div class="title">
@@ -25,6 +28,10 @@
   </div>
 
   <div id="jobs-cache-table">
-    <Pipeline::Settings::Cache::Table />
+    {{#if this.showTable}}
+      <Pipeline::Settings::Cache::Table
+        @onDestroy={{this.onTableDestroy}}
+      />
+    {{/if}}
   </div>
 </div>
