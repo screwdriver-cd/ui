@@ -106,7 +106,7 @@ export default class PipelineSettingsMainComponent extends Component {
         return {
           iconType,
           displayName,
-          admins: users.sort().join(',')
+          admins: users.sort().join(', ')
         };
       }
     );
