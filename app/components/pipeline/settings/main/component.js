@@ -85,6 +85,10 @@ export default class PipelineSettingsMainComponent extends Component {
     const scmContextToAdminUserMap = adminUsers.reduce((map, user) => {
       const context = user.scmContext;
 
+      if (context === pipelineSCMContext) {
+        return map;
+      }
+
       if (!map[context]) {
         map[context] = [];
       }
@@ -92,8 +96,6 @@ export default class PipelineSettingsMainComponent extends Component {
 
       return map;
     }, {});
-
-    delete scmContextToAdminUserMap[pipelineSCMContext];
 
     return Object.fromEntries(
       Object.entries(scmContextToAdminUserMap).map(([scmContext, users]) => {
