@@ -11,6 +11,8 @@ export default class PipelineSettingsMainComponent extends Component {
 
   @service('pipeline-page-state') pipelinePageState;
 
+  @service('scm') scm;
+
   @tracked isUpdatePipelineModalOpen = false;
 
   @tracked isUpdatePipelineAliasModalOpen = false;
@@ -76,6 +78,38 @@ export default class PipelineSettingsMainComponent extends Component {
     );
 
     return admins.sort().join(', ');
+  }
+
+  get adminUsersFromOtherSCMContexts() {
+    const pipelineSCMContext = this.pipelinePageState.getPipeline().scmContext;
+    const adminUsers = this.pipelinePageState.getAdminUsers();
+
+    const scmContextToAdminUserMap = adminUsers.reduce((map, user) => {
+      const context = user.scmContext;
+
+      if (context === pipelineSCMContext) {
+        return map;
+      }
+
+      if (!map[context]) {
+        map[context] = [];
+      }
+      map[context].push(user.username);
+
+      return map;
+    }, {});
+
+    return Object.entries(scmContextToAdminUserMap).map(
+      ([scmContext, users]) => {
+        const { iconType, displayName } = this.scm.getScm(scmContext);
+
+        return {
+          iconType,
+          displayName,
+          admins: users.sort().join(', ')
+        };
+      }
+    );
   }
 
   @action
