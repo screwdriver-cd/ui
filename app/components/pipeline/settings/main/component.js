@@ -11,6 +11,8 @@ export default class PipelineSettingsMainComponent extends Component {
 
   @service('pipeline-page-state') pipelinePageState;
 
+  @service('scm') scm;
+
   @tracked isUpdatePipelineModalOpen = false;
 
   @tracked isUpdatePipelineAliasModalOpen = false;
@@ -97,10 +99,16 @@ export default class PipelineSettingsMainComponent extends Component {
       return map;
     }, {});
 
-    return Object.fromEntries(
-      Object.entries(scmContextToAdminUserMap).map(([scmContext, users]) => {
-        return [scmContext, users.join(', ')];
-      })
+    return Object.entries(scmContextToAdminUserMap).map(
+      ([scmContext, users]) => {
+        const { iconType, displayName } = this.scm.getScm(scmContext);
+
+        return {
+          iconType,
+          displayName,
+          admins: users.sort().join(',')
+        };
+      }
     );
   }
 
