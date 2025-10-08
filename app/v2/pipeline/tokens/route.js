@@ -10,6 +10,9 @@ export default class V2PipelineTokensRoute extends Route {
     // Guests should not access this page
     if (this.session.data.authenticated.isGuest) {
       this.replaceWith('v2.pipeline');
+    } else {
+      this.pipelinePageState.setRoute(this.routeName);
+      this.pipelinePageState.forceReloadPipelineHeader();
     }
   }
 

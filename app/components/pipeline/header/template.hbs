@@ -58,11 +58,14 @@
         </BsTooltip>
       </dd.toggle>
       <dd.menu as |ddm|>
-        {{#each (await this.sameRepoPipeline) as |pipe|}}
+        {{#each (await this.sameRepoPipelines) as |pipe|}}
           <ddm.item>
-            <a href={{pipe.url}}>
+            <LinkTo
+              @route={{pipe.route}}
+              @model={{pipe.id}}
+            >
               {{svg-jar "link" class="img"}} {{pipe.branchAndRootDir}}
-            </a>
+            </LinkTo>
           </ddm.item>
         {{else}}
           <span>

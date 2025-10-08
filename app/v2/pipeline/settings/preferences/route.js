@@ -6,6 +6,11 @@ export default class V2PipelineSettingsPreferencesRoute extends Route {
 
   @service('settings') settings;
 
+  beforeModel() {
+    this.pipelinePageState.setRoute(this.routeName);
+    this.pipelinePageState.forceReloadPipelineHeader();
+  }
+
   async model() {
     if (!this.settings.getSettings()) {
       await this.settings.fetchSettings();

@@ -15,6 +15,8 @@ export default class PipelinePageStateService extends Service {
 
   isPr;
 
+  route;
+
   onForceReloadPipelineHeader;
 
   clear() {
@@ -25,7 +27,7 @@ export default class PipelinePageStateService extends Service {
     this.adminUsers = [];
     this.jobs = [];
     this.isPr = false;
-    this.onForceReloadPipelineHeader = null;
+    this.route = null;
   }
 
   setPipeline(pipeline) {
@@ -86,6 +88,14 @@ export default class PipelinePageStateService extends Service {
 
   getIsPr() {
     return this.isPr;
+  }
+
+  setRoute(route) {
+    this.route = route;
+  }
+
+  getRoute() {
+    return this.route;
   }
 
   setOnForceReloadPipelineHeader(callback) {

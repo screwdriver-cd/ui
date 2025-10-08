@@ -18,6 +18,11 @@ export default class NewPipelinePullsRoute extends Route {
     this.pipelinePageState.setIsPr(false);
   }
 
+  beforeModel() {
+    this.pipelinePageState.setRoute(this.routeName);
+    this.pipelinePageState.forceReloadPipelineHeader();
+  }
+
   async model() {
     const pipelineId = this.pipelinePageState.getPipelineId();
 

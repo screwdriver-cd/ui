@@ -20,7 +20,7 @@ export default class PipelineHeaderComponent extends Component {
 
   @tracked pipeline;
 
-  @tracked sameRepoPipeline = [];
+  @tracked sameRepoPipelines = [];
 
   constructor() {
     super(...arguments);
@@ -29,7 +29,22 @@ export default class PipelineHeaderComponent extends Component {
     this.getPipelinesWithSameRepo().then(() => {});
     this.pipelinePageState.setOnForceReloadPipelineHeader(() => {
       this.pipeline = this.pipelinePageState.getPipeline();
+
+      if (this.sameRepoPipelines.length > 0) {
+        this.sameRepoPipelines = this.sameRepoPipelines.map(
+          sameRepoPipeline => ({
+            ...sameRepoPipeline,
+            route: this.pipelinePageState.getRoute()
+          })
+        );
+      }
     });
+  }
+
+  willDestroy() {
+    super.willDestroy();
+
+    this.pipelinePageState.setOnForceReloadPipelineHeader(null);
   }
 
   get pipelineDescription() {
@@ -73,7 +88,7 @@ export default class PipelineHeaderComponent extends Component {
     if (this.pipeline.scmRepo && this.pipeline.scmUri) {
       const { scmUri } = this.pipeline;
 
-      this.sameRepoPipeline = await this.shuttle
+      this.sameRepoPipelines = await this.shuttle
         .fetchFromApi(
           'get',
           `/pipelines?scmUri=${scmUri}&sortBy=scmUri&sort=ascending`
@@ -82,7 +97,8 @@ export default class PipelineHeaderComponent extends Component {
           pipelines
             .filter(pipeline => pipeline.scmUri !== scmUri)
             .map(pipeline => ({
-              url: `/v2/pipelines/${pipeline.id}`,
+              id: pipeline.id,
+              route: this.pipelinePageState.getRoute(),
               branchAndRootDir: pipeline.scmRepo.rootDir
                 ? `${pipeline.scmRepo.branch}:${pipeline.scmRepo.rootDir}`
                 : pipeline.scmRepo.branch

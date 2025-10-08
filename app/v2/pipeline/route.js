@@ -3,11 +3,11 @@ import { service } from '@ember/service';
 import { NotFoundError } from 'screwdriver-ui/utils/not-found-error';
 
 export default class NewPipelineRoute extends Route {
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service banners;
+  @service('banners') banners;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
   async model(params) {
     const pipelineId = params.pipeline_id;
