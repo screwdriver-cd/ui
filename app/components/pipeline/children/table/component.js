@@ -5,11 +5,11 @@ import { tracked } from '@glimmer/tracking';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 
 export default class PipelineChildrenTableComponent extends Component {
-  @service scm;
+  @service('scm') scm;
 
-  @service shuttle;
+  @service('shuttle') shuttle;
 
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
   @service('emt-themes/ember-bootstrap-v5') emberModelTableBootstrapTheme;
 
@@ -41,6 +41,12 @@ export default class PipelineChildrenTableComponent extends Component {
         }
       };
     });
+  }
+
+  willDestroy() {
+    super.willDestroy();
+
+    this.args.onDestroy();
   }
 
   get theme() {
