@@ -6,6 +6,11 @@ export default class V2PipelineSettingsJobsRoute extends Route {
 
   @service('pipeline-page-state') pipelinePageState;
 
+  beforeModel() {
+    this.pipelinePageState.setRoute(this.routeName);
+    this.pipelinePageState.forceReloadPipelineHeader();
+  }
+
   async model() {
     const pipelineId = this.pipelinePageState.getPipelineId();
 
