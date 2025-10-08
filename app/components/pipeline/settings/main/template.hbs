@@ -181,7 +181,7 @@
       <div class="title">
         Admins
       </div>
-      <div>
+      <div class="pipeline-admin-description">
         Users with admin permission to this pipeline.
         <FaIcon
           @icon="circle-question"
@@ -194,8 +194,8 @@
       </div>
 
       {{#each-in this.adminUsersFromOtherSCMContexts as |scmContext users|}}
-        <div class="pipeline-admins-subtitle">
           Admins from {{scmContext}}.
+        <div class="pipeline-admin-description">
           <FaIcon
             @icon="circle-question"
             @title="These users have privilege to change the Checkout URL to a repository in {{scmContext}}."
