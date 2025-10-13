@@ -42,7 +42,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get action() {
-    return this.args.job.status ? 'restart' : 'start';
+    return this.args.newEventMode;
   }
 
   get truncatedMessage() {
@@ -102,7 +102,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
       this.session.data.authenticated.username,
       this.pipeline.id,
       this.args.job,
-      this.args.event,
+      this.action === 'restart' ? this.args.event : null,
       this.parameters,
       this.isFrozen,
       this.reason

@@ -43,13 +43,15 @@ module(
       this.setProperties({
         event,
         job,
-        closeModal: () => {}
+        closeModal: () => {},
+        newEventMode: 'start'
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -69,13 +71,15 @@ module(
       this.setProperties({
         event,
         job,
-        closeModal: () => {}
+        closeModal: () => {},
+        newEventMode: 'restart'
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -87,7 +91,8 @@ module(
         event,
         job,
         stage: { name: 'stage' },
-        closeModal: () => {}
+        closeModal: () => {},
+        newEventMode: 'start'
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
@@ -95,6 +100,7 @@ module(
             @job={{this.job}}
             @stage={{this.stage}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -108,13 +114,15 @@ module(
       this.setProperties({
         event,
         job,
-        closeModal: () => {}
+        closeModal: () => {},
+        newEventMode: 'start'
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -127,13 +135,15 @@ module(
       this.setProperties({
         event,
         job,
-        closeModal: () => {}
+        closeModal: () => {},
+        newEventMode: 'start'
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -146,13 +156,15 @@ module(
       this.setProperties({
         event,
         job,
-        closeModal: () => {}
+        closeModal: () => {},
+        newEventMode: 'start'
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -171,13 +183,15 @@ module(
       this.setProperties({
         event,
         job,
-        closeModal: () => {}
+        closeModal: () => {},
+        newEventMode: 'start'
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -191,13 +205,15 @@ module(
           sha: 'deadbeef0123456789'
         },
         job: { name: 'main', status: 'FROZEN' },
-        closeModal: () => {}
+        closeModal: () => {},
+        newEventMode: 'restart'
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -210,13 +226,15 @@ module(
       this.setProperties({
         event,
         job,
-        closeModal: () => {}
+        closeModal: () => {},
+        newEventMode: 'restart'
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -233,7 +251,8 @@ module(
       this.setProperties({
         event,
         job,
-        closeModal: closeModalSpy
+        closeModal: closeModalSpy,
+        newEventMode: 'start'
       });
 
       await render(
@@ -241,6 +260,7 @@ module(
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -263,7 +283,8 @@ module(
       this.setProperties({
         event,
         job,
-        closeModal: () => {}
+        closeModal: () => {},
+        newEventMode: 'start'
       });
 
       await render(
@@ -271,6 +292,7 @@ module(
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
+            @newEventMode={{this.newEventMode}}
         />`
       );
 
