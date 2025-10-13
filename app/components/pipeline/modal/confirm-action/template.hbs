@@ -54,7 +54,7 @@
       <Pipeline::Parameters
         @action={{this.action}}
         @job={{@job}}
-        @event={{@event}}
+        @event={{if (eq this.action "restart") @event null}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />
     {{/if}}
