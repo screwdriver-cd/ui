@@ -34,15 +34,20 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   latestCommitEvent;
 
+  /**
+   * @type {string} Possible values 'start', 'restart'.
+   *                'start' indicates that a new event should be started without inheriting the context from the current event.
+   *                'restart' indicates that a new event should be started with inheriting the context from the current event.
+   */
+  action;
+
   constructor() {
     super(...arguments);
 
+    this.action = this.args.newEventMode;
+
     this.pipeline = this.pipelinePageState.getPipeline();
     this.latestCommitEvent = this.workflowDataReload.getLatestCommitEvent();
-  }
-
-  get action() {
-    return this.args.newEventMode;
   }
 
   get truncatedMessage() {
