@@ -37,5 +37,9 @@ export default class OptInRouteMappingService extends Service {
       'v2.pipeline.settings.preferences',
       'pipeline.options'
     );
+
+    this.routeMappings.set('pipeline.secrets', 'v2.pipeline.secrets.index');
+    this.routeMappings.set('v2.pipeline.secrets.index', 'pipeline.secrets');
+    this.routeMappings.set('v2.pipeline.secrets.tokens', 'pipeline.secrets');
   }
 }
