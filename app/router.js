@@ -131,7 +131,9 @@ Router.map(function route() {
       'pipeline',
       { path: '/pipelines/:pipeline_id' },
       function pipelinesRoute() {
-        this.route('secrets');
+        this.route('secrets', function secretsRoute() {
+          this.route('tokens');
+        });
         this.route('options');
         this.route('metrics');
         this.route('child-pipelines');
@@ -153,7 +155,6 @@ Router.map(function route() {
           this.route('metrics');
           this.route('preferences');
         });
-        this.route('tokens');
       }
     );
   });
