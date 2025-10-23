@@ -184,7 +184,7 @@ module(
         event,
         job,
         closeModal: () => {},
-        newEventMode: 'start'
+        newEventMode: 'restart'
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction

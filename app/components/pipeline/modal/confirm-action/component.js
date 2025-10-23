@@ -41,29 +41,34 @@ export default class PipelineModalConfirmActionComponent extends Component {
    */
   action;
 
+  event;
+
   constructor() {
     super(...arguments);
 
     this.action = this.args.newEventMode;
+    this.commit = this.args.event.commit;
+    this.commit.sha = this.args.event.sha;
+    this.event = this.action === 'restart' ? this.args.event : null;
 
     this.pipeline = this.pipelinePageState.getPipeline();
     this.latestCommitEvent = this.workflowDataReload.getLatestCommitEvent();
   }
 
   get truncatedMessage() {
-    return truncateMessage(this.args.event.commit.message);
+    return truncateMessage(this.commit.message);
   }
 
   get isLatestCommitEvent() {
-    return this.args.event.sha === this.latestCommitEvent?.sha;
+    return this.commit.sha === this.latestCommitEvent?.sha;
   }
 
   get commitUrl() {
-    return this.args.event.commit.url;
+    return this.commit.url;
   }
 
   get truncatedSha() {
-    return this.args.event.sha.substring(0, 7);
+    return this.commit.sha.substring(0, 7);
   }
 
   get isLatestNonPrCommitEvent() {
@@ -75,7 +80,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isParameterized() {
-    return isParameterized(this.pipeline, this.args.event);
+    return isParameterized(this.pipeline, this.event);
   }
 
   get isSubmitButtonDisabled() {
@@ -107,10 +112,11 @@ export default class PipelineModalConfirmActionComponent extends Component {
       this.session.data.authenticated.username,
       this.pipeline.id,
       this.args.job,
-      this.action === 'restart' ? this.args.event : null,
+      this.event,
       this.parameters,
       this.isFrozen,
-      this.reason
+      this.reason,
+      this.commit
     );
 
     await this.shuttle

@@ -7,6 +7,7 @@
  * @param parameters
  * @param isFrozen
  * @param reason
+ * @param commit
  * @returns {{causeMessage: string, pipelineId}}
  */
 export function buildPostBody( // eslint-disable-line import/prefer-default-export
@@ -16,7 +17,8 @@ export function buildPostBody( // eslint-disable-line import/prefer-default-expo
   event,
   parameters,
   isFrozen,
-  reason
+  reason,
+  commit
 ) {
   const data = {
     pipelineId,
@@ -35,6 +37,8 @@ export function buildPostBody( // eslint-disable-line import/prefer-default-expo
       data.prNum = prNum;
       data.startFrom = job ? `PR-${prNum}:${job.name}` : '~pr';
     }
+  } else if (commit) {
+    data.sha = commit.sha;
   }
 
   if (parameters) {
