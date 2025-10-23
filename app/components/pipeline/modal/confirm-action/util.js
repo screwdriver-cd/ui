@@ -28,7 +28,7 @@ export function capitalizeFirstLetter(string) {
  */
 export function isParameterized(pipeline, event) {
   const pipelineParameters = pipeline.parameters || {};
-  const eventParameters = event.meta?.parameters || {};
+  const eventParameters = event?.meta?.parameters || {};
 
   return (
     Object.keys(pipelineParameters).length > 0 ||

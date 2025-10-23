@@ -60,12 +60,21 @@
             </p>
         {{else}}
           {{#if this.canJobStartFromView}}
+            {{#if this.tooltipData.job.status}}
+              <a
+                id="restart-job-link"
+                href="#"
+                {{on "click" (fn this.openConfirmActionModal "restart")}}
+              >
+                Restart event from here
+              </a>
+            {{/if}}
               <a
                 id="start-job-link"
                  href="#"
-                {{on "click" (fn this.openConfirmActionModal)}}
+                {{on "click" (fn this.openConfirmActionModal "start")}}
               >
-                {{if this.tooltipData.job.status "Restart" "Start"}} pipeline from here
+               Start a new event from here
               </a>
           {{/if}}
         {{/if}}
@@ -141,6 +150,7 @@
     @event={{@event}}
     @job={{this.tooltipData.job}}
     @closeModal={{this.closeConfirmActionModal}}
+    @newEventMode={{this.newEventMode}}
   />
 {{/if}}
 {{#if this.showStopBuildModal}}
