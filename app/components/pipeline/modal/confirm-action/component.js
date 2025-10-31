@@ -34,15 +34,23 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   latestCommitEvent;
 
+  /**
+   * @type {string} Possible values 'start', 'restart'.
+   *                'start' indicates that a new event should be started without inheriting the context from the current event.
+   *                'restart' indicates that a new event should be started with inheriting the context from the current event.
+   */
+  action;
+
+  event;
+
   constructor() {
     super(...arguments);
 
+    this.action = this.args.newEventMode;
+    this.event = this.action === 'restart' ? this.args.event : null;
+
     this.pipeline = this.pipelinePageState.getPipeline();
     this.latestCommitEvent = this.workflowDataReload.getLatestCommitEvent();
-  }
-
-  get action() {
-    return this.args.job.status ? 'restart' : 'start';
   }
 
   get truncatedMessage() {
@@ -70,7 +78,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isParameterized() {
-    return isParameterized(this.pipeline, this.args.event);
+    return isParameterized(this.pipeline, this.event);
   }
 
   get isSubmitButtonDisabled() {
@@ -102,10 +110,11 @@ export default class PipelineModalConfirmActionComponent extends Component {
       this.session.data.authenticated.username,
       this.pipeline.id,
       this.args.job,
-      this.args.event,
+      this.event,
       this.parameters,
       this.isFrozen,
-      this.reason
+      this.reason,
+      this.args.event.sha
     );
 
     await this.shuttle
