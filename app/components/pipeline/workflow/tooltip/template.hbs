@@ -60,22 +60,20 @@
             </p>
         {{else}}
           {{#if this.canJobStartFromView}}
-            {{#if this.tooltipData.job.status}}
-              <a
-                id="restart-job-link"
-                href="#"
-                {{on "click" (fn this.openConfirmActionModal "restart")}}
-              >
-                Restart event from here
-              </a>
-            {{/if}}
-              <a
-                id="start-job-link"
-                 href="#"
-                {{on "click" (fn this.openConfirmActionModal "start")}}
-              >
-               Start a new event from here
-              </a>
+            <a
+              id="restart-job-link"
+              href="#"
+              {{on "click" (fn this.openConfirmActionModal "restart")}}
+            >
+              Restart event from here
+            </a>
+            <a
+              id="start-job-link"
+               href="#"
+              {{on "click" (fn this.openConfirmActionModal "start")}}
+            >
+             Start a new event from here
+            </a>
           {{/if}}
         {{/if}}
       {{/if}}

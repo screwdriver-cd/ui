@@ -47,8 +47,6 @@ export default class PipelineModalConfirmActionComponent extends Component {
     super(...arguments);
 
     this.action = this.args.newEventMode;
-    this.commit = this.args.event.commit;
-    this.commit.sha = this.args.event.sha;
     this.event = this.action === 'restart' ? this.args.event : null;
 
     this.pipeline = this.pipelinePageState.getPipeline();
@@ -56,19 +54,19 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get truncatedMessage() {
-    return truncateMessage(this.commit.message);
+    return truncateMessage(this.args.event.commit.message);
   }
 
   get isLatestCommitEvent() {
-    return this.commit.sha === this.latestCommitEvent?.sha;
+    return this.args.event.sha === this.latestCommitEvent?.sha;
   }
 
   get commitUrl() {
-    return this.commit.url;
+    return this.args.event.commit.url;
   }
 
   get truncatedSha() {
-    return this.commit.sha.substring(0, 7);
+    return this.args.event.sha.substring(0, 7);
   }
 
   get isLatestNonPrCommitEvent() {
@@ -116,7 +114,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
       this.parameters,
       this.isFrozen,
       this.reason,
-      this.commit
+      this.args.event.sha
     );
 
     await this.shuttle
