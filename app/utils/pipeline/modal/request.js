@@ -1,6 +1,6 @@
 /**
  * Build post body for starting a job
- * @oaram config
+ * @param config
  *  @property config.username
  *  @property config.pipelineId
  *  @property config.job
