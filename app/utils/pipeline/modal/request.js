@@ -1,25 +1,29 @@
 /**
  * Build post body for starting a job
- * @param username
- * @param pipelineId
- * @param job
- * @param event
- * @param parameters
- * @param isFrozen
- * @param reason
- * @param commit
+ * @oaram config
+ *  @property config.username
+ *  @property config.pipelineId
+ *  @property config.job
+ *  @property config.event
+ *  @property config.parameters
+ *  @property config.isFrozen
+ *  @property config.reason
+ *  @property config.commit
+ *  @property config.prNum
  * @returns {{causeMessage: string, pipelineId}}
  */
-export function buildPostBody( // eslint-disable-line import/prefer-default-export
-  username,
-  pipelineId,
-  job,
-  event,
-  parameters,
-  isFrozen,
-  reason,
-  sha
-) {
+export default function buildPostBody(config) {
+  const {
+    username,
+    pipelineId,
+    job,
+    event,
+    parameters,
+    isFrozen,
+    reason,
+    sha,
+    prNum
+  } = config;
   const data = {
     pipelineId,
     causeMessage: `Manually started by ${username}`
@@ -27,16 +31,14 @@ export function buildPostBody( // eslint-disable-line import/prefer-default-expo
 
   data.startFrom = job ? job.name : '~commit';
 
+  if (prNum) {
+    data.prNum = prNum;
+    data.startFrom = job ? `PR-${prNum}:${job.name}` : '~pr';
+  }
+
   if (event) {
     data.groupEventId = event.groupEventId;
     data.parentEventId = event.id;
-
-    const { prNum } = event;
-
-    if (prNum) {
-      data.prNum = prNum;
-      data.startFrom = job ? `PR-${prNum}:${job.name}` : '~pr';
-    }
   } else if (sha) {
     data.sha = sha;
   }

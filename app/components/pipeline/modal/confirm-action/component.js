@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { buildPostBody } from 'screwdriver-ui/utils/pipeline/modal/request';
+import buildPostBody from 'screwdriver-ui/utils/pipeline/modal/request';
 import {
   capitalizeFirstLetter,
   isParameterized,
@@ -106,16 +106,17 @@ export default class PipelineModalConfirmActionComponent extends Component {
   async startBuild() {
     this.isAwaitingResponse = true;
 
-    const data = buildPostBody(
-      this.session.data.authenticated.username,
-      this.pipeline.id,
-      this.args.job,
-      this.event,
-      this.parameters,
-      this.isFrozen,
-      this.reason,
-      this.args.event.sha
-    );
+    const data = buildPostBody({
+      username: this.session.data.authenticated.username,
+      pipelineId: this.pipeline.id,
+      job: this.args.job,
+      event: this.event,
+      parameters: this.parameters,
+      isFrozen: this.isFrozen,
+      reason: this.reason,
+      sha: this.args.event.sha,
+      prNum: this.args.event.prNum
+    });
 
     await this.shuttle
       .fetchFromApi('post', '/events', data)
