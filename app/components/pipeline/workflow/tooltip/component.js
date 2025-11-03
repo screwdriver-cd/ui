@@ -25,6 +25,13 @@ export default class PipelineWorkflowTooltipComponent extends Component {
 
   @tracked tooltipData = null;
 
+  /**
+   * @type {string} Possible values 'start', 'restart'.
+   *                'start' indicates that a new event should be started without inheriting the context from the current event.
+   *                'restart' indicates that a new event should be started with inheriting the context from the current event.
+   */
+  @tracked newEventMode = null;
+
   pipeline;
 
   viewDescriptionMaxLength = 25;
@@ -146,8 +153,9 @@ export default class PipelineWorkflowTooltipComponent extends Component {
   }
 
   @action
-  openConfirmActionModal() {
+  openConfirmActionModal(newEventMode) {
     this.showConfirmActionModal = true;
+    this.newEventMode = newEventMode;
   }
 
   @action

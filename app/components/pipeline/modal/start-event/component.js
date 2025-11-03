@@ -6,7 +6,7 @@ import {
   extractDefaultJobParameters,
   extractDefaultParameters
 } from 'screwdriver-ui/utils/pipeline/parameters';
-import { buildPostBody } from 'screwdriver-ui/utils/pipeline/modal/request';
+import buildPostBody from 'screwdriver-ui/utils/pipeline/modal/request';
 
 export default class PipelineModalStartEventComponent extends Component {
   @service router;
@@ -64,15 +64,16 @@ export default class PipelineModalStartEventComponent extends Component {
   async startBuild() {
     this.isAwaitingResponse = true;
 
-    const data = buildPostBody(
-      this.session.data.authenticated.username,
-      this.pipeline.id,
-      this.args.job,
-      this.args.event,
-      this.parameters,
-      false,
-      null
-    );
+    const data = buildPostBody({
+      username: this.session.data.authenticated.username,
+      pipelineId: this.pipeline.id,
+      job: this.args.job,
+      event: this.args.event,
+      parameters: this.parameters,
+      isFrozen: false,
+      reason: null,
+      prNum: this.args.event?.prNum
+    });
 
     await this.shuttle
       .fetchFromApi('post', '/events', data)

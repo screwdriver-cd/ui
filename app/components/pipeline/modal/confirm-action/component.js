@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { buildPostBody } from 'screwdriver-ui/utils/pipeline/modal/request';
+import buildPostBody from 'screwdriver-ui/utils/pipeline/modal/request';
 import {
   capitalizeFirstLetter,
   isParameterized,
@@ -34,15 +34,23 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   latestCommitEvent;
 
+  /**
+   * @type {string} Possible values 'start', 'restart'.
+   *                'start' indicates that a new event should be started without inheriting the context from the current event.
+   *                'restart' indicates that a new event should be started with inheriting the context from the current event.
+   */
+  action;
+
+  event;
+
   constructor() {
     super(...arguments);
 
+    this.action = this.args.newEventMode;
+    this.event = this.action === 'restart' ? this.args.event : null;
+
     this.pipeline = this.pipelinePageState.getPipeline();
     this.latestCommitEvent = this.workflowDataReload.getLatestCommitEvent();
-  }
-
-  get action() {
-    return this.args.job.status ? 'restart' : 'start';
   }
 
   get truncatedMessage() {
@@ -70,7 +78,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isParameterized() {
-    return isParameterized(this.pipeline, this.args.event);
+    return isParameterized(this.pipeline, this.event);
   }
 
   get isSubmitButtonDisabled() {
@@ -98,15 +106,17 @@ export default class PipelineModalConfirmActionComponent extends Component {
   async startBuild() {
     this.isAwaitingResponse = true;
 
-    const data = buildPostBody(
-      this.session.data.authenticated.username,
-      this.pipeline.id,
-      this.args.job,
-      this.args.event,
-      this.parameters,
-      this.isFrozen,
-      this.reason
-    );
+    const data = buildPostBody({
+      username: this.session.data.authenticated.username,
+      pipelineId: this.pipeline.id,
+      job: this.args.job,
+      event: this.event,
+      parameters: this.parameters,
+      isFrozen: this.isFrozen,
+      reason: this.reason,
+      sha: this.args.event.sha,
+      prNum: this.args.event.prNum
+    });
 
     await this.shuttle
       .fetchFromApi('post', '/events', data)
