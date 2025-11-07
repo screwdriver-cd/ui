@@ -26,15 +26,14 @@ export default class NewPipelineEventsShowRoute extends Route {
             const latestEventId =
               this.pipelinePageState.getPipeline().lastEventId;
 
-            latestEvent = await this.shuttle.fetchFromApi(
-              'get',
-              `/events/${latestEventId}`.catch(e => {
+            latestEvent = await this.shuttle
+              .fetchFromApi('get', `/events/${latestEventId}`)
+              .catch(e => {
                 if (e instanceof NotFoundError) {
                   return null;
                 }
                 throw e;
-              })
-            );
+              });
 
             return null;
           }
