@@ -4,6 +4,9 @@ import {
   setupRenderingTest as upstreamSetupRenderingTest,
   setupTest as upstreamSetupTest
 } from 'ember-qunit';
+import { authenticateSession } from 'ember-simple-auth/test-support';
+import { userSession } from '../mock/sessions';
+import { MockApi } from '../mock/api';
 
 // This file exists to provide wrappers around ember-qunit's / ember-mocha's
 // test setup functions. This way, you can easily extend the setup that is
@@ -26,6 +29,20 @@ function setupApplicationTest(hooks, options) {
   //
   // setupIntl(hooks); // ember-intl
   // setupMirage(hooks); // ember-cli-mirage
+
+  const mockApi = new MockApi();
+
+  hooks.beforeEach(async () => {
+    await authenticateSession(userSession);
+
+    mockApi.newPretenderServer();
+  });
+
+  hooks.afterEach(() => {
+    mockApi.pretender.shutdown();
+  });
+
+  return mockApi;
 }
 
 function setupRenderingTest(hooks, options) {

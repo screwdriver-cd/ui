@@ -10,72 +10,138 @@ import {
 } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
-import { authenticateSession } from 'ember-simple-auth/test-support';
-import Pretender from 'pretender';
+import { invalidateSession } from 'ember-simple-auth/test-support';
 import { getPageTitle } from 'ember-page-title/test-support';
 
-import {
-  hasCollections,
-  hasCollection,
-  hasDefaultCollection,
-  hasEmptyDefaultCollection,
-  hasEmptyCollection
-} from 'screwdriver-ui/tests/mock/collections';
-import { hasPipelines } from 'screwdriver-ui/tests/mock/pipeline';
-
-let server;
-const hasEmptyMetrics = () => [
-  200,
-  { 'Content-Type': 'application/json' },
-  JSON.stringify([])
-];
+import { pipeline } from '../mock/pipeline';
 
 module('Acceptance | dashboards', function (hooks) {
-  setupApplicationTest(hooks);
+  const mockApi = setupApplicationTest(hooks);
+
+  const mockCollections = [
+    {
+      id: 2,
+      name: 'collection1',
+      description: 'description1',
+      type: 'normal',
+      userId: 1,
+      pipelineIds: [12742, 12743]
+    },
+    {
+      id: 1,
+      name: 'My Pipelines',
+      description: 'default collection description',
+      type: 'default',
+      userId: 1,
+      pipelineIds: [12742, 12743]
+    }
+  ];
+
+  const mockDefaultCollection = {
+    id: 1,
+    name: 'My Pipelines',
+    description: 'default collection description',
+    type: 'default',
+    pipelineIds: [12742, 12743],
+    pipelines: [
+      {
+        id: 12742,
+        scmUri: 'github.com:12345678:master',
+        createTime: '2017-01-05T00:55:46.775Z',
+        admins: {
+          username: true
+        },
+        workflow: ['main', 'publish'],
+        scmRepo: {
+          name: 'screwdriver-cd/screwdriver',
+          branch: 'master',
+          url: 'https://github.com/screwdriver-cd/screwdriver/tree/master'
+        },
+        scmContext: 'github:github.com',
+        annotations: {},
+        lastEventId: 12,
+        lastBuilds: [
+          {
+            id: 123,
+            status: 'SUCCESS'
+          },
+          {
+            id: 124,
+            status: 'FAILURE'
+          }
+        ]
+      },
+      {
+        id: 12743,
+        scmUri: 'github.com:87654321:master',
+        createTime: '2017-01-05T00:55:46.775Z',
+        admins: {
+          username: true
+        },
+        workflow: ['main', 'publish'],
+        scmRepo: {
+          name: 'screwdriver-cd/ui',
+          branch: 'master',
+          url: 'https://github.com/screwdriver-cd/ui/tree/master'
+        },
+        scmContext: 'github:github.com',
+        annotations: {},
+        prs: {
+          open: 2,
+          failing: 1
+        }
+      }
+    ]
+  };
+
+  const mockCollection = {
+    ...mockDefaultCollection,
+    id: 2,
+    name: 'collection1',
+    description: 'description1',
+    type: 'normal'
+  };
+
+  const mockEmptyDefaultCollection = {
+    ...mockDefaultCollection,
+    pipelineIds: [],
+    pipelines: []
+  };
+
+  const mockEmptyCollection = {
+    ...mockCollection,
+    pipelineIds: [],
+    pipelines: []
+  };
 
   hooks.beforeEach(function () {
-    server = new Pretender();
+    mockApi.get('/collections', () => [200, mockCollections]);
+    mockApi.get('/collections/:id', req => {
+      const id = parseInt(req.params.id, 10);
 
-    server.get('http://localhost:8080/v4/collections', hasCollections);
-    server.get('http://localhost:8080/v4/collections/1', hasDefaultCollection);
-    server.get('http://localhost:8080/v4/collections/2', hasCollection);
-    server.get('http://localhost:8080/v4/pipelines', hasPipelines);
-    server.get(
-      'http://localhost:8080/v4/pipelines/12742/metrics',
-      hasEmptyMetrics
-    );
-    server.get(
-      'http://localhost:8080/v4/pipelines/12743/metrics',
-      hasEmptyMetrics
-    );
-    server.get('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({})
-    ]);
-    server.get('http://localhost:8080/v4/banners', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
+      if (id === 1) {
+        return [200, mockDefaultCollection];
+      }
+
+      return [200, mockCollection];
+    });
+    mockApi.get('/pipelines/:id/metrics', () => [200, []]);
   });
 
   hooks.afterEach(function () {
-    server.shutdown();
+    localStorage.removeItem('lastViewedCollectionId');
+    localStorage.removeItem('activeViewOptionValue');
   });
 
   test('visiting / when not logged in', async function (assert) {
+    await invalidateSession();
     await visit('/');
 
     assert.equal(currentURL(), '/login');
   });
 
   test('visiting / when logged in and have collections among which the default collection is empty', async function (assert) {
-    server.get(
-      'http://localhost:8080/v4/collections/1',
-      hasEmptyDefaultCollection
-    );
-    await authenticateSession({ token: 'fakeToken' });
+    mockApi.get('/collections/1', () => [200, mockEmptyDefaultCollection]);
     localStorage.setItem('lastViewedCollectionId', 1);
     await visit('/');
     await waitFor('h2.header__name');
@@ -89,7 +155,6 @@ module('Acceptance | dashboards', function (hooks) {
   });
 
   test('visiting / when logged in and have collections among which the default collection is not empty', async function (assert) {
-    await authenticateSession({ token: 'fakeToken' });
     localStorage.setItem('lastViewedCollectionId', 1);
     localStorage.setItem('activeViewOptionValue', 'Card');
     await visit('/');
@@ -105,14 +170,14 @@ module('Acceptance | dashboards', function (hooks) {
   });
 
   test('visiting /dashboards when not logged in', async function (assert) {
+    await invalidateSession();
     await visit('/dashboards');
 
     assert.equal(currentURL(), '/login');
   });
 
   test('visiting /dashboards/2 when collection 2 is empty', async function (assert) {
-    server.get('http://localhost:8080/v4/collections/2', hasEmptyCollection);
-    await authenticateSession({ token: 'fakeToken' });
+    mockApi.get('/collections/2', () => [200, mockEmptyCollection]);
     await visit('/dashboards/2');
 
     assert.equal(currentURL(), '/dashboards/2');
@@ -122,7 +187,6 @@ module('Acceptance | dashboards', function (hooks) {
   });
 
   test('visiting /dashboards/2 when collection 2 is not empty', async function (assert) {
-    await authenticateSession({ token: 'fakeToken' });
     await visit('/dashboards/2');
 
     assert.equal(currentURL(), '/dashboards/2');
@@ -134,11 +198,7 @@ module('Acceptance | dashboards', function (hooks) {
   });
 
   test('visiting /dashboards/404', async function (assert) {
-    server.get('http://localhost:8080/v4/collections/404', () => [
-      404,
-      { 'Content-Type': 'application/json' }
-    ]);
-    await authenticateSession({ token: 'fakeToken' });
+    mockApi.get('/collections/404', () => [404, {}]);
     await visit('/dashboards/404');
 
     assert.equal(currentURL(), '/dashboards/404');
@@ -154,25 +214,22 @@ module('Acceptance | dashboards', function (hooks) {
       type: 'normal'
     };
 
-    server.get('http://localhost:8080/v4/collections', hasCollections);
-    server.post('http://localhost:8080/v4/collections', request => {
+    mockApi.post('/collections', request => {
       assert.deepEqual(JSON.parse(request.requestBody), expectedRequestBody);
 
       return [
         201,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify({
+        {
           id: 3,
           name: 'collection2',
           description: 'description2'
-        })
+        }
       ];
     });
 
     // GET request made in the search route for pipelines
-    server.get('http://localhost:8080/v4/pipelines', hasPipelines);
+    mockApi.get('/pipelines', () => [200, [pipeline]]);
 
-    await authenticateSession({ token: 'fakeToken' });
     localStorage.setItem('lastViewedCollectionId', 1);
     await visit('/');
     await waitFor('h2.header__name');

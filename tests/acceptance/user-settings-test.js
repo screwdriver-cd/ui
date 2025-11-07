@@ -1,89 +1,33 @@
 import { currentURL, visit, fillIn, click } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
-import { authenticateSession } from 'ember-simple-auth/test-support';
-import Pretender from 'pretender';
 import { getPageTitle } from 'ember-page-title/test-support';
 import sinon from 'sinon';
 
-let server;
-
 module('Acceptance | user-settings', function (hooks) {
-  setupApplicationTest(hooks);
+  const testUrl = '/user-settings/preferences';
+  const mockApi = setupApplicationTest(hooks);
 
   hooks.beforeEach(function () {
-    server = new Pretender();
-
-    server.get('http://localhost:8080/v4/users/settings', () => [
+    mockApi.get('/tokens', () => [
       200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        1018240: {
-          showPRJobs: true
-        },
-        1048190: {
-          showPRJobs: false
-        },
-        displayJobNameLength: 30,
-        timestamFormat: 'LOCAL_TIMEZONE',
-        allowNotification: false
-      })
-    ]);
-
-    server.get('http://localhost:8080/v4/tokens', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
+      {
         id: '1'
-      })
+      }
     ]);
-
-    server.get('http://localhost:8080/v4/collections', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1'
-      })
-    ]);
-
-    server.get('http://localhost:8080/v4/banners', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-  });
-
-  hooks.afterEach(function () {
-    server.shutdown();
   });
 
   test('visiting /user-settings/preferences', async function (assert) {
-    await authenticateSession({ token: 'faketoken' });
-    await visit('/user-settings/preferences');
+    await visit(testUrl);
 
-    assert.equal(currentURL(), '/user-settings/preferences');
+    assert.equal(currentURL(), testUrl);
     assert.dom('section.preference li').exists({ count: 4 });
   });
 
   test('update user preferences', async function (assert) {
-    server.put('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1'
-      })
-    ]);
+    await visit(testUrl);
 
-    server.get('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({})
-    ]);
-
-    await authenticateSession({ token: 'faketoken' });
-    await visit('/user-settings/preferences');
-
-    assert.equal(currentURL(), '/user-settings/preferences');
+    assert.equal(currentURL(), testUrl);
     assert.equal(
       getPageTitle(),
       'User Settings > Preferences',
@@ -103,25 +47,11 @@ module('Acceptance | user-settings', function (hooks) {
       .dom('.alert-success span:not(button span)')
       .hasText('User settings updated successfully!');
   });
+
   test('update display job name length by overflowing value', async function (assert) {
-    server.put('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1'
-      })
-    ]);
+    await visit(testUrl);
 
-    server.get('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({})
-    ]);
-
-    await authenticateSession({ token: 'faketoken' });
-    await visit('/user-settings/preferences');
-
-    assert.equal(currentURL(), '/user-settings/preferences');
+    assert.equal(currentURL(), testUrl);
 
     await fillIn('.display-job-name', 300);
     await click('button.blue-button');
@@ -131,25 +61,11 @@ module('Acceptance | user-settings', function (hooks) {
       .dom('.alert-success span:not(button span)')
       .hasText('User settings updated successfully!');
   });
+
   test('update display job name length by underflow value', async function (assert) {
-    server.put('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1'
-      })
-    ]);
+    await visit(testUrl);
 
-    server.get('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({})
-    ]);
-
-    await authenticateSession({ token: 'faketoken' });
-    await visit('/user-settings/preferences');
-
-    assert.equal(currentURL(), '/user-settings/preferences');
+    assert.equal(currentURL(), testUrl);
 
     await fillIn('.display-job-name', -1);
     await click('button.blue-button');
@@ -159,26 +75,13 @@ module('Acceptance | user-settings', function (hooks) {
       .dom('.alert-success span:not(button span)')
       .hasText('User settings updated successfully!');
   });
-  test('enable notifications', async function (assert) {
-    server.put('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1'
-      })
-    ]);
 
-    server.get('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({})
-    ]);
+  test('enable notifications', async function (assert) {
     sinon.stub(Notification, 'permission').value('granted');
 
-    await authenticateSession({ token: 'faketoken' });
-    await visit('/user-settings/preferences');
+    await visit(testUrl);
 
-    assert.equal(currentURL(), '/user-settings/preferences');
+    assert.equal(currentURL(), testUrl);
     assert.equal(
       getPageTitle(),
       'User Settings > Preferences',

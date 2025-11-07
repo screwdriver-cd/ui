@@ -1,90 +1,18 @@
 import { currentURL, visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
-import { authenticateSession } from 'ember-simple-auth/test-support';
-import Pretender from 'pretender';
 import { getPageTitle } from 'ember-page-title/test-support';
-let server;
+import { PARENT_PIPELINE_ID } from '../mock/pipeline';
 
 module('Acceptance | child pipeline', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function () {
-    server = new Pretender();
-
-    server.get('http://localhost:8080/v4/pipelines/1', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1',
-        scmUrl: 'git@github.com:foo/bar.git#master',
-        createTime: '2016-09-15T23:12:23.760Z',
-        admins: { batman: true },
-        workflow: ['main', 'publish'],
-        childPipelines: {
-          scmUrls: [
-            'git@github.com:child/one.git#master',
-            'git@github.com:child/two.git#master'
-          ]
-        }
-      })
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([
-        {
-          id: '2',
-          scmUrl: 'git@github.com:child/one.git#master',
-          scmRepo: {
-            name: 'child/one',
-            branch: 'master',
-            url: 'https://github.com/child/one'
-          },
-          state: 'ACTIVE'
-        },
-        {
-          id: '3',
-          scmUrl: 'git@github.com:child/two.git#master',
-          scmRepo: {
-            name: 'child/two',
-            branch: 'master',
-            url: 'https://github.com/child/two'
-          },
-          state: 'INACTIVE'
-        }
-      ])
-    ]);
-
-    server.get('http://localhost:8080/v4/collections', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1/latestCommitEvent', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({ id: '2', sha: 'abcdef1029384' })
-    ]);
-
-    server.get('http://localhost:8080/v4/banners', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-  });
-
-  hooks.afterEach(function () {
-    server.shutdown();
-  });
-
   test('visiting /pipelines/:id/child-pipelines', async function (assert) {
-    await authenticateSession({ token: 'faketoken' });
-    await visit('/pipelines/1/child-pipelines');
+    const url = `/pipelines/${PARENT_PIPELINE_ID}/child-pipelines`;
 
-    assert.equal(currentURL(), '/pipelines/1/child-pipelines');
+    await visit(url);
+
+    assert.equal(currentURL(), url);
     assert.dom('#banners').exists({ count: 1 });
     assert.equal(getPageTitle(), 'Child Pipelines', 'Page title is correct');
     assert.dom('.appId:nth-child(1)').hasText('Name');

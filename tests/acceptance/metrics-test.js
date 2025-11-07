@@ -1,61 +1,19 @@
 import { visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
-import { authenticateSession } from 'ember-simple-auth/test-support';
-import Pretender from 'pretender';
 
-import { hasCollections } from 'screwdriver-ui/tests/mock/collections';
-import makePipeline from '../mock/pipeline';
-import makeMetrics from '../mock/metrics';
-import makeJobs from '../mock/jobs';
-import makeGraph from '../mock/workflow-graph';
-
-let server;
+import { PIPELINE_ID } from '../mock/pipeline';
+import { mockMetrics } from '../mock/metrics';
 
 module('Acceptance | metrics', function (hooks) {
-  setupApplicationTest(hooks);
+  const mockApi = setupApplicationTest(hooks);
 
-  hooks.beforeEach(function () {
-    const graph = makeGraph();
-    const metrics = makeMetrics();
-    const jobs = makeJobs();
-    const pipeline = makePipeline(graph);
+  test('visiting /pipelines/:id/metrics', async function (assert) {
+    const url = `/pipelines/${PIPELINE_ID}/metrics`;
 
-    server = new Pretender();
-    server.get('http://localhost:8080/v4/collections', hasCollections);
+    mockApi.get(`${url}`, () => [200, mockMetrics]);
 
-    server.get('http://localhost:8080/v4/pipelines/4', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify(pipeline)
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/4/jobs', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify(jobs)
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/4/metrics', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify(metrics)
-    ]);
-
-    server.get('http://localhost:8080/v4/banners', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-  });
-
-  hooks.afterEach(function () {
-    server.shutdown();
-  });
-
-  test('visiting /pipelines/4/metrics', async function (assert) {
-    await authenticateSession({ token: 'fakeToken' });
-    await visit('/pipelines/4/metrics');
+    await visit(`${url}`);
 
     assert.dom('.chart-c3').exists({ count: 3 });
     assert.dom('.range-selection button').exists({ count: 7 });

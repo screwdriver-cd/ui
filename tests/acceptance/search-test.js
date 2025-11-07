@@ -1,24 +1,20 @@
 import { click, currentURL, visit, waitUntil, find } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
-import { authenticateSession } from 'ember-simple-auth/test-support';
-import Pretender from 'pretender';
+import { invalidateSession } from 'ember-simple-auth/test-support';
 import { getPageTitle } from 'ember-page-title/test-support';
-let server;
 
 module('Acceptance | search', function (hooks) {
-  setupApplicationTest(hooks);
+  const mockApi = setupApplicationTest(hooks);
 
   hooks.beforeEach(function () {
-    server = new Pretender();
-    server.get('http://localhost:8080/v4/pipelines', request => {
+    mockApi.get('/pipelines', request => {
       const { search, page } = request.queryParams;
 
       if (!search) {
         return [
           200,
-          { 'Content-Type': 'application/json' },
-          JSON.stringify([
+          [
             {
               id: '1',
               scmUrl: 'git@github.com:foo/bar.git#master',
@@ -58,15 +54,14 @@ module('Acceptance | search', function (hooks) {
               admins: { batman: true },
               workflow: ['main', 'publish']
             }
-          ])
+          ]
         ];
       }
 
       if (search === 'banana' && page === '1') {
         return [
           200,
-          { 'Content-Type': 'application/json' },
-          JSON.stringify([
+          [
             {
               id: '1',
               scmUrl: 'git@github.com:banana/bar.git#master',
@@ -93,45 +88,22 @@ module('Acceptance | search', function (hooks) {
               admins: { batman: true },
               workflow: ['main', 'publish']
             }
-          ])
+          ]
         ];
       }
 
-      return [200, { 'Content-Type': 'application/json' }, JSON.stringify([])];
+      return [200, []];
     });
-
-    server.get('http://localhost:8080/v4/collections', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([
-        {
-          id: '1',
-          name: 'collection1',
-          description: 'description1',
-          pipelineIds: [1, 2, 3]
-        }
-      ])
-    ]);
-
-    server.get('http://localhost:8080/v4/banners', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-  });
-
-  hooks.afterEach(function () {
-    server.shutdown();
   });
 
   test('visiting /search when not logged in', async function (assert) {
+    await invalidateSession();
     await visit('/search');
 
     assert.equal(currentURL(), '/login');
   });
 
   test('visiting /search when logged in', async function (assert) {
-    await authenticateSession({ token: 'fakeToken' });
     await visit('/search');
 
     assert.equal(currentURL(), '/search');
@@ -150,7 +122,6 @@ module('Acceptance | search', function (hooks) {
   });
 
   test('visiting /search?query=banana when logged in', async function (assert) {
-    await authenticateSession({ token: 'fakeToken' });
     await visit('/search?query=banana ');
 
     assert.equal(currentURL(), '/search?query=banana ');
@@ -163,7 +134,6 @@ module('Acceptance | search', function (hooks) {
   });
 
   test('visiting /search?query=doesnotexist when logged in', async function (assert) {
-    await authenticateSession({ token: 'fakeToken' });
     await visit('/search?query=doesnotexist');
 
     assert.equal(currentURL(), '/search?query=doesnotexist');
