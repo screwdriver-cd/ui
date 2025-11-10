@@ -1,19 +1,39 @@
 <div id="pipeline-nav">
-  <LinkTo @route="v2.pipeline.events" title="Events">
+  <LinkTo
+    id="events-nav-link"
+    title="Events"
+    @route="v2.pipeline.events"
+  >
     <FaIcon @icon="cubes" @size="16x" />
   </LinkTo>
   {{#if this.hasChildPipelines}}
-    <LinkTo @route="v2.pipeline.child-pipelines" title="Child pipelines">
+    <LinkTo
+      id="child-pipelines-nav-link"
+      title="Child pipelines"
+      @route="v2.pipeline.child-pipelines"
+    >
       <FaIcon @icon="sitemap" @size="16x" />
     </LinkTo>
   {{/if}}
-  <LinkTo @route="v2.pipeline.secrets" title="Secrets">
+  <LinkTo
+    id="secrets-nav-link"
+    title="Secrets"
+    @route="v2.pipeline.secrets"
+  >
     <FaIcon @icon="key" @size="16x" />
   </LinkTo>
-  <LinkTo @route="v2.pipeline.settings" title="Settings">
+  <LinkTo
+    id="settings-nav-link"
+    title="Settings"
+    @route="v2.pipeline.settings"
+  >
     <FaIcon @icon="gears" @size="16x" />
   </LinkTo>
-  <LinkTo @route="v2.pipeline.metrics" title="Metrics">
+  <LinkTo
+    id="metrics-nav-link"
+    title="Metrics"
+    @route="v2.pipeline.metrics"
+  >
     <FaIcon @icon="chart-line" @size="16x" />
   </LinkTo>
 </div>
