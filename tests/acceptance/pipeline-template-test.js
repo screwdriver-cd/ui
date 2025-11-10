@@ -1,168 +1,29 @@
 import { module, test } from 'qunit';
 import { visit, currentURL } from '@ember/test-helpers';
 import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
-import Pretender from 'pretender';
-import { authenticateSession } from 'ember-simple-auth/test-support';
-
-let server;
-const fakeToken =
-  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFwcGxlIiwianRpIjoiNTA1NTQzYTUtNDhjZi00OTAyLWE3YTktZGY0NTI1ODFjYWM0IiwiaWF0IjoxNTIxNTcyMDE5LCJleHAiOjE1MjE1NzU2MTl9.ImS1ajOnksl1X74uL85jOjzdUXmBW3HfMdPfP1vjrmc';
 
 module('Acceptance | pipeline template', function (hooks) {
-  setupApplicationTest(hooks);
+  const mockApi = setupApplicationTest(hooks);
 
   hooks.beforeEach(function () {
-    server = new Pretender();
-    server.get('http://localhost:8080/v4/auth/contexts', () => [
+    mockApi.get('/pipeline/template/sd-test/example-template', () => [
       200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({})
+      {
+        id: 5,
+        pipelineId: 13352,
+        namespace: 'sd-test',
+        name: 'example-template',
+        maintainer: 'foo@bar.com',
+        latestVersion: '1.0.3',
+        createTime: '2024-03-04T16:18:27.365Z',
+        updateTime: '2024-04-08T20:52:12.403Z',
+        templateType: 'PIPELINE'
+      }
     ]);
-    server.get('http://localhost:8080/v4/collections', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1'
-      })
-    ]);
-    server.get('http://localhost:8080/v4/banners', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({})
-    ]);
-    server.get(
-      'http://localhost:8080/v4/pipeline/templates/sd-test/example-template/versions',
-      () => [
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify([
-          {
-            id: 120,
-            templateId: 5,
-            description:
-              'An example pipeline template for testing golang files',
-            version: '1.0.3',
-            config: {
-              parameters: {
-                nameA: 'value1'
-              },
-              annotations: {
-                'screwdriver.cd/restrictPR': 'none',
-                'screwdriver.cd/chainPR': false
-              },
-              shared: {
-                image: 'golang'
-              },
-              jobs: {
-                main: {
-                  steps: [
-                    {
-                      name: 'echo "pipeline template test"'
-                    }
-                  ]
-                }
-              }
-            },
-            createTime: '2024-04-08T20:52:12.397Z'
-          },
-          {
-            id: 119,
-            templateId: 5,
-            description:
-              'An example pipeline template for testing golang files',
-            version: '1.0.2',
-            config: {
-              parameters: {
-                nameA: 'value1'
-              },
-              shared: {
-                image: 'golang'
-              },
-              jobs: {
-                main: {
-                  steps: [
-                    {
-                      name: 'echo "pipeline template test"'
-                    }
-                  ]
-                }
-              }
-            },
-            createTime: '2024-04-08T20:48:14.213Z'
-          },
-          {
-            id: 94,
-            templateId: 5,
-            description:
-              'An example pipeline template for testing golang files',
-            version: '1.0.1',
-            config: {
-              shared: {
-                image: 'golang'
-              },
-              jobs: {
-                main: {
-                  steps: [
-                    {
-                      name: 'echo "pipeline template test"'
-                    }
-                  ]
-                }
-              },
-              parameters: {}
-            },
-            createTime: '2024-03-29T23:09:31.669Z'
-          },
-          {
-            id: 21,
-            templateId: 5,
-            description:
-              'An example pipeline template for testing golang files',
-            version: '1.0.0',
-            config: {
-              shared: {
-                image: 'golang'
-              },
-              jobs: {
-                main: {
-                  steps: [
-                    {
-                      name: 'echo "pipeline template test"'
-                    }
-                  ]
-                }
-              },
-              parameters: {}
-            },
-            createTime: '2024-03-04T16:18:27.365Z'
-          }
-        ])
-      ]
-    );
 
-    server.get(
-      'http://localhost:8080/v4/pipeline/template/sd-test/example-template',
-      () => [
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify({
-          id: 5,
-          pipelineId: 13352,
-          namespace: 'sd-test',
-          name: 'example-template',
-          maintainer: 'foo@bar.com',
-          latestVersion: '1.0.3',
-          createTime: '2024-03-04T16:18:27.365Z',
-          updateTime: '2024-04-08T20:52:12.403Z',
-          templateType: 'PIPELINE'
-        })
-      ]
-    );
-
-    server.get('http://localhost:8080/v4/pipeline/templates', () => [
+    mockApi.get('/pipeline/templates', () => [
       200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([
+      [
         {
           id: 14,
           pipelineId: 13606,
@@ -264,147 +125,130 @@ module('Acceptance | pipeline template', function (hooks) {
           updateTime: '2024-04-08T20:35:57.904Z',
           templateType: 'PIPELINE'
         }
-      ])
+      ]
     ]);
 
-    server.get(
-      'http://localhost:8080/v4/pipeline/templates/sd-test/example-template/tags',
-      () => [
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify([
-          {
-            id: 179,
-            createTime: '2024-03-04T16:18:27.391Z',
-            namespace: 'sd-test',
-            name: 'example-template',
-            tag: 'latest',
-            version: '1.0.3',
-            templateType: 'PIPELINE'
-          }
-        ])
+    mockApi.get('/pipeline/templates/sd-test/example-template/tags', () => [
+      200,
+      [
+        {
+          id: 179,
+          createTime: '2024-03-04T16:18:27.391Z',
+          namespace: 'sd-test',
+          name: 'example-template',
+          tag: 'latest',
+          version: '1.0.3',
+          templateType: 'PIPELINE'
+        }
       ]
-    );
+    ]);
 
-    server.get(
-      'http://localhost:8080/v4/pipeline/templates/sd-test/example-template/versions',
-      () => [
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify([
-          {
-            id: 120,
-            templateId: 5,
-            description:
-              'An example pipeline template for testing golang files',
-            version: '1.0.3',
-            config: {
-              parameters: {
-                nameA: 'value1'
-              },
-              annotations: {
-                'screwdriver.cd/restrictPR': 'none',
-                'screwdriver.cd/chainPR': false
-              },
-              shared: {
-                image: 'golang'
-              },
-              jobs: {
-                main: {
-                  steps: [
-                    {
-                      name: 'echo "pipeline template test"'
-                    }
-                  ]
-                }
+    mockApi.get('/pipeline/templates/sd-test/example-template/versions', () => [
+      200,
+      [
+        {
+          id: 120,
+          templateId: 5,
+          description: 'An example pipeline template for testing golang files',
+          version: '1.0.3',
+          config: {
+            parameters: {
+              nameA: 'value1'
+            },
+            annotations: {
+              'screwdriver.cd/restrictPR': 'none',
+              'screwdriver.cd/chainPR': false
+            },
+            shared: {
+              image: 'golang'
+            },
+            jobs: {
+              main: {
+                steps: [
+                  {
+                    name: 'echo "pipeline template test"'
+                  }
+                ]
+              }
+            }
+          },
+          createTime: '2024-04-08T20:52:12.397Z'
+        },
+        {
+          id: 119,
+          templateId: 5,
+          description: 'An example pipeline template for testing golang files',
+          version: '1.0.2',
+          config: {
+            parameters: {
+              nameA: 'value1'
+            },
+            shared: {
+              image: 'golang'
+            },
+            jobs: {
+              main: {
+                steps: [
+                  {
+                    name: 'echo "pipeline template test"'
+                  }
+                ]
+              }
+            }
+          },
+          createTime: '2024-04-08T20:48:14.213Z'
+        },
+        {
+          id: 94,
+          templateId: 5,
+          description: 'An example pipeline template for testing golang files',
+          version: '1.0.1',
+          config: {
+            shared: {
+              image: 'golang'
+            },
+            jobs: {
+              main: {
+                steps: [
+                  {
+                    name: 'echo "pipeline template test"'
+                  }
+                ]
               }
             },
-            createTime: '2024-04-08T20:52:12.397Z'
+            parameters: {}
           },
-          {
-            id: 119,
-            templateId: 5,
-            description:
-              'An example pipeline template for testing golang files',
-            version: '1.0.2',
-            config: {
-              parameters: {
-                nameA: 'value1'
-              },
-              shared: {
-                image: 'golang'
-              },
-              jobs: {
-                main: {
-                  steps: [
-                    {
-                      name: 'echo "pipeline template test"'
-                    }
-                  ]
-                }
+          createTime: '2024-03-29T23:09:31.669Z'
+        },
+        {
+          id: 21,
+          templateId: 5,
+          description: 'An example pipeline template for testing golang files',
+          version: '1.0.0',
+          config: {
+            shared: {
+              image: 'golang'
+            },
+            jobs: {
+              main: {
+                steps: [
+                  {
+                    name: 'echo "pipeline template test"'
+                  }
+                ]
               }
             },
-            createTime: '2024-04-08T20:48:14.213Z'
+            parameters: {}
           },
-          {
-            id: 94,
-            templateId: 5,
-            description:
-              'An example pipeline template for testing golang files',
-            version: '1.0.1',
-            config: {
-              shared: {
-                image: 'golang'
-              },
-              jobs: {
-                main: {
-                  steps: [
-                    {
-                      name: 'echo "pipeline template test"'
-                    }
-                  ]
-                }
-              },
-              parameters: {}
-            },
-            createTime: '2024-03-29T23:09:31.669Z'
-          },
-          {
-            id: 21,
-            templateId: 5,
-            description:
-              'An example pipeline template for testing golang files',
-            version: '1.0.0',
-            config: {
-              shared: {
-                image: 'golang'
-              },
-              jobs: {
-                main: {
-                  steps: [
-                    {
-                      name: 'echo "pipeline template test"'
-                    }
-                  ]
-                }
-              },
-              parameters: {}
-            },
-            createTime: '2024-03-04T16:18:27.365Z'
-          }
-        ])
+          createTime: '2024-03-04T16:18:27.365Z'
+        }
       ]
-    );
-  });
-
-  hooks.afterEach(function () {
-    server.shutdown();
+    ]);
   });
 
   test('visiting /templates/pipeline/sd-test/example-template', async function (assert) {
-    await authenticateSession({ token: fakeToken });
-
     await visit('/templates/pipeline/sd-test/example-template');
+
     assert.strictEqual(
       currentURL(),
       '/templates/pipeline/sd-test/example-template'
@@ -438,8 +282,6 @@ module('Acceptance | pipeline template', function (hooks) {
   });
 
   test('visiting /templates/pipeline/not/exist', async function (assert) {
-    await authenticateSession({ token: fakeToken });
-
     await visit('/templates/pipeline/not/exist');
 
     assert.strictEqual(currentURL(), '/templates/pipeline/not/exist');

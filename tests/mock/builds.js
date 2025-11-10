@@ -1,9 +1,6 @@
-import { copy } from 'ember-copy';
-import { assign } from '@ember/polyfills';
-
 const build = {
-  id: '1234',
-  jobId: '1',
+  id: 1234,
+  jobId: 1,
   number: 1474649580274,
   container: 'node:6',
   cause: 'Started by user batman',
@@ -35,19 +32,18 @@ const build = {
   status: 'FAILURE'
 };
 
-const shas = [
-  'abcd1234567890',
-  'bcd1234567890a',
-  'cd1234567890ab',
-  'd1234567890abc',
-  '1234567890abcd'
-];
-
-export default eventId => {
+// eslint-disable-next-line import/prefer-default-export
+export const makeBuilds = eventId => {
   const builds = [];
+  const shas = [
+    'abcd1234567890',
+    'bcd1234567890a',
+    'cd1234567890ab',
+    'd1234567890abc',
+    '1234567890abcd'
+  ];
 
   shas.forEach(sha => {
-    const b = copy(build, true);
     const config = {
       id: Math.floor(Math.random() * 99999999999),
       eventId,
@@ -56,9 +52,7 @@ export default eventId => {
       status: ['SUCCESS', 'FAILURE', 'RUNNING'][Math.floor(Math.random() * 2)]
     };
 
-    assign(b, config);
-
-    builds.push(b);
+    builds.push({ ...build, ...config });
   });
 
   return builds;

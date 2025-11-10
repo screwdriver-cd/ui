@@ -1,11 +1,7 @@
 import { visit, currentURL } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
-import { authenticateSession } from 'ember-simple-auth/test-support';
-import Pretender from 'pretender';
 import { getPageTitle } from 'ember-page-title/test-support';
-import { hasCollections } from 'screwdriver-ui/tests/mock/collections';
-import { adminJWT } from '../mock/jwt';
 
 const dummyCommands = [
   {
@@ -44,58 +40,19 @@ const dummyCommands = [
   }
 ];
 
-let server;
-
 module('Acceptance | commands', function (hooks) {
-  setupApplicationTest(hooks);
+  const mockApi = setupApplicationTest(hooks);
 
   hooks.beforeEach(function () {
-    server = new Pretender();
-
-    server.get('http://localhost:8080/v4/collections', hasCollections);
-    server.get('http://localhost:8080/v4/commands', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify(dummyCommands)
-    ]);
-    server.get('http://localhost:8080/v4/commands/foo/bar', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify(dummyCommands)
-    ]);
-    server.get('http://localhost:8080/v4/commands/foo/bar/tags', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify(dummyCommands)
-    ]);
-    server.get('http://localhost:8080/v4/banners', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-    server.get('http://localhost:8080/v4/commands/not/exist', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-    server.get('http://localhost:8080/v4/commands/not/exist/tags', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-    server.get('http://localhost:8080/v4/commands/foo/bar/not-exist', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-  });
-
-  hooks.afterEach(function () {
-    server.shutdown();
+    mockApi.get('/commands', () => [200, dummyCommands]);
+    mockApi.get('/commands/foo/bar', () => [200, dummyCommands]);
+    mockApi.get('/commands/foo/bar/tags', () => [200, dummyCommands]);
+    mockApi.get('/commands/not/exist', () => [200, []]);
+    mockApi.get('/commands/not/exist/tags', () => [200, []]);
+    mockApi.get('/commands/foo/bar/not-exist', () => [200, []]);
   });
 
   test('visiting /commands', async assert => {
-    await authenticateSession({ token: 'faketoken' });
     await visit('/commands');
 
     assert.dom('.models-table-wrapper').exists({ count: 1 });
@@ -104,7 +61,6 @@ module('Acceptance | commands', function (hooks) {
   });
 
   test('visiting /commands/foo/bar', async assert => {
-    await authenticateSession({ token: adminJWT });
     await visit('/commands/foo/bar');
 
     assert.equal(currentURL(), '/commands/foo/bar');
@@ -112,7 +68,6 @@ module('Acceptance | commands', function (hooks) {
   });
 
   test('visiting /commands/foo/bar/1.0.0', async assert => {
-    await authenticateSession({ token: adminJWT });
     await visit('/commands/foo/bar/1.0.0');
 
     assert.equal(currentURL(), '/commands/foo/bar/1.0.0');
@@ -124,7 +79,6 @@ module('Acceptance | commands', function (hooks) {
   });
 
   test('visiting /commands has headers and description', async assert => {
-    await authenticateSession({ token: adminJWT });
     await visit('/commands');
 
     assert.strictEqual(currentURL(), '/commands');
@@ -140,7 +94,6 @@ module('Acceptance | commands', function (hooks) {
   });
 
   test('visiting /commands/not/exist', async assert => {
-    await authenticateSession({ token: adminJWT });
     await visit('/commands/not/exist');
 
     assert.equal(currentURL(), '/commands/not/exist');
@@ -148,7 +101,6 @@ module('Acceptance | commands', function (hooks) {
   });
 
   test('visiting /commands/foo/bar/not-exist', async assert => {
-    await authenticateSession({ token: adminJWT });
     await visit('/commands/foo/bar/not-exist');
 
     assert.equal(currentURL(), '/commands/foo/bar/not-exist');

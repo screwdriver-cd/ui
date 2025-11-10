@@ -1,9 +1,12 @@
-import { copy } from 'ember-copy';
-import { assign } from '@ember/polyfills';
+import { PIPELINE_ID } from './pipeline';
+import { mockGraph } from './workflow-graph';
 
-const events = [
+export const INVALID_EVENT_ID = 0;
+export const DEFAULT_EVENT_ID = 1;
+
+export const mockEvents = [
   {
-    id: '2',
+    id: DEFAULT_EVENT_ID,
     baseBranch: 'main',
     causeMessage: 'Merged by batman',
     commit: {
@@ -24,17 +27,15 @@ const events = [
       url: 'https://github.com/adong'
     },
     startFrom: '~commit',
-    pipelineId: '4',
-    groupEventId: '23452',
+    pipelineId: PIPELINE_ID,
+    groupEventId: 23452,
     sha: 'abcdef1029384',
     type: 'pipeline',
-    workflowGraph: {
-      nodes: [],
-      edges: []
-    }
+    workflowGraph: mockGraph,
+    meta: {}
   },
   {
-    id: '3',
+    id: DEFAULT_EVENT_ID + 1,
     baseBranch: 'main',
     causeMessage: 'Opened by github:robin',
     commit: {
@@ -58,18 +59,16 @@ const events = [
     pr: {
       url: 'https://github.com/adong/batmobile/pulls/42'
     },
-    pipelineId: '4',
-    groupEventId: '23453',
+    pipelineId: PIPELINE_ID,
+    groupEventId: 23453,
     type: 'pr',
     prNum: 42,
     sha: '1029384bbb',
-    workflowGraph: {
-      nodes: [],
-      edges: []
-    }
+    workflowGraph: mockGraph,
+    meta: {}
   },
   {
-    id: '4',
+    id: DEFAULT_EVENT_ID + 2,
     baseBranch: 'main',
     causeMessage: 'Opened by github:robin',
     commit: {
@@ -93,17 +92,12 @@ const events = [
     pr: {
       url: 'https://github.com/adong/batmobile/pulls/43'
     },
-    pipelineId: '4',
-    groupEventId: '23454',
+    pipelineId: PIPELINE_ID,
+    groupEventId: 23454,
     sha: '1030384bbb',
     type: 'pr',
     prNum: 43,
-    workflowGraph: {
-      nodes: [],
-      edges: []
-    }
+    workflowGraph: mockGraph,
+    meta: {}
   }
 ];
-
-export default workflowGraph =>
-  events.map(e => assign(copy(e, true), { workflowGraph }));

@@ -8,109 +8,31 @@ import {
 } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
-import { authenticateSession } from 'ember-simple-auth/test-support';
-import Pretender from 'pretender';
 import { getPageTitle } from 'ember-page-title/test-support';
-
-let server;
+import { invalidateSession } from 'ember-simple-auth/test-support';
+import { PIPELINE_WITH_NO_EVENTS_ID } from '../mock/pipeline';
 
 module('Acceptance | create', function (hooks) {
-  setupApplicationTest(hooks);
+  const mockApi = setupApplicationTest(hooks);
 
   hooks.beforeEach(function () {
-    server = new Pretender();
-
-    server.get('http://localhost:8080/v4/collections', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1/latestCommitEvent', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({})
-    ]);
-
-    server.get('http://localhost:8080/v4/banners', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-  });
-
-  hooks.afterEach(function () {
-    server.shutdown();
+    mockApi.get('/templates', () => [200, []]);
+    mockApi.get(
+      `/pipelines/${PIPELINE_WITH_NO_EVENTS_ID}/latestCommitEvent`,
+      () => {
+        return [200, {}];
+      }
+    );
   });
 
   test('/create a pipeline: not logged in will redirect', async function (assert) {
+    await invalidateSession();
     await visit('/create');
 
     assert.equal(currentURL(), '/login');
   });
 
   test('/create a pipeline: SUCCESS', async function (assert) {
-    server.post('http://localhost:8080/v4/pipelines', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1'
-      })
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1',
-        workflowGraph: {
-          nodes: ['dummy'],
-          edges: ['dummy']
-        }
-      })
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1/events', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/builds', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1/jobs', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1/stages', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1/triggers', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-    server.get('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({})
-    ]);
-    server.get('http://localhost:8080/v4/templates', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    await authenticateSession({ token: 'faketoken' });
     await visit('/create');
 
     assert.equal(currentURL(), '/create');
@@ -119,73 +41,13 @@ module('Acceptance | create', function (hooks) {
     await triggerEvent('.text-input', 'keyup');
     await click('button.blue-button');
     await waitFor('button.start-button');
-    assert.equal(currentURL(), '/pipelines/1/events');
+    assert.equal(
+      currentURL(),
+      `/pipelines/${PIPELINE_WITH_NO_EVENTS_ID}/events`
+    );
   });
 
   test('/create a pipeline with rootDir: SUCCESS', async function (assert) {
-    server.post('http://localhost:8080/v4/pipelines', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1'
-      })
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        id: '1',
-        workflowGraph: {
-          nodes: ['dummy'],
-          edges: ['dummy']
-        }
-      })
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1/events', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/builds', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1/jobs', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1/stages', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/pipelines/1/triggers', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    server.get('http://localhost:8080/v4/users/settings', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({})
-    ]);
-
-    server.get('http://localhost:8080/v4/templates', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    await authenticateSession({ token: 'faketoken' });
     await visit('/create');
 
     assert.equal(currentURL(), '/create');
@@ -195,26 +57,22 @@ module('Acceptance | create', function (hooks) {
     await fillIn('.root-dir', 'lib');
     await click('button.blue-button');
     await waitFor('button.start-button');
-    assert.equal(currentURL(), '/pipelines/1/events');
+    assert.equal(
+      currentURL(),
+      `/pipelines/${PIPELINE_WITH_NO_EVENTS_ID}/events`
+    );
   });
 
   test('/create a pipeline: FAILURE', async function (assert) {
-    server.post('http://localhost:8080/v4/pipelines', () => [
+    mockApi.post('/pipelines', () => [
       409,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
+      {
         statusCode: 409,
         error: 'Conflict',
         message: 'something conflicting'
-      })
-    ]);
-    server.get('http://localhost:8080/v4/templates', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
+      }
     ]);
 
-    await authenticateSession({ token: 'faketoken' });
     await visit('/create');
 
     assert.equal(currentURL(), '/create');
@@ -227,23 +85,6 @@ module('Acceptance | create', function (hooks) {
   });
 
   test('Generate Screwdriver.yaml automatically', async function (assert) {
-    server.post('http://localhost:8080/v4/pipelines', () => [
-      409,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        statusCode: 409,
-        error: 'Conflict',
-        message: 'something conflicting'
-      })
-    ]);
-
-    server.get('http://localhost:8080/v4/templates', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    await authenticateSession({ token: 'faketoken' });
     await visit('/create');
 
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
@@ -256,23 +97,6 @@ module('Acceptance | create', function (hooks) {
   });
 
   test('Create Screwdriver.yaml manually', async function (assert) {
-    server.post('http://localhost:8080/v4/pipelines', () => [
-      409,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        statusCode: 409,
-        error: 'Conflict',
-        message: 'something conflicting'
-      })
-    ]);
-
-    server.get('http://localhost:8080/v4/templates', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    await authenticateSession({ token: 'faketoken' });
     await visit('/create');
 
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
@@ -284,23 +108,6 @@ module('Acceptance | create', function (hooks) {
   });
 
   test('Quick start guide', async function (assert) {
-    server.post('http://localhost:8080/v4/pipelines', () => [
-      409,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify({
-        statusCode: 409,
-        error: 'Conflict',
-        message: 'something conflicting'
-      })
-    ]);
-
-    server.get('http://localhost:8080/v4/templates', () => [
-      200,
-      { 'Content-Type': 'application/json' },
-      JSON.stringify([])
-    ]);
-
-    await authenticateSession({ token: 'faketoken' });
     await visit('/create');
     await fillIn('.text-input', 'git@github.com:foo/bar.git');
     await triggerEvent('.text-input', 'keyup');

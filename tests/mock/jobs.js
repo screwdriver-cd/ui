@@ -1,99 +1,46 @@
-import { copy } from 'ember-copy';
+// eslint-disable-next-line import/prefer-default-export
+import { PIPELINE_ID } from './pipeline';
 
-export default () =>
-  copy(
-    [
-      {
-        id: '12345',
-        groupEventId: '23456',
-        name: 'main',
-        pipelineId: '4',
-        state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
-      },
-      {
-        id: '12346',
-        groupEventId: '23456',
-        name: 'publish',
-        pipelineId: '4',
-        state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
-      },
-      {
-        id: '12347',
-        groupEventId: '23457',
-        name: 'PR-42:main',
-        pipelineId: '4',
-        state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
-      },
-      {
-        id: '12348',
-        groupEventId: '23457',
-        name: 'PR-42:publish',
-        pipelineId: '4',
-        state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
-      },
-      {
-        id: '12349',
-        groupEventId: '23458',
-        name: 'PR-43:main',
-        pipelineId: '4',
-        state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
-      }
-    ],
-    true
-  );
-
-/**
- * Return jobs mock for use with metrics
- *
- * @export
- * @returns
- */
-export function metricJobs() {
-  return copy(
-    [
-      {
-        id: 159,
-        name: 'prod',
-        pipelineId: 4,
-        state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
-      },
-      {
-        id: 158,
-        name: 'beta',
-        pipelineId: 4,
-        state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
-      },
-      {
-        id: 157,
-        name: 'publish',
-        pipelineId: 4,
-        state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
-      },
-      {
-        id: 156,
-        name: 'main',
-        pipelineId: 4,
-        state: 'ENABLED',
-        archived: false,
-        permutations: [{}]
-      }
-    ],
-    true
-  );
-}
+// eslint-disable-next-line import/prefer-default-export
+export const mockJobs = [
+  {
+    id: 12345,
+    name: 'main',
+    pipelineId: PIPELINE_ID,
+    state: 'ENABLED',
+    archived: false,
+    permutations: [{}]
+  },
+  {
+    id: 12346,
+    name: 'publish',
+    pipelineId: PIPELINE_ID,
+    state: 'ENABLED',
+    archived: false,
+    permutations: [{}]
+  },
+  {
+    id: 12347,
+    name: 'PR-42:main',
+    pipelineId: PIPELINE_ID,
+    state: 'ENABLED',
+    archived: false,
+    permutations: [{}]
+  },
+  {
+    id: 12348,
+    name: 'PR-42:publish',
+    pipelineId: PIPELINE_ID,
+    state: 'ENABLED',
+    archived: false,
+    permutations: [{}]
+  },
+  {
+    id: 12349,
+    name: 'PR-43:main',
+    pipelineId: PIPELINE_ID,
+    state: 'ENABLED',
+    archived: false,
+    permutations: [{}]
+  }
+];
