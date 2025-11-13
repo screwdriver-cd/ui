@@ -6,11 +6,15 @@ import { action } from '@ember/object';
 import { hasSonarBadge } from 'screwdriver-ui/utils/pipeline';
 
 export default class PipelineHeaderComponent extends Component {
+  @service router;
+
   @service('scm') scm;
 
   @service('shuttle') shuttle;
 
   @service('pipeline-page-state') pipelinePageState;
+
+  @service('opt-in-route-mapping') optInRouteMapping;
 
   @tracked addToCollectionModalOpen = false;
 
@@ -130,5 +134,52 @@ export default class PipelineHeaderComponent extends Component {
   @action
   closeAddToCollectionModal() {
     this.addToCollectionModalOpen = false;
+  }
+
+  @action
+  switchUi() {
+    const currentUrl = this.router.currentURL;
+
+    this.optInRouteMapping.resetUiSwitch();
+    this.optInRouteMapping.returnUrl = currentUrl;
+
+    let legacyRoute = currentUrl.replace('/v2', '');
+
+    switch (this.router.currentRoute.name) {
+      case 'v2.pipeline.secrets':
+        break;
+      case 'v2.pipeline.build':
+      case 'v2.pipeline.child-pipelines':
+      case 'v2.pipeline.jobs':
+      case 'v2.pipeline.metrics':
+      case 'v2.pipeline.secrets.tokens':
+        legacyRoute = legacyRoute.replace('/tokens', '');
+        break;
+      case 'v2.pipeline.events.index':
+      case 'v2.pipeline.events.show':
+      case 'v2.pipeline.pulls.index':
+        this.optInRouteMapping.setEventId(
+          this.router.currentRoute.attributes.event.id
+        );
+        break;
+      case 'v2.pipeline.pulls.show':
+        this.optInRouteMapping.setEventId(
+          this.router.currentRoute.attributes.event.id
+        );
+        legacyRoute = `${legacyRoute.split('/pulls/')[0]}/pulls`;
+        break;
+      case 'v2.pipeline.settings.cache':
+      case 'v2.pipeline.settings.index':
+      case 'v2.pipeline.settings.jobs':
+      case 'v2.pipeline.settings.metrics':
+      case 'v2.pipeline.settings.preferences':
+        legacyRoute = `${legacyRoute.split('/settings')[0]}/options`;
+        break;
+      default:
+        break;
+    }
+
+    this.optInRouteMapping.switchFromV2 = true;
+    this.router.replaceWith(legacyRoute);
   }
 }

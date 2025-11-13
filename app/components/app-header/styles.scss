@@ -174,10 +174,6 @@
     pointer-events: none;
   }
 
-  .dropdown-item.switch-ui {
-    cursor: pointer;
-  }
-
   .dropdown-item > a.active > span {
     font-size: 12px;
     color: $sd-text-light;

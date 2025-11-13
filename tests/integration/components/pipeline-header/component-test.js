@@ -4,10 +4,18 @@ import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { click, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Service from '@ember/service';
+import sinon from 'sinon';
 import injectScmServiceStub from '../../../helpers/inject-scm';
 
 module('Integration | Component | pipeline header', function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    const router = this.owner.lookup('service:router');
+
+    sinon.stub(router, 'currentURL').value('');
+    sinon.stub(router, 'currentRouteName').value('home');
+  });
 
   test('it renders', async function (assert) {
     const pipelineMock = EmberObject.create({

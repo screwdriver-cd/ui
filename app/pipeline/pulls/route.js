@@ -6,6 +6,7 @@ import EventsRoute from '../events/route';
 
 export default EventsRoute.extend({
   store: service(),
+  optInRouteMapping: service(),
   controllerName: 'pipeline.events',
   setupController(controller, model) {
     this._super(controller, model);
@@ -15,15 +16,31 @@ export default EventsRoute.extend({
     });
     this.pipelineService.setBuildsLink('pipeline.pulls');
   },
-  beforeModel() {
-    if (localStorage.getItem('newUI') === 'true') {
-      const { pipeline_id: pipelineId } = this.paramsFor('pipeline');
+  beforeModel(transition) {
+    const { pipeline } = this.modelFor('pipeline');
 
-      this.transitionTo('v2.pipeline.pulls', pipelineId);
-    } else {
-      const { pipeline } = this.modelFor('pipeline');
-
+    if (
+      this.optInRouteMapping.switchFromV2 ||
+      localStorage.getItem('oldUi') === 'true'
+    ) {
       this.set('pipeline', pipeline);
+      this.optInRouteMapping.switchFromV2 = false;
+
+      return;
+    }
+
+    if (transition.from) {
+      switch (transition.from.name) {
+        case 'pipeline.events':
+        case 'pipeline.events.index':
+        case 'pipeline.events.show':
+          this.set('pipeline', pipeline);
+          this.optInRouteMapping.switchFromV2 = false;
+          break;
+        default:
+          this.replaceWith('v2.pipeline.pulls', pipeline.id);
+          break;
+      }
     }
   },
   async model() {

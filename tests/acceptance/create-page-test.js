@@ -23,6 +23,12 @@ module('Acceptance | create', function (hooks) {
         return [200, {}];
       }
     );
+
+    localStorage.setItem('oldUi', true);
+  });
+
+  hooks.afterEach(() => {
+    localStorage.removeItem('oldUi');
   });
 
   test('/create a pipeline: not logged in will redirect', async function (assert) {

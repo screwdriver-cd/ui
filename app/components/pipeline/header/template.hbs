@@ -76,6 +76,15 @@
     </BsDropdown>
 
     <BsButton
+      id="switch-ui"
+      @type="primary"
+      @outline={{true}}
+      @onClick={{this.switchUi}}
+    >
+      Switch interface
+    </BsButton>
+
+    <BsButton
       id="add-to-collection"
       class="confirm"
       @defaultText="Add to collection"

@@ -19,6 +19,12 @@ module('Acceptance | pipeline build', function (hooks) {
 
       return [200, makeBuilds(jobId)];
     });
+
+    localStorage.setItem('oldUi', true);
+  });
+
+  hooks.afterEach(() => {
+    localStorage.removeItem('oldUi');
   });
 
   test('visiting /pipelines/:id/builds/:buildId when logged in', async function (assert) {

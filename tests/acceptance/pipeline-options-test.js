@@ -6,6 +6,14 @@ import { PIPELINE_ID } from '../mock/pipeline';
 module('Acceptance | pipeline/options', function (hooks) {
   setupApplicationTest(hooks);
 
+  hooks.beforeEach(() => {
+    localStorage.setItem('oldUi', true);
+  });
+
+  hooks.afterEach(() => {
+    localStorage.removeItem('oldUi');
+  });
+
   test('visiting /pipelines/:id/options', async function (assert) {
     const url = `/pipelines/${PIPELINE_ID}/options`;
 

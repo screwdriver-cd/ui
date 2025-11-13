@@ -106,5 +106,14 @@
         color: #3697f2;
       }
     }
+
+    #switch-ui {
+      margin-left: 1rem;
+
+      &:hover:not(:disabled) {
+        color: $sd-running;
+        background-color: rgba($sd-running, 0.1);
+      }
+    }
   }
 }

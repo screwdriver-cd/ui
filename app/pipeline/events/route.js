@@ -14,17 +14,31 @@ export default Route.extend({
   routeAfterAuthentication: 'pipeline.events',
   pipelineService: service('pipeline'),
   userSettings: service(),
+  optInRouteMapping: service(),
   beforeModel(transition) {
     const { pipeline } = this.modelFor('pipeline');
 
-    if (localStorage.getItem('newUI') === 'true') {
-      if (transition.intent.URL) {
-        this.transitionTo(`/v2${transition.intent.URL}`);
-      } else {
-        this.transitionTo('v2.pipeline.events', pipeline.id);
-      }
-    } else {
+    if (
+      this.optInRouteMapping.switchFromV2 ||
+      localStorage.getItem('oldUi') === 'true'
+    ) {
       this.set('pipeline', pipeline);
+      this.optInRouteMapping.switchFromV2 = false;
+
+      return;
+    }
+
+    if (transition.from && transition.from.name === 'pipeline.pulls') {
+      this.set('pipeline', pipeline);
+      this.optInRouteMapping.switchFromV2 = false;
+
+      return;
+    }
+
+    if (transition.intent.URL) {
+      this.replaceWith(`/v2${transition.intent.URL}`);
+    } else {
+      this.replaceWith('v2.pipeline.events', pipeline.id);
     }
   },
   setupController(controller, model = {}) {

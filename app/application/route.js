@@ -12,6 +12,10 @@ export default Route.extend(ApplicationRouteMixin, {
     if (!this.get('session.isAuthenticated')) {
       this.set('session.attemptedTransition', transition);
     }
+
+    if (localStorage.getItem('newUI')) {
+      localStorage.removeItem('newUI');
+    }
   },
   model() {
     return this.scmService.createScms();
