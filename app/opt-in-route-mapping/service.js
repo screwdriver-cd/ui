@@ -3,8 +3,17 @@ import Service from '@ember/service';
 export default class OptInRouteMappingService extends Service {
   routeMappings;
 
+  returnUrl;
+
+  eventMeta;
+
+  switchFromV2;
+
   constructor() {
     super(...arguments);
+
+    this.returnUrl = null;
+    this.eventMeta = null;
 
     this.routeMappings = new Map();
 
@@ -12,34 +21,30 @@ export default class OptInRouteMappingService extends Service {
       'pipeline.child-pipelines',
       'v2.pipeline.child-pipelines'
     );
-    this.routeMappings.set(
-      'v2.pipeline.child-pipelines',
-      'pipeline.child-pipelines'
-    );
     this.routeMappings.set('pipeline.jobs.index', 'v2.pipeline.jobs');
-    this.routeMappings.set('v2.pipeline.jobs', 'pipeline.jobs.index');
-
     this.routeMappings.set('pipeline.events.show', 'v2.pipeline.events.show');
-    this.routeMappings.set('v2.pipeline.events.show', 'pipeline.events.show');
-
     this.routeMappings.set('pipeline.events.index', 'v2.pipeline.events.index');
-    this.routeMappings.set('v2.pipeline.events.index', 'pipeline.events.index');
-
     this.routeMappings.set('pipeline.pulls', 'v2.pipeline.pulls.show');
-    this.routeMappings.set('v2.pipeline.pulls.show', 'pipeline.pulls');
-
     this.routeMappings.set('pipeline.options', 'v2.pipeline.settings.index');
-    this.routeMappings.set('v2.pipeline.settings.index', 'pipeline.options');
-    this.routeMappings.set('v2.pipeline.settings.cache', 'pipeline.options');
-    this.routeMappings.set('v2.pipeline.settings.jobs', 'pipeline.options');
-    this.routeMappings.set('v2.pipeline.settings.metrics', 'pipeline.options');
-    this.routeMappings.set(
-      'v2.pipeline.settings.preferences',
-      'pipeline.options'
-    );
-
     this.routeMappings.set('pipeline.secrets', 'v2.pipeline.secrets.index');
-    this.routeMappings.set('v2.pipeline.secrets.index', 'pipeline.secrets');
-    this.routeMappings.set('v2.pipeline.secrets.tokens', 'pipeline.secrets');
+  }
+
+  resetUiSwitch() {
+    this.returnUrl = null;
+    this.eventMeta = null;
+  }
+
+  setEventId(eventId) {
+    if (!this.eventMeta) {
+      this.eventMeta = {};
+    }
+
+    this.eventMeta.eventId = eventId;
+  }
+
+  setLegacyEventId(legacyEventId) {
+    if (this.eventMeta) {
+      this.eventMeta.legacyEventId = legacyEventId;
+    }
   }
 }

@@ -9,6 +9,14 @@ import { mockGraph } from '../mock/workflow-graph';
 module('Acceptance | pipeline pr-chain', function (hooks) {
   const mockApi = setupApplicationTest(hooks);
 
+  hooks.beforeEach(() => {
+    localStorage.setItem('oldUi', true);
+  });
+
+  hooks.afterEach(() => {
+    localStorage.removeItem('oldUi');
+  });
+
   test('visiting /pipelines/:id/pulls when the pipeline is enabled for prChain', async function (assert) {
     mockApi.get(`/pipelines/${PIPELINE_ID}`, () => [
       200,

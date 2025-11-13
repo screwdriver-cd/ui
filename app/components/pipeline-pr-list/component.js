@@ -6,6 +6,7 @@ import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 
 export default Component.extend({
   store: service(),
+  optInRouteMappingService: service('opt-in-route-mapping'),
   classNameBindings: ['highlighted'],
   highlighted: computed('selectedEvent', 'eventId', {
     get() {
@@ -81,6 +82,7 @@ export default Component.extend({
   actions: {
     selectPR() {
       set(this, 'selected', this.eventId);
+      this.optInRouteMappingService.setLegacyEventId(this.eventId);
     }
   }
 });

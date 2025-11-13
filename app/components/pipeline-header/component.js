@@ -6,6 +6,7 @@ export default Component.extend({
   showCollectionModal: false,
   scmService: service('scm'),
   pipelineService: service('pipeline'),
+  optInRouteMappingService: service('opt-in-route-mapping'),
   classNameBindings: ['isBuildPage'],
   router: service(),
   addCollectionError: null,
@@ -91,6 +92,17 @@ export default Component.extend({
         .sort((l, r) => l.branchAndRootDir.localeCompare(r.branchAndRootDir));
     }
   }),
+  hasNewUi: computed(
+    'optInRouteMappingService.routeMappings',
+    'router.currentRouteName',
+    {
+      get() {
+        const routeName = this.router.currentRouteName;
+
+        return this.optInRouteMappingService.routeMappings.has(routeName);
+      }
+    }
+  ),
   actions: {
     openModal() {
       this.set('showCollectionModal', true);
@@ -111,6 +123,29 @@ export default Component.extend({
           );
           this.set('addCollectionSuccess', null);
         });
+    },
+    switchUi() {
+      const { returnUrl } = this.optInRouteMappingService;
+
+      let v2Url = returnUrl;
+
+      if (this.optInRouteMappingService.eventMeta) {
+        const { eventId, legacyEventId } =
+          this.optInRouteMappingService.eventMeta;
+
+        if (legacyEventId && legacyEventId !== eventId) {
+          const currentUrl = this.router.currentURL;
+
+          if (currentUrl.endsWith('/pulls')) {
+            v2Url = `/v2${currentUrl}/${legacyEventId}`;
+          } else {
+            v2Url = `/v2${currentUrl}`.replace(eventId, legacyEventId);
+          }
+        }
+      }
+
+      this.optInRouteMappingService.resetUiSwitch();
+      this.router.replaceWith(v2Url);
     }
   }
 });

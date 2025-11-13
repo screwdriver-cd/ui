@@ -6,13 +6,21 @@ export default Route.extend({
   session: service(),
   router: service(),
   store: service(),
+  optInRouteMapping: service(),
   routeAfterAuthentication: 'pipeline.child-pipelines',
   beforeModel() {
+    if (
+      this.optInRouteMapping.switchFromV2 ||
+      localStorage.getItem('oldUi') === 'true'
+    ) {
+      this.optInRouteMapping.switchFromV2 = false;
+
+      return;
+    }
+
     const { pipeline } = this.modelFor('pipeline');
 
-    if (localStorage.getItem('newUI') === 'true') {
-      this.router.transitionTo('v2.pipeline.child-pipelines', pipeline.id);
-    }
+    this.router.transitionTo('v2.pipeline.child-pipelines', pipeline.id);
   },
   model() {
     // Guests should not access this page

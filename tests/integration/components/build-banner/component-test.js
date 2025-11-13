@@ -147,7 +147,9 @@ module('Integration | Component | build banner', function (hooks) {
       new Date('2016-11-04T20:08:41.238Z')
     );
 
-    assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/pulls');
+    assert
+      .dom('li.job-name a')
+      .hasAttribute('href', '/v2/pipelines/12345/pulls/abcd');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
     assert
       .dom('.commit a')
@@ -201,7 +203,7 @@ module('Integration | Component | build banner', function (hooks) {
     assert.dom('li.job-name .banner-value').hasText('main');
     assert
       .dom('li.job-name a')
-      .hasAttribute('href', '/pipelines/12345/events/abcd?jobId=1');
+      .hasAttribute('href', '/v2/pipelines/12345/events/abcd');
   });
 
   test('it renders pr link if pr url info is available', async function (assert) {
@@ -842,7 +844,9 @@ module('Integration | Component | build banner', function (hooks) {
       new Date('2016-11-04T20:08:41.238Z')
     );
 
-    assert.dom('li.job-name a').hasAttribute('href', '/pipelines/12345/pulls');
+    assert
+      .dom('li.job-name a')
+      .hasAttribute('href', '/v2/pipelines/12345/pulls/abcd');
     assert.dom('li.job-name .banner-value').hasText('PR-671');
     assert
       .dom('.commit a')

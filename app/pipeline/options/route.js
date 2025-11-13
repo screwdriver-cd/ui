@@ -5,13 +5,21 @@ import { get } from '@ember/object';
 export default Route.extend({
   session: service(),
   router: service(),
+  optInRouteMapping: service(),
   routeAfterAuthentication: 'pipeline.options',
   beforeModel() {
-    if (localStorage.getItem('newUI') === 'true') {
-      const { pipeline_id: pipelineId } = this.paramsFor('pipeline');
+    if (
+      this.optInRouteMapping.switchFromV2 ||
+      localStorage.getItem('oldUi') === 'true'
+    ) {
+      this.optInRouteMapping.switchFromV2 = false;
 
-      this.transitionTo('v2.pipeline.settings.index', pipelineId);
+      return;
     }
+
+    const { pipeline_id: pipelineId } = this.paramsFor('pipeline');
+
+    this.transitionTo('v2.pipeline.settings.index', pipelineId);
   },
   model() {
     // Guests should not access this page

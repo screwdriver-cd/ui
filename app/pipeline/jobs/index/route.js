@@ -9,17 +9,24 @@ import { NotFoundError } from '../../../utils/not-found-error';
 export default Route.extend(AuthenticatedRouteMixin, {
   store: service(),
   router: service(),
+  optInRouteMapping: service(),
   triggerService: service('pipeline-triggers'),
   routeAfterAuthentication: 'pipeline.jobs.index',
   pipelineService: service('pipeline'),
   beforeModel() {
     const { pipeline } = this.modelFor('pipeline');
 
-    if (localStorage.getItem('newUI') === 'true') {
-      this.transitionTo('v2.pipeline.jobs', pipeline.id);
-    } else {
+    if (
+      this.optInRouteMapping.switchFromV2 ||
+      localStorage.getItem('oldUi') === 'true'
+    ) {
       this.set('pipeline', pipeline);
+      this.optInRouteMapping.switchFromV2 = false;
+
+      return;
     }
+
+    this.replaceWith('v2.pipeline.jobs', pipeline.id);
   },
   setupController(controller, model) {
     this._super(controller, model);

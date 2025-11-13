@@ -10,6 +10,7 @@ import { getTimestamp } from '../../utils/timestamp-format';
 export default Component.extend({
   userSettings: service(),
   store: service(),
+  optInRouteMappingService: service('opt-in-route-mapping'),
   classNameBindings: ['highlighted', 'event.status'],
   highlighted: computed('selectedEvent', 'event.id', {
     get() {
@@ -158,6 +159,8 @@ export default Component.extend({
 
       if (typeof fn === 'function') {
         const { id, type } = this.event;
+
+        this.optInRouteMappingService.setLegacyEventId(id);
 
         fn(id, type);
       }

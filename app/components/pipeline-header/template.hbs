@@ -81,6 +81,16 @@
     {{/if}}
   {{/if}}
 
+  <BsButton
+    id="switch-ui"
+    @type="primary"
+    @outline={{true}}
+    @onClick={{action "switchUi"}}
+    disabled={{eq this.hasNewUi false}}
+  >
+    Switch interface
+  </BsButton>
+
   <div class="header-item">
     <CollectionDropdown
       @pipeline={{this.pipeline}}

@@ -6,7 +6,22 @@ export default Route.extend({
   session: service(),
   store: service(),
   router: service(),
+  optInRouteMapping: service(),
   routeAfterAuthentication: 'pipeline.secrets',
+  beforeModel() {
+    if (
+      this.optInRouteMapping.switchFromV2 ||
+      localStorage.getItem('oldUi') === 'true'
+    ) {
+      this.optInRouteMapping.switchFromV2 = false;
+
+      return;
+    }
+
+    const { pipeline_id: pipelineId } = this.paramsFor('pipeline');
+
+    this.replaceWith('v2.pipeline.secrets', pipelineId);
+  },
   model() {
     // Refresh error message
     this.controllerFor('pipeline.secrets').set('errorMessage', '');

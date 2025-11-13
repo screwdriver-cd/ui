@@ -7,6 +7,14 @@ import { PIPELINE_ID } from '../mock/pipeline';
 module('Acceptance | secrets', function (hooks) {
   setupApplicationTest(hooks);
 
+  hooks.beforeEach(() => {
+    localStorage.setItem('oldUi', true);
+  });
+
+  hooks.afterEach(() => {
+    localStorage.removeItem('oldUi');
+  });
+
   test('visiting /pipelines/:id/secrets', async function (assert) {
     const testUrl = `/pipelines/${PIPELINE_ID}/secrets`;
 

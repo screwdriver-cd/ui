@@ -7,6 +7,14 @@ import { PARENT_PIPELINE_ID } from '../mock/pipeline';
 module('Acceptance | child pipeline', function (hooks) {
   setupApplicationTest(hooks);
 
+  hooks.beforeEach(() => {
+    localStorage.setItem('oldUi', true);
+  });
+
+  hooks.afterEach(() => {
+    localStorage.removeItem('oldUi');
+  });
+
   test('visiting /pipelines/:id/child-pipelines', async function (assert) {
     const url = `/pipelines/${PARENT_PIPELINE_ID}/child-pipelines`;
 
