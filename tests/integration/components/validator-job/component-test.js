@@ -96,7 +96,9 @@ module('Integration | Component | validator job', function (hooks) {
         FOO: 'bar'
       },
       settings: {
-        FOO: 'bar'
+        FOO: 'bar',
+        BAZ: { name: 'test' },
+        QUX: {}
       },
       annotations: {
         FOO: 'bar'
@@ -114,7 +116,15 @@ module('Integration | Component | validator job', function (hooks) {
     assert.dom('.env .label').hasText('Environment Variables:');
     assert.dom('.env ul li').hasText('FOO: bar');
     assert.dom('.settings .label').hasText('Settings:');
-    assert.dom('.settings ul li').hasText('FOO: bar');
+    assert.dom('.settings ul li:nth-of-type(1)').hasText('FOO: bar');
+    assert.dom('.settings ul li:nth-of-type(2) div.name').hasText('BAZ:');
+    assert
+      .dom('.settings ul li:nth-of-type(2) div.value')
+      .hasText('name: test');
+    assert.dom('.settings ul li:nth-of-type(3) div.name').hasText('QUX:');
+    assert
+      .dom('.settings ul li:nth-of-type(3) div.value')
+      .hasText('None defined');
     assert.dom('.annotations .label').hasText('Annotations:');
     assert.dom('.annotations ul li').hasText('FOO: bar');
   });
