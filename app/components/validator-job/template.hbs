@@ -313,15 +313,21 @@
               {{name}}:
             </div>
             <div class="value">
-              {{#each-in svalue as |xname xvalue|}}
-                <div>
-                  {{xname}}: {{xvalue}}
-                </div>
+              {{#if (is-object svalue)}}
+                {{#each-in svalue as |xname xvalue|}}
+                  <div>
+                    {{xname}}: {{xvalue}}
+                  </div>
+                {{else}}
+                  <div>
+                    None defined
+                  </div>
+                {{/each-in}}
               {{else}}
                 <div>
                   {{svalue}}
                 </div>
-              {{/each-in}}
+              {{/if}}
             </div>
           </div>
         </li>
