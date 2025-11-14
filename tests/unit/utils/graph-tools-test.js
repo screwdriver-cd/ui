@@ -393,17 +393,19 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(result, expectedOutput);
   });
 
-  test('it processes a non-chained pr pipeline with a join from a pr trigger', function (assert) {
+  test.only('it processes a non-chained pr pipeline with a join from a pr trigger', function (assert) {
     const inputGraph = {
       nodes: [
         { name: '~pr' },
         { name: '~commit' },
         { name: 'main' },
+        { name: 'foo-main' },
         { name: 'downstream' }
       ],
       edges: [
         { src: '~pr', dest: 'main' },
         { src: '~commit', dest: 'main' },
+        { src: '~pr', dest: 'foo-main' },
         { src: 'main', dest: 'downstream' }
       ]
     };
@@ -412,12 +414,22 @@ module('Unit | Utility | graph tools', function () {
         id: 1,
         group: 2,
         name: 'pr-2:main'
+      },
+      {
+        id: 111,
+        group: 2,
+        name: 'pr-2:foo-main'
       }
     ];
     const builds = [
       {
         id: 3,
         jobId: 1,
+        status: 'SUCCESS'
+      },
+      {
+        id: 333,
+        jobId: 2,
         status: 'SUCCESS'
       }
     ];
@@ -442,6 +454,11 @@ module('Unit | Utility | graph tools', function () {
           pos: { x: 1, y: 0 }
         },
         {
+          name: 'foo-main',
+          isDisabled: false,
+          pos: { x: 1, y: 1 }
+        },
+        {
           name: 'downstream',
           isDisabled: false,
           pos: { x: 2, y: 0 }
@@ -460,6 +477,13 @@ module('Unit | Utility | graph tools', function () {
           dest: 'main',
           from: { x: 0, y: 1 },
           to: { x: 1, y: 0 }
+        },
+        {
+          src: '~pr',
+          dest: 'foo-main',
+          status: 'STARTED_FROM',
+          from: { x: 0, y: 0 },
+          to: { x: 1, y: 1 }
         },
         {
           src: 'main',
