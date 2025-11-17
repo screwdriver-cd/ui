@@ -63,7 +63,7 @@ const findJob = (jobs, jobId) => jobs.find(j => j && `${j.id}` === `${jobId}`);
  * @return {Object}         Reference to the job object from the list if found
  */
 const prJob = (jobs, prNum, name) =>
-  jobs.find(j => j && j.group === prNum && j.name.endsWith(`:${name}`));
+  jobs.find(j => j && j.group === prNum && j.name.split(`PR-${prNum}:`)[1] === name);
 
 /**
  * Determines if a job is a setup job of a stage based on the name
