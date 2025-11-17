@@ -417,7 +417,7 @@ module('Unit | Utility | graph tools', function () {
       {
         id: 111,
         group: 2,
-        name: 'pr-2:foo-main'
+        name: 'PR-2:foo-main'
       }
     ];
     const builds = [
