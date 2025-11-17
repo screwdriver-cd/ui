@@ -412,7 +412,7 @@ module('Unit | Utility | graph tools', function () {
       {
         id: 1,
         group: 2,
-        name: 'pr-2:main'
+        name: 'PR-2:main'
       },
       {
         id: 111,
