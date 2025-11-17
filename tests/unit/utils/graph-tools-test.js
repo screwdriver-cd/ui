@@ -393,7 +393,6 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(result, expectedOutput);
   });
 
-  test.only('it processes a non-chained pr pipeline with a join from a pr trigger', function (assert) {
     const inputGraph = {
       nodes: [
         { name: '~pr' },
