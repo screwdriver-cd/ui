@@ -511,6 +511,234 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(result, expectedOutput);
   });
 
+  test('it processes a non-chained pr pipeline with similar job names', function (assert) {
+    const inputGraph = {
+      nodes: [
+        { name: '~pr' },
+        { name: '~commit' },
+        { name: 'main' },
+        { name: 'foo-main' },
+        { name: 'setup' },
+        { name: 'teardown' },
+        { name: 'stage@puff:setup' },
+        { name: 'cream' },
+        { name: 'stage@puff:teardown' }
+      ],
+      edges: [
+        { src: '~pr', dest: 'main' },
+        { src: '~pr', dest: 'foo-main' },
+        { src: '~pr', dest: 'setup' },
+        { src: '~pr', dest: 'teardown' },
+        { src: '~pr', dest: 'stage@puff:setup' },
+        { src: 'stage@puff:setup', dest: 'cream' },
+        { src: 'cream', dest: 'stage@puff:teardown' }
+      ]
+    };
+    const jobs = [
+      {
+        id: 1,
+        group: 2,
+        name: 'PR-2:stage@puff:teardown'
+      },
+      {
+        id: 2,
+        group: 2,
+        name: 'PR-2:cream'
+      },
+      {
+        id: 3,
+        group: 2,
+        name: 'PR-2:stage@puff:setup'
+      },
+      {
+        id: 4,
+        group: 2,
+        name: 'PR-2:teardown'
+      },
+      {
+        id: 5,
+        group: 2,
+        name: 'PR-2:setup'
+      },
+      {
+        id: 6,
+        group: 2,
+        name: 'PR-2:foo-main'
+      },
+      {
+        id: 7,
+        group: 2,
+        name: 'PR-2:main'
+      }
+    ];
+    const builds = [
+      {
+        id: 1,
+        jobId: 7,
+        status: 'SUCCESS'
+      },
+      {
+        id: 2,
+        jobId: 6,
+        status: 'SUCCESS'
+      },
+      {
+        id: 3,
+        jobId: 5,
+        status: 'SUCCESS'
+      },
+      {
+        id: 4,
+        jobId: 4,
+        status: 'SUCCESS'
+      },
+      {
+        id: 5,
+        jobId: 3,
+        status: 'SUCCESS'
+      },
+      {
+        id: 6,
+        jobId: 2,
+        status: 'SUCCESS'
+      },
+      {
+        id: 7,
+        jobId: 1,
+        status: 'SUCCESS'
+      }
+    ];
+    const expectedOutput = {
+      nodes: [
+        {
+          name: '~pr',
+          isDisabled: false,
+          status: 'STARTED_FROM',
+          pos: { x: 0, y: 0 }
+        },
+        {
+          name: '~commit',
+          isDisabled: false,
+          pos: { x: 0, y: 5 }
+        },
+        {
+          name: 'main',
+          buildId: 1,
+          isDisabled: false,
+          status: 'SUCCESS',
+          pos: { x: 1, y: 0 }
+        },
+        {
+          name: 'foo-main',
+          buildId: 2,
+          isDisabled: false,
+          status: 'SUCCESS',
+          pos: { x: 1, y: 1 }
+        },
+        {
+          name: 'setup',
+          buildId: 3,
+          isDisabled: false,
+          status: 'SUCCESS',
+          pos: { x: 1, y: 2 }
+        },
+        {
+          name: 'teardown',
+          buildId: 4,
+          isDisabled: false,
+          status: 'SUCCESS',
+          pos: { x: 1, y: 3 }
+        },
+        {
+          name: 'stage@puff:setup',
+          buildId: 5,
+          isDisabled: false,
+          status: 'SUCCESS',
+          pos: { x: 1, y: 4 }
+        },
+        {
+          name: 'cream',
+          buildId: 6,
+          isDisabled: false,
+          status: 'SUCCESS',
+          pos: { x: 2, y: 0 }
+        },
+        {
+          name: 'stage@puff:teardown',
+          buildId: 7,
+          isDisabled: false,
+          status: 'SUCCESS',
+          pos: { x: 3, y: 0 }
+        }
+      ],
+      edges: [
+        {
+          src: '~pr',
+          dest: 'main',
+          status: 'STARTED_FROM',
+          from: { x: 0, y: 0 },
+          to: { x: 1, y: 0 }
+        },
+        {
+          src: '~pr',
+          dest: 'foo-main',
+          status: 'STARTED_FROM',
+          from: { x: 0, y: 0 },
+          to: { x: 1, y: 1 }
+        },
+        {
+          src: '~pr',
+          dest: 'setup',
+          status: 'STARTED_FROM',
+          from: { x: 0, y: 0 },
+          to: { x: 1, y: 2 }
+        },
+        {
+          src: '~pr',
+          dest: 'teardown',
+          status: 'STARTED_FROM',
+          from: { x: 0, y: 0 },
+          to: { x: 1, y: 3 }
+        },
+        {
+          src: '~pr',
+          dest: 'stage@puff:setup',
+          status: 'STARTED_FROM',
+          from: { x: 0, y: 0 },
+          to: { x: 1, y: 4 }
+        },
+        {
+          src: 'stage@puff:setup',
+          dest: 'cream',
+          from: { x: 1, y: 4 },
+          to: { x: 2, y: 0 }
+        },
+        {
+          src: 'cream',
+          dest: 'stage@puff:teardown',
+          from: { x: 2, y: 0 },
+          to: { x: 3, y: 0 }
+        }
+      ],
+      stages: [],
+      stageEdges: [],
+      meta: {
+        height: 6,
+        width: 4
+      }
+    };
+
+    const result = decorateGraph({
+      inputGraph,
+      builds,
+      jobs,
+      start: '~pr',
+      prNum: 2
+    });
+
+    assert.deepEqual(result, expectedOutput);
+  });
+
   test('it handles detached jobs', function (assert) {
     const inputGraph = {
       nodes: [
