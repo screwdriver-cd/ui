@@ -1,6 +1,8 @@
 import Service, { service } from '@ember/service';
 
 export default class SettingsService extends Service {
+  @service session;
+
   @service('shuttle') shuttle;
 
   settings;
@@ -20,6 +22,10 @@ export default class SettingsService extends Service {
         this.settings = settings;
       })
       .catch(err => {
+        if (this.session.data.authenticated.isGuest) {
+          return;
+        }
+
         console.error('Error fetching settings:', err);
         throw err;
       });
