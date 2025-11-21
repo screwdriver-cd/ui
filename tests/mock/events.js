@@ -1,8 +1,9 @@
-import { PIPELINE_ID } from './pipeline';
+import { PARENT_PIPELINE_ID, PIPELINE_ID } from './pipeline';
 import { mockGraph } from './workflow-graph';
 
 export const INVALID_EVENT_ID = 0;
 export const DEFAULT_EVENT_ID = 1;
+export const EVENT_FOR_ANOTHER_PIPELINE_ID = 10;
 
 export const mockEvents = [
   {
@@ -97,6 +98,35 @@ export const mockEvents = [
     sha: '1030384bbb',
     type: 'pr',
     prNum: 43,
+    workflowGraph: mockGraph,
+    meta: {}
+  },
+  {
+    id: EVENT_FOR_ANOTHER_PIPELINE_ID,
+    baseBranch: 'main',
+    causeMessage: 'Merged by batman',
+    commit: {
+      message: 'Merge pull request #2 from batcave/batmobile',
+      author: {
+        username: 'batman',
+        name: 'Bruce W',
+        avatar: 'https://avatars.githubusercontent.com/u/15989893?v=4',
+        url: 'https://github.com/adong'
+      },
+      url: 'https://github.com/adong/commit/abcdef1029384'
+    },
+    createTime: '2016-11-04T20:09:41.238Z',
+    creator: {
+      username: 'batman',
+      name: 'Bruce W',
+      avatar: 'https://avatars.githubusercontent.com/u/15989893?v=4',
+      url: 'https://github.com/adong'
+    },
+    startFrom: '~commit',
+    pipelineId: PARENT_PIPELINE_ID,
+    groupEventId: 23452,
+    sha: 'abcdef1029384',
+    type: 'pipeline',
     workflowGraph: mockGraph,
     meta: {}
   }

@@ -21,6 +21,13 @@ export default class NewPipelineEventsShowRoute extends Route {
     } else {
       event = await this.shuttle
         .fetchFromApi('get', `/events/${eventId}`)
+        .then(fetchedEvent => {
+          if (fetchedEvent.pipelineId !== pipelineId) {
+            throw new NotFoundError('Event does not belong to this pipeline');
+          }
+
+          return fetchedEvent;
+        })
         .catch(async err => {
           if (err instanceof NotFoundError) {
             const latestEventId =
