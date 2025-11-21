@@ -3,7 +3,11 @@ import { visit, currentURL } from '@ember/test-helpers';
 import { setupApplicationTest } from 'screwdriver-ui/tests/helpers';
 import { invalidateSession } from 'ember-simple-auth/test-support';
 import { getPageTitle } from 'ember-page-title/test-support';
-import { DEFAULT_EVENT_ID, INVALID_EVENT_ID } from '../../../mock/events';
+import {
+  DEFAULT_EVENT_ID,
+  EVENT_FOR_ANOTHER_PIPELINE_ID,
+  INVALID_EVENT_ID
+} from '../../../mock/events';
 import { PIPELINE_ID } from '../../../mock/pipeline';
 
 module('Acceptance | pipelines/:id/events', hooks => {
@@ -29,6 +33,16 @@ module('Acceptance | pipelines/:id/events', hooks => {
     await visit(`${BASE_URL}/${INVALID_EVENT_ID}`);
 
     assert.strictEqual(currentURL(), `${BASE_URL}/${INVALID_EVENT_ID}`);
+    assert.dom('#invalid-event').exists();
+  });
+
+  test.skip('visiting /pipelines/:id/events/:eventId with an event for another pipeline', async assert => {
+    await visit(`${BASE_URL}/${EVENT_FOR_ANOTHER_PIPELINE_ID}`);
+
+    assert.strictEqual(
+      currentURL(),
+      `${BASE_URL}/${EVENT_FOR_ANOTHER_PIPELINE_ID}`
+    );
     assert.dom('#invalid-event').exists();
   });
 
