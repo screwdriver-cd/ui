@@ -27,6 +27,8 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @tracked showCards = false;
 
+  @tracked lastSuccessfulEventId;
+
   collectionApi;
 
   prNums;
@@ -101,6 +103,9 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     ]).then(([newerEvents, olderEvents]) => {
       this.events = [...newerEvents, event, ...olderEvents];
       this.newestEvent = this.events[0];
+      this.lastSuccessfulEvent = this.events.find(e => e.status === 'SUCCESS');
+
+      this.lastSuccessfulEventId = this.lastSuccessfulEvent?.id;
 
       return newerEvents.length;
     });
@@ -253,5 +258,10 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   @action
   closeSyncPrModal() {
     this.showSyncPrModal = false;
+  }
+
+  @action
+  updateLastSuccessfulEventId(event) {
+    this.lastSuccessfulEventId = event.id;
   }
 }

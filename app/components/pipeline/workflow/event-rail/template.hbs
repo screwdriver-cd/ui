@@ -55,6 +55,8 @@
           @showParameters={{true}}
           @showEventGroup={{true}}
           @handleFilter={{true}}
+          @lastSuccessfulEventId={{this.lastSuccessfulEventId}}
+          @onSuccess={{this.updateLastSuccessfulEventId}}
         />
       </VerticalCollection>
     {{/if}}
