@@ -8,6 +8,8 @@ export default class PipelineSettingsMainModalSyncComponent extends Component {
 
   @service('pipeline-page-state') pipelinePageState;
 
+  @service router;
+
   @tracked errorMessage;
 
   @tracked isAwaitingResponse;
@@ -59,7 +61,11 @@ export default class PipelineSettingsMainModalSyncComponent extends Component {
       .fetchFromApi('post', url)
       .then(() => {
         this.wasActionSuccessful = true;
-        this.args.closeModal();
+        if (this.args.syncType === 'pipeline') {
+          this.router.refresh();
+        } else {
+          this.args.closeModal();
+        }
       })
       .catch(err => {
         this.wasActionSuccessful = false;
