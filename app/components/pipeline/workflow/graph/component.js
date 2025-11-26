@@ -3,7 +3,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { isSkipped } from 'screwdriver-ui/utils/pipeline/event';
-import { decorateGraph } from 'screwdriver-ui/utils/graph-tools';
+import { decorateGraph, removeBranch } from 'screwdriver-ui/utils/graph-tools';
 import {
   addEdges,
   addJobIcons,
@@ -59,6 +59,16 @@ export default class PipelineWorkflowGraphComponent extends Component {
     event,
     collapsedStages
   ) {
+    // remove jobs that starts from ~pr
+
+    const { showPRJobs } = this.args;
+
+    if (!showPRJobs) {
+      const prNode = workflowGraph.nodes.findBy('name', '~pr');
+
+      removeBranch(prNode, workflowGraph);
+    }
+
     this.decoratedGraph = decorateGraph({
       inputGraph: workflowGraph,
       builds,

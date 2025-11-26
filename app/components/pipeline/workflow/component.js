@@ -54,6 +54,8 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked collapsedStages;
 
+  @tracked showPRJobs = true;
+
   workflowGraph;
 
   workflowGraphWithDownstreamTriggers;
@@ -78,6 +80,7 @@ export default class PipelineWorkflowComponent extends Component {
     this.showStageTooltip = false;
     this.d3Data = null;
     this.collapsedStages = new Set([]);
+    this.showPRJobs = true;
     this.pipeline = this.pipelinePageState.getPipeline();
     this.userSettings = this.settings.getSettings();
     this.showDownstreamTriggers =
@@ -87,6 +90,14 @@ export default class PipelineWorkflowComponent extends Component {
       this.pipeline.id,
       this.pipelinePageState.getIsPr()
     );
+
+    const pipelinePreference = this.userSettings[this.pipeline.id];
+
+    this.showPRJobs =
+      pipelinePreference === undefined ||
+      pipelinePreference.showPRJobs === undefined
+        ? true
+        : pipelinePreference.showPRJobs;
 
     if (this.args.noEvents) {
       this.monitorForNewEvents();
