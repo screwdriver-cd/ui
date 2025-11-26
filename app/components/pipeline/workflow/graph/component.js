@@ -63,7 +63,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
     const { showPRJobs } = this.args;
 
-    if (!showPRJobs) {
+    if (event.prNum === undefined && !showPRJobs) {
       const prNode = workflowGraph.nodes.findBy('name', '~pr');
 
       removeBranch(prNode, workflowGraph);
