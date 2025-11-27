@@ -77,6 +77,9 @@ export default class PipelineEventCardComponent extends Component {
     this.showParametersModal = false;
     this.showAbortBuildModal = false;
     this.hideCard = false;
+
+    this.notificationReady = false;
+    this.allowNotification = this.settings.getSettings().allowNotification;
   }
 
   willDestroy() {
@@ -92,6 +95,33 @@ export default class PipelineEventCardComponent extends Component {
       clearInterval(this.durationIntervalId);
     }
     this.durationIntervalId = null;
+  }
+
+  buildNotify(beforeStatus, nextStatus) {
+    if (Notification.permission === 'granted' && this.allowNotification) {
+      if (['QUEUED', 'RUNNING'].includes(beforeStatus)) {
+        if (['SUCCESS', 'FAILURE', 'ABORTED'].includes(nextStatus)) {
+          const screwdriverIconPath =
+            '/assets/icons/android-chrome-144x144.png';
+          const statusMap = {
+            SUCCESS: '✅',
+            FAILURE: '❌',
+            ABORTED: '⛔'
+          };
+
+          const notificationIcon = statusMap[nextStatus];
+          const pipeline = this.pipelinePageState.getPipeline();
+
+          // eslint-disable-next-line no-new
+          new Notification(`SD.cd ${pipeline.name}`, {
+            body: `${notificationIcon} ${nextStatus}: Event ${this.event.id}`,
+            icon: screwdriverIconPath
+          }).onclick = () => {
+            window.focus();
+          };
+        }
+      }
+    }
   }
 
   @action
@@ -176,7 +206,8 @@ export default class PipelineEventCardComponent extends Component {
     if (beforeStatus === 'RUNNING' && this.status === 'SUCCESS') {
       // Only when the status changes from RUNNING to SUCCESS
       // The processing of the latestEventId during the initial run is handled by event-rail component
-      this.args.onSuccess(this.event);
+      // this.args.onSuccess(this.event);
+      this.buildNotify(beforeStatus, this.status);
     }
 
     if (this.args.handleFilter) {
