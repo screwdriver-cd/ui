@@ -224,6 +224,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @collapsedStages={{this.collapsedStages}}
             @chainPr={{true}}
             @displayJobNameLength={{this.displayJobNameLength}}
+            @showPRJobs={{this.showPRJobs}}
       />`
     );
 
