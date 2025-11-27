@@ -32,7 +32,8 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       event: { startFrom: '~commit' },
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
       collapsedStages: new Set([]),
-      displayJobNameLength: 20
+      displayJobNameLength: 20,
+      showPRJobs: false
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -42,6 +43,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
+            @showPRJobs={{this.showPRJobs}}
       />`
     );
 
@@ -61,7 +63,8 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       event: { startFrom: nodeNames[0] },
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
       collapsedStages: new Set([]),
-      displayJobNameLength: 25
+      displayJobNameLength: 25,
+      showPRJobs: false
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -71,6 +74,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
+            @showPRJobs={{this.showPRJobs}}
       />`
     );
 
@@ -127,7 +131,8 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
         { id: 3, jobId: 12, status: 'SUCCESS' }
       ],
       collapsedStages: new Set([]),
-      displayJobNameLength: 20
+      displayJobNameLength: 20,
+      showPRJobs: false
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -137,6 +142,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
+            @showPRJobs={{this.showPRJobs}}
       />`
     );
 
@@ -184,7 +190,8 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
         { id: 3, jobId: 12, status: 'SUCCESS' }
       ],
       collapsedStages: new Set([]),
-      displayJobNameLength: 20
+      displayJobNameLength: 20,
+      showPRJobs: false
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -194,6 +201,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
+            @showPRJobs={{this.showPRJobs}}
       />`
     );
 
@@ -211,10 +219,11 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
           { src: 'first', dest: 'second' }
         ]
       },
-      event: { startFrom: '~pr' },
+      event: { startFrom: '~pr', prNum: 1 },
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
       collapsedStages: new Set([]),
-      displayJobNameLength: 20
+      displayJobNameLength: 20,
+      showPRJobs: false
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -254,7 +263,8 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       event: { startFrom: '~commit' },
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
       collapsedStages: new Set([]),
-      displayJobNameLength: 20
+      displayJobNameLength: 20,
+      showPRJobs: false
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -264,6 +274,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
+            @showPRJobs={{this.showPRJobs}}
       />`
     );
 
@@ -286,7 +297,8 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       event: { startFrom: '~commit' },
       builds: [{ id: 1, jobId: 123, status: 'RUNNING' }],
       collapsedStages: new Set([]),
-      displayJobNameLength: 20
+      displayJobNameLength: 20,
+      showPRJobs: false
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -296,6 +308,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
+            @showPRJobs={{this.showPRJobs}}
       />`
     );
 
@@ -349,7 +362,8 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       ],
       stageBuilds: [{ id: 1, stageId: 10, status: 'RUNNING' }],
       collapsedStages: new Set([]),
-      displayJobNameLength: 20
+      displayJobNameLength: 20,
+      showPRJobs: false
     });
     await render(
       hbs`<Pipeline::Workflow::Graph
@@ -360,6 +374,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
             @collapsedStages={{this.collapsedStages}}
             @chainPr={{false}}
             @displayJobNameLength={{this.displayJobNameLength}}
+            @showPRJobs={{this.showPRJobs}}
       />`
     );
 
