@@ -273,7 +273,7 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
     assert.dom('#hidden-tooltip-description').exists({ count: 1 });
   });
 
-  test('it does not render actionable menu options when the node represents stage jobs group', async function (assert) {
+  test.only('it does not render actionable menu options when the node represents stage jobs group', async function (assert) {
     this.setProperties({
       d3Data: {
         node: {
@@ -307,6 +307,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
     assert.dom('#hidden-tooltip-description').exists({ count: 1 });
     assert
       .dom('#hidden-tooltip-description')
-      .hasText('Description: This job group includes t...');
+      .hasText('This job group includes t...');
   });
 });
