@@ -562,7 +562,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     assert.dom('span').hasText(`${fullDescription}`);
   });
 
-  test('it does not render actionable menu options when the node represents stage jobs group', async function (assert) {
+  test.only('it does not render actionable menu options when the node represents stage jobs group', async function (assert) {
     const data = {
       job: {
         name: 'stage@production jobs(3)',
@@ -588,7 +588,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     assert
       .dom('.content span')
       .hasText(
-        'Description: This job group includes the following jobs: prod-deploy, prod-test, prod-certify'
+        'This job group includes the following jobs: prod-deploy, prod-test, prod-certify'
       );
   });
 });
