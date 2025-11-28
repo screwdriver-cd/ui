@@ -562,7 +562,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     assert.dom('span').hasText(`${fullDescription}`);
   });
 
-  test.only('it does not render actionable menu options when the node represents stage jobs group', async function (assert) {
+  test('it does not render actionable menu options when the node represents stage jobs group', async function (assert) {
     const data = {
       job: {
         name: 'stage@production jobs(3)',
