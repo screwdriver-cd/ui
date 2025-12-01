@@ -101,7 +101,16 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
       },
       prNum: 1
     };
-    const jobs = [{ name: 'p1', state: 'ENABLED' }];
+    const jobs = [
+      { id: 1, name: 'p1', state: 'ENABLED', description: 'original' },
+      {
+        id: 2,
+        name: 'PR-1:p1',
+        state: 'ENABLED',
+        description: 'updated',
+        prParentJobId: 1
+      }
+    ];
 
     const tooltipData = getTooltipData(
       {
@@ -112,8 +121,11 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
     );
 
     assert.deepEqual(tooltipData.job, {
+      id: 2,
+      prParentJobId: 1,
       name: 'p1',
-      isDisabled: false
+      isDisabled: false,
+      description: 'updated'
     });
     assert.deepEqual(tooltipData.selectedEvent, event);
   });
@@ -137,22 +149,28 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
         parameters: {}
       }
     };
-    const node = { name: 'p1' };
+    const node = { id: 1, name: 'p1' };
 
     let tooltipData = getTooltipData(node, event, []);
 
-    assert.deepEqual(tooltipData.job, { name: 'p1' });
+    assert.deepEqual(tooltipData.job, { id: 1, name: 'p1' });
     assert.deepEqual(tooltipData.selectedEvent, event);
 
     tooltipData = getTooltipData(node, event, [
-      { name: 'p1', state: 'DISABLED' }
-    ]);
-    assert.deepEqual(tooltipData.job, { name: 'p1', isDisabled: true });
-
-    tooltipData = getTooltipData(node, event, [
-      { name: 'p1', state: 'DISABLED', stateChanger: 'foo' }
+      { id: 123, name: 'p1', state: 'DISABLED', description: 'test' }
     ]);
     assert.deepEqual(tooltipData.job, {
+      id: 123,
+      name: 'p1',
+      isDisabled: true,
+      description: 'test'
+    });
+
+    tooltipData = getTooltipData(node, event, [
+      { id: 123, name: 'p1', state: 'DISABLED', stateChanger: 'foo' }
+    ]);
+    assert.deepEqual(tooltipData.job, {
+      id: 123,
       name: 'p1',
       isDisabled: true,
       stateChanger: 'foo'
@@ -160,6 +178,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
 
     tooltipData = getTooltipData(node, event, [
       {
+        id: 123,
         name: 'p1',
         state: 'DISABLED',
         stateChanger: 'foo',
@@ -167,6 +186,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
       }
     ]);
     assert.deepEqual(tooltipData.job, {
+      id: 123,
       name: 'p1',
       isDisabled: true,
       stateChanger: 'foo'
@@ -174,6 +194,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
 
     tooltipData = getTooltipData(node, event, [
       {
+        id: 123,
         name: 'p1',
         state: 'DISABLED',
         stateChanger: 'foo',
@@ -181,6 +202,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
       }
     ]);
     assert.deepEqual(tooltipData.job, {
+      id: 123,
       name: 'p1',
       isDisabled: true,
       stateChanger: 'foo',
@@ -199,7 +221,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
         parameters: {}
       }
     };
-    const jobs = [{ name: 'main' }];
+    const jobs = [{ id: 123, name: 'main' }];
 
     const tooltipData = getTooltipData(
       {
@@ -210,6 +232,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
     );
 
     assert.deepEqual(tooltipData.job, {
+      id: 123,
       name: 'main',
       isDisabled: false
     });
@@ -227,7 +250,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
         parameters: {}
       }
     };
-    const jobs = [{ name: 'main' }];
+    const jobs = [{ id: 1, name: 'main' }];
     const builds = [{ id: 123, status: 'SUCCESS' }];
 
     const tooltipData = getTooltipData(
@@ -240,6 +263,7 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
     );
 
     assert.deepEqual(tooltipData.job, {
+      id: 1,
       name: 'main',
       isDisabled: false,
       buildId: 123,

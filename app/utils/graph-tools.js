@@ -63,7 +63,9 @@ const findJob = (jobs, jobId) => jobs.find(j => j && `${j.id}` === `${jobId}`);
  * @return {Object}         Reference to the job object from the list if found
  */
 const prJob = (jobs, prNum, name) =>
-  jobs.find(j => j && j.group === prNum && j.name.split(`PR-${prNum}:`)[1] === name);
+  jobs.find(
+    j => j && j.group === prNum && j.name.split(`PR-${prNum}:`)[1] === name
+  );
 
 /**
  * Determines if a job is a setup job of a stage based on the name
@@ -886,19 +888,23 @@ const decorateGraph = ({
         jobId = job?.id;
       }
 
+      const originalJob = job?.prParentJobId
+        ? findJob(jobs, job.prParentJobId)
+        : job;
+
       // eslint-disable-next-line no-nested-ternary
-      n.isDisabled = job
-        ? job.isDisabled === undefined
+      n.isDisabled = originalJob
+        ? originalJob.isDisabled === undefined
           ? false
-          : job.isDisabled
+          : originalJob.isDisabled
         : false;
 
       // Set build status to disabled if job is disabled
       if (n.isDisabled) {
-        const { state } = job;
+        const { state } = originalJob;
         const stateWithCapitalization =
           state[0].toUpperCase() + state.substring(1).toLowerCase();
-        const { stateChanger } = job;
+        const { stateChanger } = originalJob;
 
         n.status = state;
         n.stateChangeMessage = stateChanger
