@@ -78,7 +78,6 @@ export default class PipelineEventCardComponent extends Component {
     this.showAbortBuildModal = false;
     this.hideCard = false;
 
-    this.notificationReady = false;
     this.allowNotification = this.settings.getSettings().allowNotification;
   }
 
