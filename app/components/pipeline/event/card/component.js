@@ -176,9 +176,9 @@ export default class PipelineEventCardComponent extends Component {
     if (beforeStatus === 'RUNNING' && this.status === 'SUCCESS') {
       // Only when the status changes from RUNNING to SUCCESS
       // The processing of the latestEventId during the initial run is handled by event-rail component
-      this.args.onSuccess(this.event);
+      // this.args.onSuccess(this.event);
+      this.buildNotify(beforeStatus, this.status);
     }
-    this.buildNotify(beforeStatus, this.status);
 
     if (this.args.handleFilter) {
       const pipeline = this.pipelinePageState.getPipeline();
