@@ -307,6 +307,6 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
     assert.dom('#hidden-tooltip-description').exists({ count: 1 });
     assert
       .dom('#hidden-tooltip-description')
-      .hasText('Description: This job group includes t...');
+      .hasText('This job group includes t...');
   });
 });
