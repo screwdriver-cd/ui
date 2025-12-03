@@ -22,7 +22,9 @@ import {
 import { nodeCanShowTooltip } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
 
 export default class PipelineWorkflowGraphComponent extends Component {
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
+
+  @service('settings') settings;
 
   event;
 

@@ -12,9 +12,14 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
 
   hooks.beforeEach(function () {
     const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+    const settings = this.owner.lookup('service:settings');
 
     sinon.stub(pipelinePageState, 'getStages').returns(stages);
     sinon.stub(pipelinePageState, 'getJobs').returns(jobs);
+    sinon.stub(pipelinePageState, 'getPipelineId').returns(1);
+    sinon
+      .stub(settings, 'getSettingsForPipeline')
+      .returns({ showPRJobs: false });
 
     jobs.push({ id: 1 });
   });
