@@ -59,13 +59,24 @@ export default class PipelineSettingsMainModalSyncComponent extends Component {
 
     return this.shuttle
       .fetchFromApi('post', url)
-      .then(() => {
-        this.wasActionSuccessful = true;
+      .then(async () => {
         if (this.args.syncType === 'pipeline') {
-          this.router.refresh();
-        } else {
-          this.args.closeModal();
+          await this.shuttle
+            .fetchFromApi(
+              'get',
+              `/pipelines/${this.pipelinePageState.getPipelineId()}`
+            )
+            .then(pipeline => {
+              this.pipelinePageState.setPipeline(pipeline);
+              this.pipelinePageState.forceReloadPipelineHeader();
+            })
+            .catch(() => {
+              this.router.refresh();
+            });
         }
+
+        this.wasActionSuccessful = true;
+        this.args.closeModal();
       })
       .catch(err => {
         this.wasActionSuccessful = false;
