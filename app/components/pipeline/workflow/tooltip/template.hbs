@@ -122,15 +122,15 @@
       >
         {{#if this.isDescriptionClicked}}
           <FaIcon @icon="caret-down" />
-            Description: {{this.tooltipData.job.description}}
+            {{this.tooltipData.job.description}}
         {{else}}
           <FaIcon @icon="caret-right" />
-            Description: {{this.jobDescription}}
+            {{this.jobDescription}}
         {{/if}}
       </span>
     {{else}}
       <span id="tooltip-description">
-          Description: {{this.tooltipData.job.description}}
+          {{this.tooltipData.job.description}}
         </span>
     {{/if}}
   {{/if}}

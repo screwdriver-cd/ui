@@ -522,7 +522,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
     assert.dom('a:nth-of-type(3)').hasText('Start pipeline from here');
-    assert.dom('span').hasText('Description: Test');
+    assert.dom('span').hasText('Test');
   });
 
   test('it renders long description', async function (assert) {
@@ -555,11 +555,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
     assert.dom('a:nth-of-type(3)').hasText('Start pipeline from here');
-    assert.dom('span').hasText(`Description: ${description}`);
+    assert.dom('span').hasText(`${description}`);
 
     await click('span');
 
-    assert.dom('span').hasText(`Description: ${fullDescription}`);
+    assert.dom('span').hasText(`${fullDescription}`);
   });
 
   test('it does not render actionable menu options when the node represents stage jobs group', async function (assert) {
@@ -588,7 +588,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     assert
       .dom('.content span')
       .hasText(
-        'Description: This job group includes the following jobs: prod-deploy, prod-test, prod-certify'
+        'This job group includes the following jobs: prod-deploy, prod-test, prod-certify'
       );
   });
 });
