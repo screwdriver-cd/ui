@@ -92,13 +92,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it renders virtual stage', async function (assert) {
-    stages.push({
-      id: 10,
-      name: 'test',
-      jobIds: [1],
-      setup: 11,
-      teardown: 12
-    });
+    stages.push({ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 });
     jobs.splice(0).push(
       ...[
         { id: 1, name: 'main' },
@@ -157,13 +151,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it renders stage', async function (assert) {
-    stages.push({
-      id: 10,
-      name: 'test',
-      jobIds: [1],
-      setup: 11,
-      teardown: 12
-    });
+    stages.push({ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 });
     jobs.splice(0).push(
       ...[
         { id: 1, name: 'main' },
@@ -285,9 +273,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
 
     assert.equal(this.element.querySelector('svg').children.length, 5);
 
-    this.setProperties({
-      workflowGraph: workflowGraphWithDownstreamTriggers
-    });
+    this.setProperties({ workflowGraph: workflowGraphWithDownstreamTriggers });
     await rerender();
 
     assert.equal(this.element.querySelector('svg').children.length, 8);
@@ -328,13 +314,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   });
 
   test('it re-renders graph when stage builds update', async function (assert) {
-    stages.push({
-      id: 10,
-      name: 'test',
-      jobIds: [1],
-      setup: 11,
-      teardown: 12
-    });
+    stages.push({ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 });
     jobs.splice(0).push(
       ...[
         { id: 1, name: 'main' },
