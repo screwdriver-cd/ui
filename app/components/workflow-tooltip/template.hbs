@@ -71,15 +71,15 @@
         <span class="text-nowrap" onClick={{action "clickDescription"}}>
           {{#if this.isDescriptionClicked}}
             <FaIcon @icon="caret-down" />
-            Description: {{this.tooltipData.job.description}}
+            {{this.tooltipData.job.description}}
           {{else}}
             <FaIcon @icon="caret-right" />
-            Description: {{this.jobDescription}}
+            {{this.jobDescription}}
           {{/if}}
         </span>
       {{else}}
         <span>
-          Description: {{this.tooltipData.job.description}}
+          {{this.tooltipData.job.description}}
         </span>
       {{/if}}
     {{/if}}
