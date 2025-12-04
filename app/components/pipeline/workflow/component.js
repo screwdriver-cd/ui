@@ -54,7 +54,6 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked collapsedStages;
 
-  @tracked showPRJobs = true;
 
   workflowGraph;
 
