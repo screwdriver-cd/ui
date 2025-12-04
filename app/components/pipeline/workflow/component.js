@@ -90,14 +90,6 @@ export default class PipelineWorkflowComponent extends Component {
       this.pipelinePageState.getIsPr()
     );
 
-    const pipelinePreference = this.userSettings[this.pipeline.id];
-
-    this.showPRJobs =
-      pipelinePreference === undefined ||
-      pipelinePreference.showPRJobs === undefined
-        ? true
-        : pipelinePreference.showPRJobs;
-
     if (this.args.noEvents) {
       this.monitorForNewEvents();
     } else {
