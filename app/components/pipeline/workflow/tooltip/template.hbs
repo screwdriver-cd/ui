@@ -145,10 +145,10 @@
 {{/if}}
 {{#if this.showConfirmActionModal}}
   <Pipeline::Modal::ConfirmAction
+    @action={{this.eventAction}}
     @event={{@event}}
     @job={{this.tooltipData.job}}
     @closeModal={{this.closeConfirmActionModal}}
-    @newEventMode={{this.newEventMode}}
   />
 {{/if}}
 {{#if this.showStopBuildModal}}

@@ -38,6 +38,10 @@ export default class PipelineParametersComponent extends Component {
       pipeline: { ...pipelineParameters },
       job: { ...jobParameters }
     };
+
+    if (this.args.onUpdateParameters) {
+      this.args.onUpdateParameters(flattenParameters(this.selectedParameters));
+    }
   }
 
   get title() {
