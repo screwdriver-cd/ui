@@ -140,7 +140,7 @@ module('Integration | Component | pipeline/header', function (hooks) {
       .hasText(pipelineDescription);
   });
 
-  test.only('it renders pipeline description with link', async function (assert) {
+  test('it renders pipeline description with link', async function (assert) {
     const pipelineDescription =
       'This is a test link (<a href=https://screwdriver.cd/ target=_blank>link</a>)';
 
