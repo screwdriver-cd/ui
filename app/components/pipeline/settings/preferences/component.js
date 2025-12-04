@@ -46,7 +46,7 @@ export default class PipelineSettingsPreferencesComponent extends Component {
     this.isFilterEventsForNoBuilds = !!settings?.filterEventsForNoBuilds;
 
     this.userSettings = this.settings.getSettingsForPipeline(this.pipeline.id);
-    this.isShowPrJobs = this.userSettings?.showPRJobs || false;
+    this.isShowPrJobs = this.userSettings?.showPRJobs ?? true;
 
     this.isUserSettingsDisabled = false;
   }
