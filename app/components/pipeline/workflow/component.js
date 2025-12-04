@@ -79,7 +79,6 @@ export default class PipelineWorkflowComponent extends Component {
     this.showStageTooltip = false;
     this.d3Data = null;
     this.collapsedStages = new Set([]);
-    this.showPRJobs = true;
     this.pipeline = this.pipelinePageState.getPipeline();
     this.userSettings = this.settings.getSettings();
     this.showDownstreamTriggers =
