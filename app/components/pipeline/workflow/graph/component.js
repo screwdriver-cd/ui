@@ -38,12 +38,19 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
   graphSvg;
 
+  showPRJobs;
+
   constructor() {
     super(...arguments);
     this.event = this.args.event;
     this.builds = this.args.builds;
     this.stageBuilds = this.args.stageBuilds;
     this.collapsedStages = this.args.collapsedStages;
+
+    this.showPRJobs =
+      this.settings.getSettingsForPipeline(
+        this.pipelinePageState.getPipelineId()
+      ).showPRJobs ?? true;
 
     this.getDecoratedGraph(
       this.args.workflowGraph,
@@ -63,9 +70,7 @@ export default class PipelineWorkflowGraphComponent extends Component {
   ) {
     // remove jobs that starts from ~pr
 
-    const { showPRJobs } = this.args;
-
-    if (event.prNum === undefined && !showPRJobs) {
+    if (event.prNum === undefined && !this.showPRJobs) {
       const prNode = workflowGraph.nodes.findBy('name', '~pr');
 
       removeBranch(prNode, workflowGraph);
