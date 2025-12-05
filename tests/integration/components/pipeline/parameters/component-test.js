@@ -301,9 +301,9 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     );
     await fillIn('.parameter-list.expanded input', 'foobar');
 
-    assert.equal(onUpdateParameters.callCount, 1);
+    assert.equal(onUpdateParameters.callCount, 2);
     assert.true(
-      onUpdateParameters.calledWith({
+      onUpdateParameters.getCall(1).calledWith({
         foo: 'foobar',
         job1: { p1: 'abc' }
       })
@@ -348,9 +348,9 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     );
     await fillIn('.parameter-list.expanded input', 'job123abc');
 
-    assert.equal(onUpdateParameters.callCount, 1);
+    assert.equal(onUpdateParameters.callCount, 2);
     assert.true(
-      onUpdateParameters.calledWith({
+      onUpdateParameters.getCall(1).calledWith({
         foo: 'foozy',
         job1: { p1: 'job123abc' }
       })
@@ -388,9 +388,9 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
 
     await selectChoose('.dropdown-selection-container', 'bar');
 
-    assert.equal(onUpdateParameters.callCount, 1);
+    assert.equal(onUpdateParameters.callCount, 2);
     assert.true(
-      onUpdateParameters.calledWith({
+      onUpdateParameters.getCall(1).calledWith({
         foo: 'bar'
       })
     );

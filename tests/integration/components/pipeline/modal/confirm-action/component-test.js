@@ -27,7 +27,13 @@ module(
         .stub(workflowDataReload, 'getLatestCommitEvent')
         .returns({ sha: 'deadbeef0123456789' });
 
-      sinon.stub(pipelinePageState, 'getPipeline').returns({ id: 987 });
+      sinon.stub(pipelinePageState, 'getPipeline').returns({
+        id: 987,
+        workflowGraph: {
+          nodes: [],
+          edges: []
+        }
+      });
       sinon.stub(pipelinePageState, 'getJobs').returns([]);
       sinon.stub(pipelinePageState, 'getIsPr').returns(isPr);
 
@@ -41,17 +47,17 @@ module(
 
     test('it renders start action', async function (assert) {
       this.setProperties({
+        action: 'start',
         event,
         job,
-        closeModal: () => {},
-        newEventMode: 'start'
+        closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -69,17 +75,17 @@ module(
       job.status = 'SUCCESS';
 
       this.setProperties({
+        action: 'restart',
         event,
         job,
-        closeModal: () => {},
-        newEventMode: 'restart'
+        closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -88,19 +94,19 @@ module(
 
     test('it renders stage name if set', async function (assert) {
       this.setProperties({
+        action: 'start',
         event,
         job,
         stage: { name: 'stage' },
-        closeModal: () => {},
-        newEventMode: 'start'
+        closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
             @event={{this.event}}
             @job={{this.job}}
             @stage={{this.stage}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -112,59 +118,61 @@ module(
     test('it renders warning message for non-latest commit event', async function (assert) {
       event.sha = '0123456789deadbeef';
       this.setProperties({
+        action: 'start',
         event,
         job,
-        closeModal: () => {},
-        newEventMode: 'start'
+        closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
-      assert.dom('.alert').hasText('This is NOT the latest commit.');
+      assert
+        .dom('#user-notice')
+        .hasText(
+          'This is NOT the latest commit. Make sure this job (main) and any downstream jobs can be successfully completed without rerunning any upstream jobs (i.e., does this job depend on any metadata that was previously set?)'
+        );
     });
 
     test('it does not render warning message for pr commit event', async function (assert) {
       isPr = true;
 
       this.setProperties({
+        action: 'start',
         event,
-        job,
-        closeModal: () => {},
-        newEventMode: 'start'
+        closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
             @event={{this.event}}
-            @job={{this.job}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
-      assert.dom('.modal-body .alert').doesNotExist();
+      assert.dom('.modal-body #user-notice').doesNotExist();
     });
 
     test('it renders reason input for frozen job', async function (assert) {
       job.status = 'FROZEN';
 
       this.setProperties({
+        action: 'start',
         event,
         job,
-        closeModal: () => {},
-        newEventMode: 'start'
+        closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -181,17 +189,17 @@ module(
       };
 
       this.setProperties({
+        action: 'restart',
         event,
         job,
-        closeModal: () => {},
-        newEventMode: 'restart'
+        closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -200,20 +208,20 @@ module(
 
     test('it disables submit button when no reason is provided for frozen job', async function (assert) {
       this.setProperties({
+        action: 'restart',
         event: {
           commit: { message: 'commit message', url: 'http://foo.com' },
           sha: 'deadbeef0123456789'
         },
         job: { name: 'main', status: 'FROZEN' },
-        closeModal: () => {},
-        newEventMode: 'restart'
+        closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
             @event={{this.event}}
             @job={{this.job}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -224,17 +232,17 @@ module(
       job.status = 'FROZEN';
 
       this.setProperties({
+        action: 'restart',
         event,
         job,
-        closeModal: () => {},
-        newEventMode: 'restart'
+        closeModal: () => {}
       });
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
             @event={{this.event}}
             @job={{this.job}}
+            @action={{this.action}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
@@ -249,22 +257,18 @@ module(
       const closeModalSpy = sinon.spy();
 
       this.setProperties({
-        event,
-        job,
-        closeModal: closeModalSpy,
-        newEventMode: 'start'
+        action: 'start',
+        closeModal: closeModalSpy
       });
 
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @event={{this.event}}
-            @job={{this.job}}
+            @action={{this.action}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
-      assert.dom('.alert').doesNotExist();
+      assert.dom('#confirm-action-error').doesNotExist();
 
       await click('#submit-action');
 
@@ -281,28 +285,24 @@ module(
         .rejects({ message: errorMessage });
 
       this.setProperties({
-        event,
-        job,
-        closeModal: () => {},
-        newEventMode: 'start'
+        action: 'start',
+        closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::ConfirmAction
-            @event={{this.event}}
-            @job={{this.job}}
+            @action={{this.action}}
             @closeModal={{this.closeModal}}
-            @newEventMode={{this.newEventMode}}
         />`
       );
 
-      assert.dom('.alert').doesNotExist();
+      assert.dom('#confirm-action-error').doesNotExist();
 
       await click('#submit-action');
 
       assert.equal(shuttleStub.calledOnce, true);
-      assert.dom('.alert').exists({ count: 1 });
-      assert.dom('.alert > span').hasText(errorMessage);
+      assert.dom('#confirm-action-error').exists({ count: 1 });
+      assert.dom('#confirm-action-error .alert > span').hasText(errorMessage);
     });
   }
 );

@@ -29,7 +29,8 @@
         title="Start a new event"
       />
       {{#if this.showStartEventModal}}
-        <Pipeline::Modal::StartEvent
+        <Pipeline::Modal::ConfirmAction
+          @action="start"
           @closeModal={{this.closeStartEventModal}}
         />
       {{/if}}
