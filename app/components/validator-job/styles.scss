@@ -1,7 +1,7 @@
 & {
   margin: 10px 10px 0 0;
   color: $sd-text;
-  overflow-x: scroll;
+  overflow-x: auto;
 
   &.collapsible {
     border-radius: 3px;
@@ -60,5 +60,4 @@
   div.hidden {
     display: none !important;
   }
-
 }

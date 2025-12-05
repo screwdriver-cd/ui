@@ -30,7 +30,7 @@
     #event-cards-container {
       $margin-bottom: 1rem;
       height: calc(100% - $rail-actions-height - $margin-bottom);
-      overflow: scroll;
+      overflow: auto;
       margin-bottom: $margin-bottom;
     }
   }

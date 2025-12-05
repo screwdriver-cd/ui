@@ -30,7 +30,7 @@
         100% - $clear-cache-button-height - $table-footer-height -
           $inherited-table-margin
       );
-      overflow: scroll;
+      overflow: auto;
 
       table {
         table-layout: fixed;

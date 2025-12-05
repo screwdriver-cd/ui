@@ -50,7 +50,7 @@
           .dropdown-menu {
             display: flex;
             flex-direction: column;
-            overflow-x: scroll;
+            overflow-x: auto;
             max-height: 10rem;
             width: 20rem;
 
