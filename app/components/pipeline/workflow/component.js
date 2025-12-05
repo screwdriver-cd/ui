@@ -54,6 +54,7 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked collapsedStages;
 
+
   workflowGraph;
 
   workflowGraphWithDownstreamTriggers;
