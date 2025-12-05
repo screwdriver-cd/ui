@@ -4,38 +4,47 @@
   as |modal|
 >
   <modal.header>
-    <div class="modal-title">Are you sure you want to {{this.action}}?</div>
+    <div class="modal-title">Are you sure you want to {{@action}}?</div>
   </modal.header>
   <modal.body>
     {{#if this.errorMessage}}
       <InfoMessage
+        id="confirm-action-error"
         @message={{this.errorMessage}}
         @type="warning"
         @icon="triangle-exclamation"
         @dismissible={{false}}
       />
     {{/if}}
+
+    {{#if this.notice}}
+      <div
+        id="user-notice"
+        class="alert alert-warning"
+      >
+        <FaIcon @icon="triangle-exclamation" />
+        {{this.notice}}
+      </div>
+    {{/if}}
+
     {{#if @stage}}
       <div id="confirm-action-stage">Stage: <code>{{@stage.name}}</code></div>
     {{else}}
-      <div id="confirm-action-job">Job: <code>{{@job.name}}</code></div>
+      <div id="confirm-action-job">Job: <code>{{this.jobName}}</code></div>
     {{/if}}
-    <div id="confirm-action-commit">
-      Commit: <code>{{this.truncatedMessage}}</code>
-      <a
-        id="confirm-action-commit-link"
-        class={{if this.isLatestCommitEvent "latest-commit"}}
-        href={{this.commitUrl}}
-      >
-        #{{this.truncatedSha}}
-      </a>
-      {{#unless this.isLatestNonPrCommitEvent}}
-        <div class="alert alert-warning">
-          <FaIcon @icon="triangle-exclamation" />
-          This is <strong>NOT</strong> the latest commit.
-        </div>
-      {{/unless}}
-    </div>
+
+    {{#if @event}}
+      <div id="confirm-action-commit">
+        Commit: <code>{{this.truncatedMessage}}</code>
+        <a
+          id="confirm-action-commit-link"
+          class={{if this.isLatestCommitEvent "latest-commit"}}
+          href={{this.commitUrl}}
+        >
+          #{{this.truncatedSha}}
+        </a>
+      </div>
+    {{/if}}
 
     {{#if this.isFrozen}}
       <div class="frozen-reason">
@@ -52,11 +61,17 @@
 
     {{#if this.isParameterized}}
       <Pipeline::Parameters
-        @action={{this.action}}
+        @action={{@action}}
+        @pipelineParameters={{this.defaultPipelineParameters}}
+        @jobParameters={{this.defaultJobParameters}}
         @job={{@job}}
-        @event={{this.event}}
+        @event={{@event}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />
+    {{else}}
+      <div class="no-parameters-title">
+        NO PARAMETERS TO CONFIGURE
+      </div>
     {{/if}}
   </modal.body>
   <modal.footer>

@@ -1,10 +1,19 @@
 @use 'screwdriver-colors' as colors;
+@use 'variables';
 
 @mixin styles {
   #confirm-action-modal {
     .modal-body {
       display: flex;
       flex-direction: column;
+
+      #user-notice {
+        display: flex;
+
+        svg {
+          padding-right: 0.75rem;
+        }
+      }
 
       .frozen-reason {
         label {
@@ -25,6 +34,13 @@
       }
 
       .pipeline-parameters {
+        padding-top: 2.5rem;
+      }
+
+      .no-parameters-title {
+        font-size: 1.2rem;
+        font-weight: variables.$weight-bold;
+        color: colors.$sd-light-gray;
         padding-top: 2.5rem;
       }
     }
