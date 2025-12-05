@@ -71,7 +71,8 @@
             @prefix="far"
           />
           {{#if this.showStartEventModal}}
-            <Pipeline::Modal::StartEvent
+            <Pipeline::Modal::ConfirmAction
+              @action="start"
               @event={{@event}}
               @closeModal={{this.closeStartEventModal}}
             />

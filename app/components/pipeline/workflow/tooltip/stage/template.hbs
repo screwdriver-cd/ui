@@ -16,6 +16,7 @@
 
 {{#if this.showConfirmActionModal}}
   <Pipeline::Modal::ConfirmAction
+    @action={{this.stageAction}}
     @event={{@event}}
     @job={{this.job}}
     @stage={{@d3Data.stage}}

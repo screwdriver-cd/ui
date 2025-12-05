@@ -30,7 +30,7 @@ export default class PipelineWorkflowTooltipComponent extends Component {
    *                'start' indicates that a new event should be started without inheriting the context from the current event.
    *                'restart' indicates that a new event should be started with inheriting the context from the current event.
    */
-  @tracked newEventMode = null;
+  @tracked eventAction = null;
 
   pipeline;
 
@@ -153,9 +153,9 @@ export default class PipelineWorkflowTooltipComponent extends Component {
   }
 
   @action
-  openConfirmActionModal(newEventMode) {
+  openConfirmActionModal(eventAction) {
     this.showConfirmActionModal = true;
-    this.newEventMode = newEventMode;
+    this.eventAction = eventAction;
   }
 
   @action
