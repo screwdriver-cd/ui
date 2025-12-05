@@ -2,8 +2,12 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import buildPostBody from 'screwdriver-ui/utils/pipeline/modal/request';
 import {
+  extractDefaultJobParameters,
+  extractDefaultParameters
+} from 'screwdriver-ui/utils/pipeline/parameters';
+import {
+  buildPostBody,
   capitalizeFirstLetter,
   isParameterized,
   truncateMessage
@@ -34,23 +38,43 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   latestCommitEvent;
 
-  /**
-   * @type {string} Possible values 'start', 'restart'.
-   *                'start' indicates that a new event should be started without inheriting the context from the current event.
-   *                'restart' indicates that a new event should be started with inheriting the context from the current event.
-   */
-  action;
+  defaultPipelineParameters;
 
-  event;
+  defaultJobParameters;
+
+  startFrom;
+
+  jobName;
 
   constructor() {
     super(...arguments);
 
-    this.action = this.args.newEventMode;
-    this.event = this.action === 'restart' ? this.args.event : null;
+    const { job } = this.args;
 
+    this.action = this.args.action;
     this.pipeline = this.pipelinePageState.getPipeline();
     this.latestCommitEvent = this.workflowDataReload.getLatestCommitEvent();
+
+    if (this.args.action === 'start' && !job) {
+      this.startFrom = this.pipelinePageState.getIsPr() ? '~pr' : '~commit';
+      this.jobName = this.startFrom;
+      this.defaultPipelineParameters = extractDefaultParameters(
+        this.pipeline.parameters
+      );
+      this.defaultJobParameters = extractDefaultJobParameters(
+        this.pipelinePageState.getJobs()
+      );
+    } else {
+      this.startFrom = job.name;
+
+      const { displayName, name } = this.args.job;
+
+      this.jobName = displayName || name;
+
+      if (this.jobName.startsWith('PR-')) {
+        this.jobName = this.jobName.split(`PR-${this.args.event.prNum}:`)[1];
+      }
+    }
   }
 
   get truncatedMessage() {
@@ -58,7 +82,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isLatestCommitEvent() {
-    return this.args.event.sha === this.latestCommitEvent?.sha;
+    return this.args.event?.sha === this.latestCommitEvent?.sha;
   }
 
   get commitUrl() {
@@ -69,16 +93,28 @@ export default class PipelineModalConfirmActionComponent extends Component {
     return this.args.event.sha.substring(0, 7);
   }
 
-  get isLatestNonPrCommitEvent() {
-    return this.pipelinePageState.getIsPr() ? true : this.isLatestCommitEvent;
+  get notice() {
+    if (this.startFrom === '~commit' || this.startFrom === '~pr') {
+      return null;
+    }
+
+    const type = this.args.stage ? 'stage' : 'job';
+    const name = this.args.stage ? this.args.stage.name : this.jobName;
+    const notice = `Make sure this ${type} (${name}) and any downstream jobs can be successfully completed without rerunning any upstream jobs (i.e., does this job depend on any metadata that was previously set?)`;
+
+    if (!this.pipelinePageState.getIsPr() && !this.isLatestCommitEvent) {
+      return `This is NOT the latest commit. ${notice}`;
+    }
+
+    return notice;
   }
 
   get isFrozen() {
-    return this.args.job.status === 'FROZEN';
+    return this.args.job?.status === 'FROZEN';
   }
 
   get isParameterized() {
-    return isParameterized(this.pipeline, this.event);
+    return isParameterized(this.pipeline, this.args.event);
   }
 
   get isSubmitButtonDisabled() {
@@ -94,7 +130,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get pendingAction() {
-    return `${capitalizeFirstLetter(this.action)}ing...`;
+    return `${capitalizeFirstLetter(this.args.action)}ing...`;
   }
 
   @action
@@ -106,21 +142,29 @@ export default class PipelineModalConfirmActionComponent extends Component {
   async startBuild() {
     this.isAwaitingResponse = true;
 
-    const data = buildPostBody({
-      username: this.session.data.authenticated.username,
+    const event =
+      this.args.action === 'start' && !this.pipelinePageState.getIsPr()
+        ? null
+        : this.args.event;
+    const sha = this.args.event?.sha;
+
+    const data = {
       pipelineId: this.pipeline.id,
-      job: this.args.job,
-      event: this.event,
-      parameters: this.parameters,
-      isFrozen: this.isFrozen,
-      reason: this.reason,
-      sha: this.args.event.sha,
-      prNum: this.args.event.prNum
-    });
+      causeMessage: this.isFrozen
+        ? `[force start] ${this.reason}`
+        : `Manually started by ${this.session.data.authenticated.username}`,
+      ...buildPostBody(
+        this.startFrom,
+        event,
+        sha,
+        this.args.event?.prNum,
+        this.parameters
+      )
+    };
 
     await this.shuttle
       .fetchFromApi('post', '/events', data)
-      .then(event => {
+      .then(newEvent => {
         this.args.closeModal();
 
         const route = this.pipelinePageState.getIsPr()
@@ -128,9 +172,9 @@ export default class PipelineModalConfirmActionComponent extends Component {
           : 'v2.pipeline.events.show';
 
         this.router.transitionTo(route, {
-          event,
+          event: newEvent,
           reloadEventRail: true,
-          id: event.id
+          id: newEvent.id
         });
       })
       .catch(err => {
