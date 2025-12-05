@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
+import { htmlSafe } from '@ember/template';
 
 import { hasSonarBadge } from 'screwdriver-ui/utils/pipeline';
 
@@ -52,7 +53,14 @@ export default class PipelineHeaderComponent extends Component {
   }
 
   get pipelineDescription() {
-    return this.pipeline.annotations['screwdriver.cd/pipelineDescription'];
+    let pipelineDescription =
+      this.pipeline.annotations['screwdriver.cd/pipelineDescription'];
+
+    if (pipelineDescription) {
+      pipelineDescription.replace(/\n/g, '<br>');
+    }
+
+    return htmlSafe(pipelineDescription);
   }
 
   get sonarBadgeUri() {
