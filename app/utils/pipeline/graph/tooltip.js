@@ -67,8 +67,14 @@ export function getTooltipData(node, event, jobs = [], builds = []) {
     selectedEvent: event
   };
 
+  const { prNum } = event;
   const job = { ...node };
-  const originalJob = jobs.find(j => j.name === job.name);
+  const sourceJob = prNum
+    ? jobs.find(j => j.name === `PR-${prNum}:${job.name}`)
+    : jobs.find(j => j.name === job.name);
+  const originalJob = sourceJob?.prParentJobId
+    ? jobs.find(j => j.id === sourceJob.prParentJobId)
+    : sourceJob;
 
   if (originalJob) {
     job.isDisabled = originalJob.state === 'DISABLED';
@@ -80,6 +86,16 @@ export function getTooltipData(node, event, jobs = [], builds = []) {
       originalJob.stateChangeMessage !== ' '
     ) {
       job.stateChangeMessage = originalJob.stateChangeMessage;
+    }
+  }
+
+  if (sourceJob) {
+    job.id = sourceJob.id;
+    if (sourceJob.prParentJobId) {
+      job.prParentJobId = sourceJob.prParentJobId;
+    }
+    if (sourceJob.description) {
+      job.description = sourceJob.description;
     }
   }
 

@@ -56,7 +56,9 @@ export default class PipelineModalToggleJobComponent extends Component {
 
     return Promise.allSettled(
       this.jobs.map(job => {
-        return this.shuttle.fetchFromApi('put', `/jobs/${job.id}`, payload);
+        const id = job.prParentJobId || job.id;
+
+        return this.shuttle.fetchFromApi('put', `/jobs/${id}`, payload);
       })
     ).then(results => {
       const successfulResults = [];
