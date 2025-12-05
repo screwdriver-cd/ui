@@ -19,7 +19,7 @@
     .table-main {
       max-height: calc(100% - $table-footer-height);
       margin-top: 0;
-      overflow: scroll;
+      overflow: auto;
 
       table {
         table-layout: fixed;
