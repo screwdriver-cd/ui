@@ -84,11 +84,14 @@ export default class PipelineModalStartEventComponent extends Component {
           ? 'v2.pipeline.pulls.show'
           : 'v2.pipeline.events.show';
 
-        this.router.transitionTo(route, {
-          event,
-          reloadEventRail: true,
-          id: event.id
-        });
+        if (this.pipelinePageState.route !== 'v2.pipeline.jobs') {
+          // When starting a build from the "v2.pipeline.jobs" tab, it does not automatically transition to the 'v2.pipeline.events' tab.
+          this.router.transitionTo(route, {
+            event,
+            reloadEventRail: true,
+            id: event.id
+          });
+        }
       })
       .catch(err => {
         this.wasActionSuccessful = false;
