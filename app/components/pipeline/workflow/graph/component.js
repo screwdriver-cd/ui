@@ -3,7 +3,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { isSkipped } from 'screwdriver-ui/utils/pipeline/event';
-import { decorateGraph } from 'screwdriver-ui/utils/graph-tools';
+import { decorateGraph, removeBranch } from 'screwdriver-ui/utils/graph-tools';
 import {
   addEdges,
   addJobIcons,
@@ -22,7 +22,9 @@ import {
 import { nodeCanShowTooltip } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
 
 export default class PipelineWorkflowGraphComponent extends Component {
-  @service pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
+
+  @service('settings') settings;
 
   event;
 
@@ -36,12 +38,19 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
   graphSvg;
 
+  showPRJobs;
+
   constructor() {
     super(...arguments);
     this.event = this.args.event;
     this.builds = this.args.builds;
     this.stageBuilds = this.args.stageBuilds;
     this.collapsedStages = this.args.collapsedStages;
+
+    this.showPRJobs =
+      this.settings.getSettingsForPipeline(
+        this.pipelinePageState.getPipelineId()
+      ).showPRJobs ?? true;
 
     this.getDecoratedGraph(
       this.args.workflowGraph,
@@ -59,6 +68,14 @@ export default class PipelineWorkflowGraphComponent extends Component {
     event,
     collapsedStages
   ) {
+    // remove jobs that starts from ~pr
+
+    if (event.prNum === undefined && !this.showPRJobs) {
+      const prNode = workflowGraph.nodes.findBy('name', '~pr');
+
+      removeBranch(prNode, workflowGraph);
+    }
+
     this.decoratedGraph = decorateGraph({
       inputGraph: workflowGraph,
       builds,

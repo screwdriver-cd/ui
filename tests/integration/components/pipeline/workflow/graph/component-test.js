@@ -12,9 +12,14 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
 
   hooks.beforeEach(function () {
     const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+    const settings = this.owner.lookup('service:settings');
 
     sinon.stub(pipelinePageState, 'getStages').returns(stages);
     sinon.stub(pipelinePageState, 'getJobs').returns(jobs);
+    sinon.stub(pipelinePageState, 'getPipelineId').returns(1);
+    sinon
+      .stub(settings, 'getSettingsForPipeline')
+      .returns({ showPRJobs: false });
 
     jobs.push({ id: 1 });
   });
@@ -211,7 +216,7 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
           { src: 'first', dest: 'second' }
         ]
       },
-      event: { startFrom: '~pr' },
+      event: { startFrom: '~pr', prNum: 1 },
       builds: [{ id: 1, jobId: 1, status: 'SUCCESS' }],
       collapsedStages: new Set([]),
       displayJobNameLength: 20
