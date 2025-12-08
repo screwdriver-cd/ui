@@ -10,7 +10,7 @@
 
       .ember-power-select-selected-item {
         display: block;
-        overflow: scroll;
+        overflow: auto;
         text-overflow: ellipsis;
       }
     }
@@ -21,7 +21,7 @@
 
         .ember-power-select-options {
           li {
-            overflow: scroll;
+            overflow: auto;
             text-overflow: ellipsis;
           }
         }
