@@ -7,6 +7,8 @@ import { hasSonarBadge } from 'screwdriver-ui/utils/pipeline';
 import { getCheckoutUrl } from 'screwdriver-ui/utils/git';
 
 export default class PipelineSettingsMainComponent extends Component {
+  @service shuttle;
+
   @service router;
 
   @service('pipeline-page-state') pipelinePageState;
@@ -25,6 +27,8 @@ export default class PipelineSettingsMainComponent extends Component {
 
   @tracked isDeletePipelineModalOpen = false;
 
+  @tracked isSetVisibilityModalOpen = false;
+
   @tracked pipeline;
 
   @tracked syncType;
@@ -33,6 +37,14 @@ export default class PipelineSettingsMainComponent extends Component {
     super(...arguments);
 
     this.pipeline = this.pipelinePageState.getPipeline();
+  }
+
+  get visibilityText() {
+    if (this.pipeline.settings?.public) {
+      return 'Public';
+    }
+
+    return 'Private';
   }
 
   get checkoutUrl() {
@@ -198,5 +210,41 @@ export default class PipelineSettingsMainComponent extends Component {
     if (pipelineDeleted) {
       this.router.transitionTo('home');
     }
+  }
+
+  @action
+  async closePipelineVisibilityPipelineModal(isChange) {
+    this.isSetVisibilityModalOpen = false;
+
+    if (isChange) {
+      await this.changePipelineVisibility(true);
+    }
+  }
+
+  @action
+  async togglePipelineVisibility() {
+    const isPublic = this.pipeline.settings?.public;
+
+    if (isPublic) {
+      await this.changePipelineVisibility(false);
+    } else {
+      this.isSetVisibilityModalOpen = true;
+    }
+  }
+
+  async changePipelineVisibility(isPublic) {
+    return this.shuttle
+      .fetchFromApi('put', `/pipelines/${this.pipeline.id}`, {
+        settings: {
+          public: isPublic
+        }
+      })
+      .then(pipeline => {
+        this.pipelinePageState.setPipeline(pipeline);
+        this.pipeline = pipeline;
+      })
+      .catch(err => {
+        this.errorMessage = err.message;
+      });
   }
 }
