@@ -3,12 +3,12 @@ import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module.only(
+module(
   'Integration | Component | pipeline/modal/change-visibility',
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test.only('it renders core components', async function (assert) {
+    test('it renders core components', async function (assert) {
       this.setProperties({
         pipeline: { id: 123 },
         closeModal: () => {}
