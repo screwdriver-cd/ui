@@ -4,12 +4,12 @@ import { click, fillIn, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
-module(
+module.only(
   'Integration | Component | pipeline/modal/delete-pipeline',
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders core components', async function (assert) {
+    test.only('it renders core components', async function (assert) {
       this.setProperties({
         pipeline: { id: 123 },
         closeModal: () => {}

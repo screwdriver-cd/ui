@@ -27,7 +27,8 @@ module('Integration | Component | pipeline/settings/main', function (hooks) {
   test('it renders', async function (assert) {
     await render(hbs`<Pipeline::Settings::Main />`);
 
-    assert.dom('.section').exists({ count: 8 });
+    assert.dom('.section').exists({ count: 9 });
     assert.dom('.pipeline-settings-danger-zone').exists();
+    assert.dom('.pipeline-settings-danger-zone').exists({ count: 2 });
   });
 });
