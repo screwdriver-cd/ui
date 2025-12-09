@@ -31,7 +31,7 @@ export default class PipelineSecretsAndTokensModalCreateComponent extends Compon
   }
 
   isSecretNameInvalid() {
-    const secretNameRegex = /^[A-Z][A-Z_]*$/;
+    const secretNameRegex = /^[A-Z][A-Z_0-9]*$/;
 
     return this.secretName
       ? this.pipelineSecrets.secretNames.includes(this.secretName) ||

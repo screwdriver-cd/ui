@@ -140,6 +140,25 @@ module('Integration | Component | pipeline/header', function (hooks) {
       .hasText(pipelineDescription);
   });
 
+  test('it renders pipeline description with link', async function (assert) {
+    const pipelineDescription =
+      'This is a test link (<a href=https://screwdriver.cd/ target=_blank>link</a>)';
+
+    pipeline.annotations = {
+      'screwdriver.cd/pipelineDescription': pipelineDescription
+    };
+
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
+
+    assert
+      .dom('#pipeline-header .pipeline-description')
+      .hasText('This is a test link (link)');
+  });
+
   test('it rerenders properly', async function (assert) {
     await render(
       hbs`<Pipeline::Header
