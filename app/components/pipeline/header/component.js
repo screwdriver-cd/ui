@@ -166,15 +166,19 @@ export default class PipelineHeaderComponent extends Component {
       case 'v2.pipeline.events.index':
       case 'v2.pipeline.events.show':
       case 'v2.pipeline.pulls.index':
-        this.optInRouteMapping.setEventId(
-          this.router.currentRoute.attributes.event.id
-        );
+        if (this.router.currentRoute.attributes.event?.id) {
+          this.optInRouteMapping.setEventId(
+            this.router.currentRoute.attributes.event.id
+          );
+        }
         break;
       case 'v2.pipeline.pulls.show':
-        this.optInRouteMapping.setEventId(
-          this.router.currentRoute.attributes.event.id
-        );
-        legacyRoute = `${legacyRoute.split('/pulls/')[0]}/pulls`;
+        if (this.router.currentRoute.attributes.event?.id) {
+          this.optInRouteMapping.setEventId(
+            this.router.currentRoute.attributes.event.id
+          );
+          legacyRoute = `${legacyRoute.split('/pulls/')[0]}/pulls`;
+        }
         break;
       case 'v2.pipeline.settings.cache':
       case 'v2.pipeline.settings.index':
