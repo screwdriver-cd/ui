@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
+import { htmlSafe } from '@ember/template';
 
 import { hasSonarBadge } from 'screwdriver-ui/utils/pipeline';
 
@@ -52,7 +53,14 @@ export default class PipelineHeaderComponent extends Component {
   }
 
   get pipelineDescription() {
-    return this.pipeline.annotations['screwdriver.cd/pipelineDescription'];
+    let pipelineDescription =
+      this.pipeline.annotations['screwdriver.cd/pipelineDescription'];
+
+    if (pipelineDescription) {
+      pipelineDescription.replace(/\n/g, '<br>');
+    }
+
+    return htmlSafe(pipelineDescription);
   }
 
   get sonarBadgeUri() {
@@ -158,15 +166,19 @@ export default class PipelineHeaderComponent extends Component {
       case 'v2.pipeline.events.index':
       case 'v2.pipeline.events.show':
       case 'v2.pipeline.pulls.index':
-        this.optInRouteMapping.setEventId(
-          this.router.currentRoute.attributes.event.id
-        );
+        if (this.router.currentRoute.attributes.event?.id) {
+          this.optInRouteMapping.setEventId(
+            this.router.currentRoute.attributes.event.id
+          );
+        }
         break;
       case 'v2.pipeline.pulls.show':
-        this.optInRouteMapping.setEventId(
-          this.router.currentRoute.attributes.event.id
-        );
-        legacyRoute = `${legacyRoute.split('/pulls/')[0]}/pulls`;
+        if (this.router.currentRoute.attributes.event?.id) {
+          this.optInRouteMapping.setEventId(
+            this.router.currentRoute.attributes.event.id
+          );
+          legacyRoute = `${legacyRoute.split('/pulls/')[0]}/pulls`;
+        }
         break;
       case 'v2.pipeline.settings.cache':
       case 'v2.pipeline.settings.index':

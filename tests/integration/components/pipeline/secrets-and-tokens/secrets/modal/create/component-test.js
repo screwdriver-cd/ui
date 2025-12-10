@@ -63,10 +63,16 @@ module(
       await fillIn('#secret-name-input', 'TEST');
       assert.dom('#secret-name-input').hasClass('invalid');
 
-      await fillIn('#secret-name-input', 'OK');
+      await fillIn('#secret-name-input', 'ALSO_OK');
+      assert.dom('#secret-name-input').hasNoClass('invalid');
+
+      await fillIn('#secret-name-input', 'STILL_GOOD123');
       assert.dom('#secret-name-input').hasNoClass('invalid');
 
       await fillIn('#secret-name-input', 'bad');
+      assert.dom('#secret-name-input').hasClass('invalid');
+
+      await fillIn('#secret-name-input', '123_NO_NO');
       assert.dom('#secret-name-input').hasClass('invalid');
     });
 
