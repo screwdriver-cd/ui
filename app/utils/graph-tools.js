@@ -893,18 +893,13 @@ const decorateGraph = ({
         : job;
 
       // eslint-disable-next-line no-nested-ternary
-      n.isDisabled = originalJob
-        ? originalJob.isDisabled === undefined
-          ? false
-          : originalJob.isDisabled
-        : false;
+      n.isDisabled = !!originalJob?.isDisabled;
 
       // Set build status to disabled if job is disabled
       if (n.isDisabled) {
-        const { state } = originalJob;
+        const { state, stateChanger } = originalJob;
         const stateWithCapitalization =
           state[0].toUpperCase() + state.substring(1).toLowerCase();
-        const { stateChanger } = originalJob;
 
         n.status = state;
         n.stateChangeMessage = stateChanger
