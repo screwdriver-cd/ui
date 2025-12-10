@@ -209,35 +209,37 @@
     </div>
   </div>
 
-  <div class="section pipeline-settings-danger-zone">
-    <div class="text-container">
-      <div class="title">
-        Set pipeline visibility
+  {{#if this.pipeline.scmRepo.private}}
+    <div class="section pipeline-settings-danger-zone">
+      <div class="text-container">
+        <div class="title">
+          Set pipeline visibility
+        </div>
+        <div>
+          Think twice before setting pipeline to public.
+        </div>
+        <div class="configuration">
+          <div id="pipeline-settings-main-visibility">visibility: <b>{{this.visibilityText}}</b></div>
+        </div>
       </div>
-      <div>
-        Think twice before setting pipeline to public.
-      </div>
-      <div class="configuration">
-        <div id="pipeline-settings-main-visibility">visibility: <b>{{this.visibilityText}}</b></div>
-      </div>
+      <XToggle
+        @size="small"
+        @theme="light"
+        @showLabels={{false}}
+        @value={{this.pipeline.settings.public}}
+        @onToggle={{fn this.togglePipelineVisibility}}
+        as |toggle|
+      >
+        <label for="toggle-set-visibility" class="sr-only">Toggle change pipeline visibility</label>
+        <toggle.switch id="toggle-set-visibility"/>
+        {{#if this.isSetVisibilityModalOpen}}
+          <Pipeline::Modal::ChangeVisibility
+            @closeModal={{this.closePipelineVisibilityPipelineModal}}
+          />
+        {{/if}}
+      </XToggle>
     </div>
-    <XToggle
-      @size="small"
-      @theme="light"
-      @showLabels={{false}}
-      @value={{this.pipeline.settings.public}}
-      @onToggle={{fn this.togglePipelineVisibility}}
-      as |toggle|
-    >
-      <label for="toggle-set-visibility" class="sr-only">Toggle change pipeline visibility</label>
-      <toggle.switch id="toggle-set-visibility"/>
-      {{#if this.isSetVisibilityModalOpen}}
-        <Pipeline::Modal::ChangeVisibility
-          @closeModal={{this.closePipelineVisibilityPipelineModal}}
-        />
-      {{/if}}
-    </XToggle>
-  </div>
+  {{/if}}
 
   <div class="section pipeline-settings-danger-zone">
     <div class="text-container">
