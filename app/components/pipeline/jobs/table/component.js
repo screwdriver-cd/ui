@@ -34,6 +34,8 @@ export default class PipelineJobsTableComponent extends Component {
 
   previousBuilds;
 
+  previousEventBuilds;
+
   @tracked data;
 
   columns;
@@ -45,6 +47,9 @@ export default class PipelineJobsTableComponent extends Component {
     this.event = this.args.event;
     this.data = null;
     this.previousBuilds = new Map();
+    if (this.event) {
+      this.previousEventBuilds = [];
+    }
 
     this.setColumnData();
   }
@@ -224,14 +229,17 @@ export default class PipelineJobsTableComponent extends Component {
     let jobBuildsMap = new Map();
 
     if (this.event) {
-      if (isComplete(builds)) {
-        this.dataReloader.stop(this.event.id);
-      }
-
       if (builds) {
         builds.forEach(build => {
           jobBuildsMap.set(build.jobId, [build]);
         });
+      }
+
+      if (isComplete(builds, this.previousEventBuilds)) {
+        this.dataReloader.stop(this.event.id);
+        this.previousEventBuilds = [];
+      } else {
+        this.previousEventBuilds = builds;
       }
     } else if (builds) {
       jobBuildsMap = builds;

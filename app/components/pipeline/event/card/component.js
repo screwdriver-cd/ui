@@ -68,6 +68,8 @@ export default class PipelineEventCardComponent extends Component {
 
   firstCreateTime;
 
+  previousBuilds;
+
   constructor() {
     super(...arguments);
 
@@ -79,6 +81,9 @@ export default class PipelineEventCardComponent extends Component {
     this.hideCard = false;
 
     this.allowNotification = this.settings.getSettings().allowNotification;
+
+    this.builds = [];
+    this.previousBuilds = [];
   }
 
   willDestroy() {
@@ -146,6 +151,7 @@ export default class PipelineEventCardComponent extends Component {
     this.workflowDataReload.removeBuildsCallback(this.queueName, this.event.id);
 
     this.event = event;
+    this.previousBuilds = [];
 
     if (this.durationIntervalId) {
       clearInterval(this.durationIntervalId);
@@ -180,9 +186,10 @@ export default class PipelineEventCardComponent extends Component {
 
   @action
   buildsCallback(builds) {
-    const isEventComplete = isComplete(builds);
+    const isEventSkipped = isSkipped(this.event, builds);
+    const isEventComplete = isComplete(builds, this.previousBuilds);
 
-    if (isSkipped(this.event, builds) || isEventComplete) {
+    if (isEventSkipped || isEventComplete) {
       this.workflowDataReload.removeBuildsCallback(
         this.queueName,
         this.event.id
@@ -196,10 +203,11 @@ export default class PipelineEventCardComponent extends Component {
       this.durationText = getDurationText(builds);
     }
 
-    this.builds = builds;
     const beforeStatus = this.status;
 
-    this.status = getStatus(this.event, builds);
+    this.status = getStatus(builds, isEventSkipped, isEventComplete);
+    this.previousBuilds = this.builds;
+    this.builds = builds;
     this.aggregateStatus = this.status;
 
     this.buildNotify(beforeStatus, this.status);
