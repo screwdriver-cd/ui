@@ -46,37 +46,90 @@ module('Unit | Utility | Pipeline | event', function () {
   });
 
   test('isComplete returns correct value', function (assert) {
-    assert.equal(isComplete(null), false);
-    assert.equal(isComplete([]), false);
-    assert.equal(isComplete([{ status: 'UNSTABLE' }]), false);
+    assert.equal(isComplete(null, []), false);
+    assert.equal(isComplete([], []), false);
+    assert.equal(isComplete([{ id: 1, status: 'QUEUED' }], []), false);
+    assert.equal(isComplete([{ id: 1, status: 'CREATED' }], []), false);
+    assert.equal(isComplete([{ id: 1, status: 'SUCCESS' }], []), true);
+    assert.equal(isComplete([{ id: 1, status: 'UNSTABLE' }], []), false);
     assert.equal(
-      isComplete([{ status: 'UNSTABLE', endTime: '2024-04-01T00:00:00.000Z' }]),
+      isComplete(
+        [{ id: 1, status: 'UNSTABLE', endTime: '2024-04-01T00:00:00.000Z' }],
+        []
+      ),
       true
     );
-    assert.equal(isComplete([{ status: 'SUCCESS' }]), true);
-    assert.equal(isComplete([{ status: 'QUEUED' }]), false);
-    assert.equal(isComplete([{ status: 'CREATED' }]), false);
     assert.equal(
-      isComplete([{ status: 'CREATED' }, { status: 'SUCCESS' }]),
+      isComplete(
+        [{ id: 1, status: 'RUNNING' }],
+        [{ id: 1, status: 'CREATED' }]
+      ),
+      false
+    );
+    assert.equal(
+      isComplete(
+        [{ id: 1, status: 'SUCCESS' }],
+        [{ id: 1, status: 'CREATED' }]
+      ),
+      true
+    );
+    assert.equal(
+      isComplete(
+        [
+          { id: 1, status: 'RUNNING' },
+          { id: 2, status: 'CREATED' }
+        ],
+        [{ id: 1, status: 'CREATED' }]
+      ),
+      false
+    );
+    assert.equal(
+      isComplete(
+        [
+          { id: 1, status: 'SUCCESS' },
+          { id: 2, status: 'CREATED' }
+        ],
+        [{ id: 1, status: 'CREATED' }]
+      ),
+      false
+    );
+    assert.equal(
+      isComplete(
+        [
+          { id: 1, status: 'RUNNING' },
+          { id: 2, status: 'CREATED' }
+        ],
+        [
+          { id: 1, status: 'RUNNING' },
+          { id: 2, status: 'CREATED' }
+        ]
+      ),
+      false
+    );
+    assert.equal(
+      isComplete(
+        [
+          { id: 1, status: 'SUCCESS' },
+          { id: 2, status: 'CREATED' }
+        ],
+        [
+          { id: 1, status: 'SUCCESS' },
+          { id: 2, status: 'CREATED' }
+        ]
+      ),
       true
     );
   });
 
   test('getStatus returns correct value', function (assert) {
-    assert.equal(
-      getStatus({ commit: { message: '[skip ci]' } }, []),
-      'SKIPPED'
-    );
-    assert.equal(getStatus({}, null), 'UNKNOWN');
-    assert.equal(getStatus({}, []), 'UNKNOWN');
-    assert.equal(getStatus({}, [{ status: 'SUCCESS' }]), 'SUCCESS');
-    assert.equal(getStatus({}, [{ status: 'FROZEN' }]), 'FROZEN');
-    assert.equal(getStatus({}, [{ status: 'CREATED' }]), 'RUNNING');
-    assert.equal(getStatus({}, [{ status: 'WARNING' }]), 'WARNING');
-    assert.equal(getStatus({}, [{ status: 'CREATED' }]), 'RUNNING');
-    assert.equal(
-      getStatus({}, [{ status: 'CREATED' }, { status: 'SUCCESS' }]),
-      'SUCCESS'
-    );
+    assert.equal(getStatus([], true, false), 'SKIPPED');
+    assert.equal(getStatus([], true, true), 'SKIPPED');
+    assert.equal(getStatus(null, false, false), 'UNKNOWN');
+    assert.equal(getStatus([], false, false), 'UNKNOWN');
+    assert.equal(getStatus([{ status: 'FROZEN' }], false, false), 'FROZEN');
+    assert.equal(getStatus([{ status: 'SUCCESS' }], false, false), 'RUNNING');
+    assert.equal(getStatus([{ status: 'CREATED' }], false, true), 'RUNNING');
+    assert.equal(getStatus([{ status: 'SUCCESS' }], false, true), 'SUCCESS');
+    assert.equal(getStatus([{ status: 'WARNING' }], false, true), 'WARNING');
   });
 });

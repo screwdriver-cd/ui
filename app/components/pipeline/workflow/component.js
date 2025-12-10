@@ -54,7 +54,6 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked collapsedStages;
 
-
   workflowGraph;
 
   workflowGraphWithDownstreamTriggers;
@@ -72,7 +71,7 @@ export default class PipelineWorkflowComponent extends Component {
   initialize() {
     this.event = null;
     this.selectedEvent = null;
-    this.builds = null;
+    this.builds = [];
     this.stageBuilds = null;
     this.workflowGraphToDisplay = null;
     this.showTooltip = false;
@@ -253,30 +252,27 @@ export default class PipelineWorkflowComponent extends Component {
 
   @action
   buildsCallback(builds) {
-    this.builds = builds;
-
     if (this.isEventComplete(builds)) {
       this.workflowDataReload.removeBuildsCallback(
         BUILD_QUEUE_NAME,
         this.event.id
       );
-    }
-  }
-
-  @action
-  stageBuildsCallback(stageBuilds) {
-    this.stageBuilds = stageBuilds;
-
-    if (this.isEventComplete(this.builds)) {
       this.workflowDataReload.removeStageBuildsCallback(
         STAGE_BUILD_QUEUE_NAME,
         this.event.id
       );
     }
+
+    this.builds = builds;
+  }
+
+  @action
+  stageBuildsCallback(stageBuilds) {
+    this.stageBuilds = stageBuilds;
   }
 
   isEventComplete(builds) {
-    return isSkipped(this.event, builds) || isComplete(builds);
+    return isSkipped(this.event, builds) || isComplete(builds, this.builds);
   }
 
   get isPR() {
