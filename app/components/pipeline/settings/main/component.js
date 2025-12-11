@@ -7,8 +7,6 @@ import { hasSonarBadge } from 'screwdriver-ui/utils/pipeline';
 import { getCheckoutUrl } from 'screwdriver-ui/utils/git';
 
 export default class PipelineSettingsMainComponent extends Component {
-  @service shuttle;
-
   @service router;
 
   @service('pipeline-page-state') pipelinePageState;
