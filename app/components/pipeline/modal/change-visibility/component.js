@@ -35,11 +35,7 @@ export default class PipelineModalChangeVisibilityComponent extends Component {
         this.args.closeModal(true);
       })
       .catch(err => {
-        this.wasActionSuccessful = false;
         this.errorMessage = err.message;
-      })
-      .finally(() => {
-        this.isAwaitingResponse = false;
       });
   }
 }
