@@ -19,18 +19,29 @@ export const isSkipped = (event, builds) => {
 /**
  * Determines if the all builds have completed
  * @param {Array} builds Array of builds in the format returned by the API
+ * @param {Array} previousBuilds Array of previous builds in the format returned by the API
  * @returns {boolean} true if all builds have a status that indicates they have completed
  */
-export const isComplete = builds => {
+export const isComplete = (builds, previousBuilds) => {
+  const CREATED = 'CREATED';
+
   if (!builds || builds.length === 0) {
     return false;
   }
 
-  const filteredBuilds = builds.filter(build => build.status !== 'CREATED');
+  const currentCreatedBuildIds = new Set(
+    builds.filter(build => build.status === CREATED).map(build => build.id)
+  );
+  const previousCreatedBuildIds = new Set(
+    previousBuilds
+      .filter(build => build.status === CREATED)
+      .map(build => build.id)
+  );
 
-  return filteredBuilds.length === 0
-    ? false
-    : filteredBuilds.every(build => {
+  if (currentCreatedBuildIds.difference(previousCreatedBuildIds).size === 0) {
+    return builds
+      .filter(build => build.status !== CREATED)
+      .every(build => {
         const { status } = build;
 
         if (status === 'UNSTABLE') {
@@ -39,16 +50,20 @@ export const isComplete = builds => {
 
         return !unfinishedStatuses.includes(status);
       });
+  }
+
+  return false;
 };
 
 /**
  * Get the status of the event
- * @param {Object} event Event object in the format returned by the API
  * @param {Array} builds Array of builds in the format returned by the API
+ * @param {boolean} isEventSkipped
+ * @param {boolean} isEventComplete
  * @returns {*} The status of the event
  */
-export const getStatus = (event, builds) => {
-  if (isSkipped(event, builds)) {
+export const getStatus = (builds, isEventSkipped, isEventComplete) => {
+  if (isEventSkipped) {
     return 'SKIPPED';
   }
 
@@ -56,7 +71,7 @@ export const getStatus = (event, builds) => {
     return 'UNKNOWN';
   }
 
-  if (isComplete(builds)) {
+  if (isEventComplete) {
     const filteredBuilds = builds.filter(build => build.status !== 'CREATED');
 
     if (filteredBuilds.length === 0) {
