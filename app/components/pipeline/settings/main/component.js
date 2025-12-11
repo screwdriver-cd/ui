@@ -39,8 +39,12 @@ export default class PipelineSettingsMainComponent extends Component {
     this.pipeline = this.pipelinePageState.getPipeline();
   }
 
+  get isPublic() {
+    return this.pipeline.settings?.public ?? false;
+  }
+
   get visibilityText() {
-    if (this.pipeline.settings?.public) {
+    if (this.isPublic) {
       return 'Public';
     }
 
@@ -213,38 +217,16 @@ export default class PipelineSettingsMainComponent extends Component {
   }
 
   @action
-  async closePipelineVisibilityPipelineModal(isChange) {
-    this.isSetVisibilityModalOpen = false;
-
-    if (isChange) {
-      await this.changePipelineVisibility(true);
-    }
+  async showPipelineVisibilityModal() {
+    this.isSetVisibilityModalOpen = true;
   }
 
   @action
-  async togglePipelineVisibility() {
-    const isPublic = this.pipeline.settings?.public;
+  async closePipelineVisibilityModal(wasChanged) {
+    this.isSetVisibilityModalOpen = false;
 
-    if (isPublic) {
-      await this.changePipelineVisibility(false);
-    } else {
-      this.isSetVisibilityModalOpen = true;
+    if (wasChanged) {
+      this.pipeline = this.pipelinePageState.getPipeline();
     }
-  }
-
-  async changePipelineVisibility(isPublic) {
-    return this.shuttle
-      .fetchFromApi('put', `/pipelines/${this.pipeline.id}`, {
-        settings: {
-          public: isPublic
-        }
-      })
-      .then(pipeline => {
-        this.pipelinePageState.setPipeline(pipeline);
-        this.pipeline = pipeline;
-      })
-      .catch(err => {
-        this.errorMessage = err.message;
-      });
   }
 }

@@ -216,28 +216,24 @@
           Set pipeline visibility
         </div>
         <div>
-          Think twice before setting pipeline to public.
+          Change pipeline visibility for other users
         </div>
         <div class="configuration">
-          <div id="pipeline-settings-main-visibility">visibility: <b>{{this.visibilityText}}</b></div>
+          <div id="pipeline-settings-main-visibility">Visibility: <b>{{this.visibilityText}}</b></div>
         </div>
       </div>
-      <XToggle
-        @size="small"
-        @theme="light"
-        @showLabels={{false}}
-        @value={{this.pipeline.settings.public}}
-        @onToggle={{fn this.togglePipelineVisibility}}
-        as |toggle|
+      <BsButton
+        @type="danger"
+        @onClick={{this.showPipelineVisibilityModal}}
+        title="Change visibility"
       >
-        <label for="toggle-set-visibility" class="sr-only">Toggle change pipeline visibility</label>
-        <toggle.switch id="toggle-set-visibility"/>
+        <FaIcon @icon="gear" />
         {{#if this.isSetVisibilityModalOpen}}
           <Pipeline::Modal::ChangeVisibility
-            @closeModal={{this.closePipelineVisibilityPipelineModal}}
+            @closeModal={{this.closePipelineVisibilityModal}}
           />
         {{/if}}
-      </XToggle>
+      </BsButton>
     </div>
   {{/if}}
 

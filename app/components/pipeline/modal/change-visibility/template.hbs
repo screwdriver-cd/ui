@@ -4,7 +4,7 @@
   as |modal|
 >
   <modal.header>
-    <div class="modal-title">Are you sure you want to change visibility to public?</div>
+    <div class="modal-title">Are you sure you want to change visibility?</div>
   </modal.header>
   <modal.body>
     {{#if this.errorMessage}}
@@ -17,10 +17,24 @@
     {{/if}}
 
     <div id="change-visibility-message">
-      <div class="change-visibility-message-warning">
-        <FaIcon @icon="triangle-exclamation"/>
-        <b>Think twice before setting pipeline to public.</b>
-      </div>
+      {{#if this.isPublic}}
+        <div>
+          Are you sure you want to set this back to <b>Private</b>?
+        </div>
+      {{else}}
+        <div class="change-visibility-message-warning">
+          <FaIcon @icon="triangle-exclamation"/>
+          <b>Think twice before setting pipeline to public!</b>
+        </div>
+        <br />
+        <div>
+          If you set it to Public, other users will be able to view the pipeline
+        </div>
+        <br />
+        <div>
+          <b>Are you sure you want to change the Visibility to Public?</b>
+        </div>
+      {{/if}}
     </div>
   </modal.body>
   <modal.footer>

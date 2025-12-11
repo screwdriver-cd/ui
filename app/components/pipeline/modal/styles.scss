@@ -1,4 +1,5 @@
 @use 'add-to-collection/styles' as addToCollection;
+@use 'change-visibility/styles' as changeVisibility;
 @use 'confirm-action/styles' as confirmAction;
 @use 'delete-pipeline/styles' as deletePipeline;
 @use 'event-group-history/styles' as eventGroup;
@@ -8,6 +9,7 @@
 
 @mixin styles {
   @include addToCollection.styles;
+  @include changeVisibility.styles;
   @include confirmAction.styles;
   @include deletePipeline.styles;
   @include eventGroup.styles;
