@@ -1,0 +1,49 @@
+<BsModal
+  id="change-visibility-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">Are you sure you want to change visibility?</div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    <div id="change-visibility-message">
+      {{#if this.isPublic}}
+        <div>
+          Are you sure you want to return the visibility to private?
+        </div>
+      {{else}}
+        <div class="change-visibility-message-warning">
+          <FaIcon @icon="triangle-exclamation"/>
+          <b>Think twice before setting pipeline to public!</b>
+        </div>
+        <br />
+        <div>
+          If you set it to Public, other users will be able to view the pipeline
+        </div>
+        <br />
+        <div>
+          <b>Are you sure you want to change the Visibility to Public?</b>
+        </div>
+      {{/if}}
+    </div>
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="change-visibility-action"
+      @type="primary"
+      @defaultText="Yes"
+      @pendingText="Changing"
+      @onClick={{fn this.changeVisibility}}
+    />
+  </modal.footer>
+</BsModal>
