@@ -8,7 +8,6 @@
 
 @mixin styles {
   @include addToCollection.styles;
-  @include changeVisibility.styles;
   @include confirmAction.styles;
   @include deletePipeline.styles;
   @include eventGroup.styles;
