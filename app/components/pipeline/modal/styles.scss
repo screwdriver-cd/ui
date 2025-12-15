@@ -3,7 +3,6 @@
 @use 'delete-pipeline/styles' as deletePipeline;
 @use 'event-group-history/styles' as eventGroup;
 @use 'search-event/styles' as searchEvent;
-@use 'start-event/styles' as startEvent;
 @use 'toggle-job/styles' as toggleJob;
 
 @mixin styles {
@@ -12,6 +11,5 @@
   @include deletePipeline.styles;
   @include eventGroup.styles;
   @include searchEvent.styles;
-  @include startEvent.styles;
   @include toggleJob.styles;
 }
