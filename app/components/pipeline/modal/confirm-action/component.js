@@ -171,11 +171,14 @@ export default class PipelineModalConfirmActionComponent extends Component {
           ? 'v2.pipeline.pulls.show'
           : 'v2.pipeline.events.show';
 
-        this.router.transitionTo(route, {
-          event: newEvent,
-          reloadEventRail: true,
-          id: newEvent.id
-        });
+        if (this.pipelinePageState.route !== 'v2.pipeline.jobs') {
+          // When restarting a build from the "v2.pipeline.jobs" tab, it does not automatically transition to the 'v2.pipeline.events' tab.
+          this.router.transitionTo(route, {
+            event: newEvent,
+            reloadEventRail: true,
+            id: newEvent.id
+          });
+        }
       })
       .catch(err => {
         this.wasActionSuccessful = false;
