@@ -26,7 +26,7 @@ module(
       });
 
       await render(
-        hbs`<Pipeline::Modal::ChangeVisibility
+        hbs`<Pipeline::Settings::Main::Modal::ChangeVisibility
             @closeModal={{this.closeModal}}
         />`
       );
@@ -54,7 +54,7 @@ module(
       });
 
       await render(
-        hbs`<Pipeline::Modal::ChangeVisibility
+        hbs`<Pipeline::Settings::Main::Modal::ChangeVisibility
             @closeModal={{this.closeModal}}
         />`
       );
@@ -82,7 +82,7 @@ module(
       });
 
       await render(
-        hbs`<Pipeline::Modal::ChangeVisibility
+        hbs`<Pipeline::Settings::Main::Modal::ChangeVisibility
             @closeModal={{this.closeModal}}
         />`
       );
