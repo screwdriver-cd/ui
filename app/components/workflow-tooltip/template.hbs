@@ -24,12 +24,18 @@
       </LinkTo>
 
       {{#if this.tooltipData.job.isDisabled}}
-        <p>
-          {{this.tooltipData.job.stateChangeMessage}}
-        </p>
-        <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
-          Enable this job
-        </a>
+        {{#if this.tooltipData.job.manualStartDisabled}}
+          <p>
+            Disabled by annotation
+          </p>
+        {{else}}
+          <p>
+            {{this.tooltipData.job.stateChangeMessage}}
+          </p>
+          <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
+            Enable this job
+          </a>
+        {{/if}}
       {{else}}
         {{#if this.canRestartPipeline}}
           {{#if this.tooltipData.job.manualStartDisabled}}

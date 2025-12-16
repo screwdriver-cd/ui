@@ -152,7 +152,8 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       d3Data: {
         node: {
           name: 'main',
-          manualStartDisabled: true
+          manualStartDisabled: true,
+          isDisabled: true
         },
         d3Event: { clientX: 0, clientY: 0 },
         sizes: { ICON_SIZE: 0 }
@@ -170,7 +171,7 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
     );
 
     assert.dom('#toggle-job-link').doesNotExist();
-    assert.dom('p').hasText('Disabled manually starting');
+    assert.dom('p').hasText('Disabled by annotation');
   });
 
   test('it renders stop build link', async function (assert) {

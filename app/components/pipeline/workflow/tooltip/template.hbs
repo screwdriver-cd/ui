@@ -40,18 +40,24 @@
     </LinkTo>
 
     {{#if this.tooltipData.job.isDisabled}}
-      <p
-        title={{this.tooltipData.job.stateChangeMessage}}
-      >
-        {{this.stateChangerMessage}}
-      </p>
-      <a
-        id="toggle-job-link"
-        href="#"
-        {{on "click" (fn this.openToggleJobModal "Enable")}}
-      >
-        Enable this job
-      </a>
+      {{#if this.tooltipData.job.manualStartDisabled}}
+        <p>
+          Disabled by annotation
+        </p>
+      {{else}}
+        <p
+          title={{this.tooltipData.job.stateChangeMessage}}
+        >
+          {{this.stateChangerMessage}}
+        </p>
+        <a
+          id="toggle-job-link"
+          href="#"
+          {{on "click" (fn this.openToggleJobModal "Enable")}}
+        >
+          Enable this job
+        </a>
+      {{/if}}
     {{else}}
       {{#if this.displayRestartButton}}
         {{#if this.tooltipData.job.manualStartDisabled}}
