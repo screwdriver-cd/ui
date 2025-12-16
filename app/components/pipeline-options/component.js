@@ -57,7 +57,15 @@ export default Component.extend({
     const prRegex = /PR-\d+:.*/;
 
     return (this.jobs === undefined ? [] : this.jobs)
-      .filter(j => !j.name.match(prRegex))
+      .filter(j => {
+        const annotations = j.permutations?.[0].annotations || {};
+
+        if (annotations['screwdriver.cd/manualStartEnabled'] === false) {
+          return false;
+        }
+
+        return !j.name.match(prRegex);
+      })
       .sortBy('name');
   }),
   isInvalid: not('isValid'),

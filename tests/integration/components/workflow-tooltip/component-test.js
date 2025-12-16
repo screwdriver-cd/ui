@@ -129,7 +129,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
         buildId: 1234,
         name: 'batmobile',
         manualStartDisabled: true,
-        isDisabled: false
+        isDisabled: true
       }
     };
 
@@ -142,12 +142,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
         @confirmStartBuild={{this.confirmStartBuild}}
       />`);
 
-    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('.content a').exists({ count: 2 });
     assert.dom('.content p').exists({ count: 1 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
-    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
-    assert.dom('p:nth-of-type(1)').hasText('Disabled manually starting');
+    assert.dom('p:nth-of-type(1)').hasText('Disabled by annotation');
   });
 
   test('it renders start link', async function (assert) {
