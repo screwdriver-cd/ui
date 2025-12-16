@@ -53,7 +53,9 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
     this.action = this.args.action;
     this.pipeline = this.pipelinePageState.getPipeline();
-    this.latestCommitEvent = this.workflowDataReload.getLatestCommitEvent();
+    this.latestCommitEvent =
+      this.args.latestCommitEvent ||
+      this.workflowDataReload.getLatestCommitEvent();
 
     if (this.args.action === 'start' && !job) {
       this.startFrom = this.pipelinePageState.getIsPr() ? '~pr' : '~commit';
@@ -167,11 +169,11 @@ export default class PipelineModalConfirmActionComponent extends Component {
       .then(newEvent => {
         this.args.closeModal();
 
-        const route = this.pipelinePageState.getIsPr()
-          ? 'v2.pipeline.pulls.show'
-          : 'v2.pipeline.events.show';
-
         if (this.pipelinePageState.route !== 'v2.pipeline.jobs') {
+          const route = this.pipelinePageState.getIsPr()
+            ? 'v2.pipeline.pulls.show'
+            : 'v2.pipeline.events.show';
+
           // When restarting a build from the "v2.pipeline.jobs" tab, it does not automatically transition to the 'v2.pipeline.events' tab.
           this.router.transitionTo(route, {
             event: newEvent,

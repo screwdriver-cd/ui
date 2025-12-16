@@ -106,6 +106,22 @@ module('Unit | Component | pipeline/modal/confirm-action/util', function () {
     });
   });
 
+  test('buildPostBody sets correct values for new PR event from specified job with PR prefix', function (assert) {
+    const prNum = 7;
+    const jobName = `PR-${prNum}:pull`;
+    const event = {
+      id: 45,
+      groupEventId: 10
+    };
+
+    assert.deepEqual(buildPostBody(jobName, event, null, prNum), {
+      prNum,
+      startFrom: jobName,
+      parentEventId: event.id,
+      groupEventId: event.groupEventId
+    });
+  });
+
   test('buildPostBody sets correct values for new event with parameters', function (assert) {
     const jobName = '~commit';
     const parameters = { param: 4 };

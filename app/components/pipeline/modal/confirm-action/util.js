@@ -55,7 +55,7 @@ export const buildPostBody = (jobName, event, sha, prNum, parameters) => {
     data.parentEventId = event.id;
     data.groupEventId = event.groupEventId;
 
-    if (jobName !== '~pr') {
+    if (jobName !== '~pr' && !jobName.startsWith(`PR-${prNum}:`)) {
       data.startFrom = `PR-${prNum}:${jobName}`;
     }
   } else if (event) {

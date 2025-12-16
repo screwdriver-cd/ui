@@ -10,6 +10,7 @@ import {
   getDisplayName,
   getStageName
 } from 'screwdriver-ui/utils/pipeline/job';
+import { canJobStart } from 'screwdriver-ui/utils/pipeline-workflow';
 import DataReloader from './dataReloader';
 import sortJobs from './util';
 
@@ -32,6 +33,8 @@ export default class PipelineJobsTableComponent extends Component {
 
   jobs;
 
+  view;
+
   previousBuilds;
 
   previousEventBuilds;
@@ -46,6 +49,7 @@ export default class PipelineJobsTableComponent extends Component {
     this.pipelineId = this.args.pipelineId;
     this.event = this.args.event;
     this.data = null;
+    this.view = this.pipelinePageState.getIsPr() ? 'pulls' : 'events';
     this.previousBuilds = new Map();
     if (this.event) {
       this.previousEventBuilds = [];
@@ -167,12 +171,20 @@ export default class PipelineJobsTableComponent extends Component {
   setJobs() {
     this.jobs = new Map();
 
-    const jobs = this.event?.prNum
-      ? this.workflowDataReload.getJobsForPr(this.event.prNum)
-      : this.pipelinePageState.getJobs();
+    const jobs =
+      this.view === 'pulls'
+        ? this.workflowDataReload.getJobsForPr(this.event.prNum)
+        : this.pipelinePageState.getJobs();
+    const workflowGraph =
+      this.view === 'pulls'
+        ? this.event.workflowGraph
+        : this.pipelinePageState.getPipeline().workflowGraph;
 
     jobs.forEach(job => {
-      this.jobs.set(job.id, job);
+      this.jobs.set(job.id, {
+        job,
+        canStartFromView: canJobStart(this.view, workflowGraph, job.name)
+      });
     });
   }
 
@@ -194,6 +206,10 @@ export default class PipelineJobsTableComponent extends Component {
       this.initialize();
 
       return;
+    }
+
+    if (this.view === 'pulls') {
+      this.initialize();
     }
 
     this.dataReloader.start(this.event.id);
@@ -278,11 +294,13 @@ export default class PipelineJobsTableComponent extends Component {
     if (buildsHaveChanged) {
       this.previousBuilds = jobBuildsMap;
 
-      this.jobs.forEach(job => {
+      this.jobs.forEach(({ job, canStartFromView }) => {
         const buildsForJob = jobBuildsMap.get(job.id);
 
         data.push({
           job,
+          canStartFromView,
+          event: this.event,
           build: buildsForJob ? _.last(buildsForJob) : null,
           builds: buildsForJob,
           jobName: getDisplayName(job, this.event?.prNum),

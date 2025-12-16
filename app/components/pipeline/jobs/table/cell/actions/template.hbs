@@ -4,7 +4,7 @@
     @outline=true
     @value="start"
     disabled={{this.startButtonDisabled}}
-    @onClick={{fn this.openStartEventModal}}
+    @onClick={{fn this.openConfirmActionModal "start"}}
   >
     <FaIcon
       @icon="circle-play"
@@ -30,8 +30,8 @@
     @type="primary"
     @outline=true
     @value="restart"
-    disabled={{this.restartButtonDisabled}}
-    @onClick={{fn this.openRestartJobModal}}
+    disabled={{this.startButtonDisabled}}
+    @onClick={{fn this.openConfirmActionModal "restart"}}
   >
     <FaIcon
       @icon="rotate-right"
@@ -41,25 +41,19 @@
     />
   </BsButton>
 
-  {{#if this.showStartEventModal}}
-    <Pipeline::Modal::StartEvent
+  {{#if this.showConfirmActionModal}}
+    <Pipeline::Modal::ConfirmAction
+      @action={{this.confirmAction}}
+      @event={{this.event}}
       @job={{@record.job}}
-      @notice={{this.notice}}
-      @closeModal={{this.closeStartEventModal}}
+      @latestCommitEvent={{this.latestCommitEvent}}
+      @closeModal={{this.closeConfirmActionModal}}
     />
   {{/if}}
   {{#if this.showStopBuildModal}}
     <Pipeline::Modal::StopBuild
       @buildId={{@record.build.id}}
       @closeModal={{this.closeStopBuildModal}}
-    />
-  {{/if}}
-  {{#if this.showRestartJobModal}}
-    <Pipeline::Modal::ConfirmAction
-      @event={{this.latestEvent}}
-      @latestCommitEvent={{this.latestCommitEvent}}
-      @job={{@record.job}}
-      @closeModal={{this.closeRestartJobModal}}
     />
   {{/if}}
 </div>
