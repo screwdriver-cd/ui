@@ -25,6 +25,8 @@ export default class PipelineSettingsMainComponent extends Component {
 
   @tracked isDeletePipelineModalOpen = false;
 
+  @tracked isSetVisibilityModalOpen = false;
+
   @tracked pipeline;
 
   @tracked syncType;
@@ -33,6 +35,18 @@ export default class PipelineSettingsMainComponent extends Component {
     super(...arguments);
 
     this.pipeline = this.pipelinePageState.getPipeline();
+  }
+
+  get isPublic() {
+    return this.pipeline.settings?.public ?? false;
+  }
+
+  get visibilityText() {
+    if (this.isPublic) {
+      return 'Public';
+    }
+
+    return 'Private';
   }
 
   get checkoutUrl() {
@@ -197,6 +211,20 @@ export default class PipelineSettingsMainComponent extends Component {
 
     if (pipelineDeleted) {
       this.router.transitionTo('home');
+    }
+  }
+
+  @action
+  async showPipelineVisibilityModal() {
+    this.isSetVisibilityModalOpen = true;
+  }
+
+  @action
+  async closePipelineVisibilityModal(wasChanged) {
+    this.isSetVisibilityModalOpen = false;
+
+    if (wasChanged) {
+      this.pipeline = this.pipelinePageState.getPipeline();
     }
   }
 }

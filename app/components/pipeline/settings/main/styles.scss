@@ -4,11 +4,13 @@
 @use 'modal/pipeline/styles' as pipelineModal;
 @use 'modal/pipeline-alias/styles' as pipelineAliasModal;
 @use 'modal/sonar-badge/styles' as sonarBadgeModal;
+@use 'modal/change-visibility/styles' as changeVisibility;
 
 @mixin styles {
   @include pipelineModal.styles;
   @include pipelineAliasModal.styles;
   @include sonarBadgeModal.styles;
+  @include changeVisibility.styles;
 
   #pipeline-settings-main-tab-contents {
     .section {

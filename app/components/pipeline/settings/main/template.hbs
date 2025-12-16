@@ -209,6 +209,34 @@
     </div>
   </div>
 
+  {{#if this.pipeline.scmRepo.private}}
+    <div class="section pipeline-settings-danger-zone">
+      <div class="text-container">
+        <div class="title">
+          Set pipeline visibility
+        </div>
+        <div>
+          Change pipeline visibility for other users
+        </div>
+        <div class="configuration">
+          <div id="pipeline-settings-main-visibility">Visibility: <b>{{this.visibilityText}}</b></div>
+        </div>
+      </div>
+      <BsButton
+        @type="danger"
+        @onClick={{this.showPipelineVisibilityModal}}
+        title="Change visibility"
+      >
+        <FaIcon @icon="gear" />
+        {{#if this.isSetVisibilityModalOpen}}
+          <Pipeline::Settings::Main::Modal::ChangeVisibility
+            @closeModal={{this.closePipelineVisibilityModal}}
+          />
+        {{/if}}
+      </BsButton>
+    </div>
+  {{/if}}
+
   <div class="section pipeline-settings-danger-zone">
     <div class="text-container">
       <div class="title">
