@@ -19,9 +19,9 @@ const INITIAL_PAGE_SIZE = 10;
 export default class PipelineJobsTableComponent extends Component {
   @service('shuttle') shuttle;
 
-  @service('pipelinePageState') pipelinePageState;
+  @service('pipeline-page-state') pipelinePageState;
 
-  @service('workflowDataReload') workflowDataReload;
+  @service('workflow-data-reload') workflowDataReload;
 
   @service('emt-themes/ember-bootstrap-v5') emberModelTableBootstrapTheme;
 
