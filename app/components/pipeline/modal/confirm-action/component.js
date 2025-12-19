@@ -184,7 +184,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
       })
       .catch(err => {
         this.wasActionSuccessful = false;
-        this.errorMessage = err.message;
+        this.errorMessage = err.payload.message;
       })
       .finally(() => {
         this.isAwaitingResponse = false;
