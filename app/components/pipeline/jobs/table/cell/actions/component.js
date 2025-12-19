@@ -90,6 +90,8 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
           this.showConfirmActionModal = true;
         });
       }
+    } else {
+      this.showConfirmActionModal = true;
     }
   }
 
