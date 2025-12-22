@@ -9,11 +9,19 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders', async function (assert) {
-      const pipelinePageState = this.owner.lookup(
-        'service:pipeline-page-state'
-      );
+    let shuttle;
 
+    let pipelinePageState;
+
+    hooks.beforeEach(function () {
+      shuttle = this.owner.lookup('service:shuttle');
+      pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+      sinon.stub(pipelinePageState, 'getPipeline').returns({ id: 1 });
+      sinon.stub(shuttle, 'fetchFromApi').resolves({ id: 123 });
+    });
+
+    test('it renders', async function (assert) {
       sinon.stub(pipelinePageState, 'getIsPr').returns(false);
 
       await render(hbs`<Pipeline::Workflow::EventRail/>`);
@@ -26,10 +34,6 @@ module(
     });
 
     test('it renders for pull requests', async function (assert) {
-      const pipelinePageState = this.owner.lookup(
-        'service:pipeline-page-state'
-      );
-
       sinon.stub(pipelinePageState, 'getIsPr').returns(true);
 
       await render(hbs`<Pipeline::Workflow::EventRail/>`);
