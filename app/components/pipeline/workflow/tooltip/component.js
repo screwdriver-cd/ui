@@ -56,7 +56,7 @@ export default class PipelineWorkflowTooltipComponent extends Component {
     const { job } = this.tooltipData;
     const jobState = job.isDisabled ? 'Disabled' : 'Enabled';
 
-    return `${jobState} by ${job.stateChanger}`;
+    return job.stateChanger ? `${jobState} by ${job.stateChanger}` : jobState;
   }
 
   get buildDetailsAvailable() {
