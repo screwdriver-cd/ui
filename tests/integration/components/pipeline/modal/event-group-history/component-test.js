@@ -40,9 +40,9 @@ module(
       };
 
       mockApiResponse.push(
-        { ...mockEvent, id: 3, sha: 'event3' },
-        { ...mockEvent, id: 2, sha: 'event2' },
-        { ...mockEvent, id: 1, sha: 'event1' }
+        { ...mockEvent, id: 3, sha: '111999111999' },
+        { ...mockEvent, id: 2 },
+        { ...mockEvent, id: 1 }
       );
 
       this.setProperties({
@@ -66,7 +66,7 @@ module(
       assert.dom('.event-card').exists({ count: 3 });
       assert
         .dom('.event-card:has(.last-successful)')
-        .hasTextContaining('event3');
+        .hasTextContaining('#111999');
 
       await clearRender();
     });
