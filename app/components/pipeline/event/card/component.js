@@ -206,6 +206,7 @@ export default class PipelineEventCardComponent extends Component {
     const beforeStatus = this.status;
 
     this.status = getStatus(builds, isEventSkipped, isEventComplete);
+    this.event.status = this.status;
     this.previousBuilds = this.builds;
     this.builds = builds;
     this.aggregateStatus = this.status;
@@ -244,6 +245,8 @@ export default class PipelineEventCardComponent extends Component {
         );
       }, 1000);
     }
+
+    this.args.onEventUpdated?.(this.event);
   }
 
   @action
@@ -326,6 +329,10 @@ export default class PipelineEventCardComponent extends Component {
 
   get isLatestCommit() {
     return this.latestCommitEvent?.sha === this.event.sha;
+  }
+
+  get isLastSuccessfulEvent() {
+    return this.args.lastSuccessfulEvent?.id === this.event.id;
   }
 
   get truncatedMessage() {

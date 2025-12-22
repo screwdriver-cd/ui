@@ -16,6 +16,7 @@
       {{#if this.showSearchEventModal}}
         <Pipeline::Modal::SearchEvent
           @closeModal={{this.closeSearchEventModal}}
+          @lastSuccessfulEvent={{this.lastSuccessfulEvent}}
         />
       {{/if}}
     </BsButton>
@@ -56,6 +57,8 @@
           @showParameters={{true}}
           @showEventGroup={{true}}
           @handleFilter={{true}}
+          @lastSuccessfulEvent={{this.lastSuccessfulEvent}}
+          @onEventUpdated={{this.onEventUpdated}}
         />
       </VerticalCollection>
     {{/if}}
