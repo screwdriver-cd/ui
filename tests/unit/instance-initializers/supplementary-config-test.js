@@ -67,7 +67,7 @@ module('Unit | Instance Initializer | supplementary config', function (hooks) {
     assert.equal(ENV.APP.SDDOC_URL, 'http://custom.doc');
     assert.equal(ENV.APP.SLACK_URL, 'http://custom.slack');
     assert.equal(ENV.APP.BUILD_RELOAD_TIMER, '10000');
-    assert.equal(ENV.APP.BUILD_RELOAD_TIMER, '15000');
+    assert.equal(ENV.APP.EVENT_RELOAD_TIMER, '15000');
     assert.equal(ENV.APP.LOG_RELOAD_TIMER, '5000');
   });
 });
