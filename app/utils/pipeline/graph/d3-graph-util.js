@@ -783,9 +783,9 @@ export function addJobIcons( // eslint-disable-line max-params
 
       const virtualClass = d.virtual ? ' virtual' : '';
 
-      return `graph-node${virtualClass}$${
+      return `graph-node${virtualClass}${
         d.status ? ` build-${d.status.toLowerCase()}` : ''
-      }`.replace('$', '');
+      }`;
     })
     .attr('data-job', d => d.name)
     .on('click', node => {
