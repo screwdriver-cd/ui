@@ -51,6 +51,24 @@ module('Unit | Utility | Pipeline | event', function () {
     assert.equal(isComplete([{ id: 1, status: 'QUEUED' }], []), false);
     assert.equal(isComplete([{ id: 1, status: 'CREATED' }], []), false);
     assert.equal(isComplete([{ id: 1, status: 'SUCCESS' }], []), true);
+    assert.equal(
+      isComplete(
+        [
+          { id: 1, status: 'SUCCESS' },
+          { id: 2, status: 'CREATED' }
+        ],
+        []
+      ),
+      true
+    );
+    assert.equal(
+      isComplete([
+        { id: 1, status: 'RUNNING' },
+        { id: 2, status: 'CREATED' }
+      ]),
+      false
+    );
+
     assert.equal(isComplete([{ id: 1, status: 'UNSTABLE' }], []), false);
     assert.equal(
       isComplete(

@@ -22,11 +22,33 @@ export const isSkipped = (event, builds) => {
  * @param {Array} previousBuilds Array of previous builds in the format returned by the API
  * @returns {boolean} true if all builds have a status that indicates they have completed
  */
-export const isComplete = (builds, previousBuilds) => {
+export const isComplete = (builds, previousBuilds = []) => {
   const CREATED = 'CREATED';
 
+  // No builds means nothing is completed
   if (!builds || builds.length === 0) {
     return false;
+  }
+
+  const nonCreatedBuilds = builds.filter(b => b.status !== CREATED);
+
+  // If all builds are still in CREATED state, treat as not completed
+  if (nonCreatedBuilds.length === 0) return false;
+
+  const isFinished = build => {
+    if (build.status === 'UNSTABLE') {
+      // UNSTABLE is considered finished only when endTime is set
+      return build.endTime !== undefined;
+    }
+
+    return !unfinishedStatuses.includes(build.status);
+  };
+
+  // Initial run: skip CREATED-difference check and
+  // consider completed only if at least one non-CREATED build exists
+  // and all non-CREATED builds are finished
+  if (previousBuilds.length === 0) {
+    return nonCreatedBuilds.every(isFinished);
   }
 
   const currentCreatedBuildIds = new Set(
@@ -38,21 +60,13 @@ export const isComplete = (builds, previousBuilds) => {
       .map(build => build.id)
   );
 
-  if (currentCreatedBuildIds.difference(previousCreatedBuildIds).size === 0) {
-    return builds
-      .filter(build => build.status !== CREATED)
-      .every(build => {
-        const { status } = build;
+  // If new CREATED builds appeared since the previous check,
+  // treat the whole set as not completed
+  if (currentCreatedBuildIds.difference(previousCreatedBuildIds).size !== 0)
+    return false;
 
-        if (status === 'UNSTABLE') {
-          return build.endTime !== undefined;
-        }
-
-        return !unfinishedStatuses.includes(status);
-      });
-  }
-
-  return false;
+  // No new CREATED builds and all non-CREATED builds are finished
+  return nonCreatedBuilds.every(isFinished);
 };
 
 /**
