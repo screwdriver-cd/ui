@@ -781,7 +781,11 @@ export function addJobIcons( // eslint-disable-line max-params
         return 'graph-node build-skipped';
       }
 
-      return `graph-node${d.status ? ` build-${d.status.toLowerCase()}` : ''}`;
+      const virtualClass = d.virtual ? ' virtual' : '';
+
+      return `graph-node${virtualClass}$${
+        d.status ? ` build-${d.status.toLowerCase()}` : ''
+      }`.replace('$', '');
     })
     .attr('data-job', d => d.name)
     .on('click', node => {
@@ -904,7 +908,9 @@ export function updateJobStatuses(svg, data, sizes, nodeWidth) {
     .data(data.nodes)
     .join()
     .attr('class', node => {
-      return `graph-node${
+      const virtualClass = node.virtual ? ' virtual' : '';
+
+      return `graph-node${virtualClass}${
         node.status ? ` build-${node.status.toLowerCase()}` : ''
       }`;
     })
