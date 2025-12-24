@@ -3,7 +3,6 @@ import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { render, rerender } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   setupRenderingTest(hooks);
@@ -177,13 +176,9 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
       .dom('svg g.graph-node.virtual.build-created[data-job="main"]')
       .exists({ count: 1 });
 
-    const textEl = $(
-      'svg g.graph-node.virtual.build-created[data-job="main"] text'
-    );
-    const virtualGlyph = '\ue911';
-
-    assert.equal(textEl.length, 1);
-    assert.equal(textEl.text(), virtualGlyph);
+    assert
+      .dom('svg g.graph-node.virtual.build-created[data-job="main"] text')
+      .hasText('\ue911');
   });
 
   test('it renders stage', async function (assert) {
