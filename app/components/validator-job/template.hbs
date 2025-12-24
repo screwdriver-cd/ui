@@ -304,6 +304,11 @@
     Settings:
   </span>
   <span class="value">
+    {{#if (is-object this.job.settings)}}
+      <ObjectTree @data={{this.job.settings}} />
+    {{else}}
+      None defined
+    {{/if}}
     <ul>
       {{!TODO handle settings properly}}
       {{#each-in this.job.settings as |name svalue|}}
