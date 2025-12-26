@@ -55,6 +55,14 @@
           fill: darken(colors.$sd-queued, 10%);
         }
       }
+
+      &.virtual.build-created text {
+        fill: transparent;
+        stroke: colors.$sd-queued;
+        stroke-width: 3px;
+        paint-order: stroke;
+        vector-effect: non-scaling-stroke;
+      }
     }
     .graph-edge {
       stroke: colors.$sd-text-light;

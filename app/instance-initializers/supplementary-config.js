@@ -7,6 +7,12 @@ import convertToBool from 'screwdriver-ui/utils/convert-to-bool';
  * @method initialize
  */
 export function initialize() {
+  const toInt = v => {
+    const n = parseInt(v, 10);
+
+    return Number.isNaN(n) ? null : n;
+  };
+
   if (
     window.SUPPLEMENTARY_CONFIG &&
     window.SUPPLEMENTARY_CONFIG.SDAPI_HOSTNAME
@@ -76,6 +82,38 @@ export function initialize() {
     ENV.APP.DOWNLOAD_ARTIFACT_DIR = convertToBool(
       window.SUPPLEMENTARY_CONFIG.DOWNLOAD_ARTIFACT_DIR
     );
+  }
+
+  // Runtime overrides for reload timers (ms)
+  if (
+    window.SUPPLEMENTARY_CONFIG &&
+    window.SUPPLEMENTARY_CONFIG.BUILD_RELOAD_TIMER !== undefined
+  ) {
+    const n = toInt(window.SUPPLEMENTARY_CONFIG.BUILD_RELOAD_TIMER);
+
+    if (n !== null) {
+      ENV.APP.BUILD_RELOAD_TIMER = n;
+    }
+  }
+  if (
+    window.SUPPLEMENTARY_CONFIG &&
+    window.SUPPLEMENTARY_CONFIG.EVENT_RELOAD_TIMER !== undefined
+  ) {
+    const n = toInt(window.SUPPLEMENTARY_CONFIG.EVENT_RELOAD_TIMER);
+
+    if (n !== null) {
+      ENV.APP.EVENT_RELOAD_TIMER = n;
+    }
+  }
+  if (
+    window.SUPPLEMENTARY_CONFIG &&
+    window.SUPPLEMENTARY_CONFIG.LOG_RELOAD_TIMER !== undefined
+  ) {
+    const n = toInt(window.SUPPLEMENTARY_CONFIG.LOG_RELOAD_TIMER);
+
+    if (n !== null) {
+      ENV.APP.LOG_RELOAD_TIMER = n;
+    }
   }
 }
 
