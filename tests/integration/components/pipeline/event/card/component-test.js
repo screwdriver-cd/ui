@@ -269,6 +269,31 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.event-card-title .sha .latest-commit').hasText('#abc123d');
   });
 
+  test('it does not throw when latestCommitEvent is null', async function (assert) {
+    registerLatestCommitEventCallbackStub.reset();
+    registerLatestCommitEventCallbackStub.callsFake(
+      (queueName, id, callback) => {
+        callback(null);
+      }
+    );
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }]);
+    });
+
+    this.setProperties({
+      event
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+      />`
+    );
+
+    assert.dom('.event-card-title .sha .latest-commit').doesNotExist();
+  });
+
   test('it does not render counts for collapsed event', async function (assert) {
     registerBuildsCallbackStub.reset();
     registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
