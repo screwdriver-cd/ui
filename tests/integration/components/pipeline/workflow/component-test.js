@@ -36,7 +36,7 @@ module('Integration | Component | pipeline/workflow', function (hooks) {
 
   test('it renders for pipeline with no events', async function (assert) {
     sinon.stub(pipelinePageState, 'getIsPr').returns(false);
-    sinon.stub(shuttle, 'fetchFromApi').resolves(null);
+    sinon.stub(shuttle, 'fetchFromApi').throws(new Error('Not found test'));
 
     await render(
       hbs`<Pipeline::Workflow
