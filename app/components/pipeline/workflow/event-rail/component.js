@@ -70,6 +70,9 @@ export default class PipelineWorkflowEventRailComponent extends Component {
       )
       .then(lastSuccessfulEvent => {
         this.lastSuccessfulEvent = lastSuccessfulEvent;
+      })
+      .catch(() => {
+        this.lastSuccessfulEvent = null;
       });
 
     if (event) {
