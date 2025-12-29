@@ -206,7 +206,6 @@ export default class PipelineEventCardComponent extends Component {
     const beforeStatus = this.status;
 
     this.status = getStatus(builds, isEventSkipped, isEventComplete);
-    this.event.status = this.status;
     this.previousBuilds = this.builds;
     this.builds = builds;
     this.aggregateStatus = this.status;
@@ -246,7 +245,10 @@ export default class PipelineEventCardComponent extends Component {
       }, 1000);
     }
 
-    this.args.onEventUpdated?.(this.event);
+    this.args.onEventUpdated?.({
+      ...this.event,
+      status: this.status
+    });
   }
 
   @action

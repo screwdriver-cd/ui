@@ -17,7 +17,9 @@ module(
       shuttle = this.owner.lookup('service:shuttle');
       pipelinePageState = this.owner.lookup('service:pipeline-page-state');
 
-      sinon.stub(pipelinePageState, 'getPipeline').returns({ id: 1 });
+      const pipelineId = 1;
+      sinon.stub(pipelinePageState, 'getPipeline').returns({ id: pipelineId });
+      sinon.stub(pipelinePageState, 'getPipelineId').returns(pipelineId);
       sinon.stub(shuttle, 'fetchFromApi').resolves({ id: 123 });
     });
 

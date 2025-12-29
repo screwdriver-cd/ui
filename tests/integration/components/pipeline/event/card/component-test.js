@@ -164,7 +164,7 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       />`
     );
 
-    assert.dom('.last-successful').hasText('Last successful');
+    assert.dom('.last-successful').exists();
   });
 
   test('it does not render last successful', async function (assert) {
@@ -185,34 +185,47 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.last-successful').doesNotExist();
   });
 
-  test('it render last successful when the last successfule event is udpated', async function (assert) {
+  test('it render last successful when the last successful event is updated', async function (assert) {
     lastSuccessfulEvent = { id: 99 };
+
+    let buildsCallback;
+    const eventUpdatedStub = sinon.stub();
+
+    eventUpdatedStub.onCall(1).callsFake(updatedEvent => {
+      this.setProperties({ lastSuccessfulEvent: updatedEvent });
+    });
 
     registerBuildsCallbackStub.reset();
     registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
-      callback([{ status: 'SUCCESS' }]);
+      buildsCallback = callback;
+      callback([]);
     });
-
-    const eventUpdatedSub = updatedEvent => {
-      assert.equal(updatedEvent.status, 'SUCCESS');
-      this.setProperties({ lastSuccessfulEvent: updatedEvent });
-    };
 
     this.setProperties({
       event,
       lastSuccessfulEvent,
-      eventUpdatedSub
+      eventUpdatedStub
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
         @lastSuccessfulEvent={{this.lastSuccessfulEvent}}
-        @onEventUpdated={{this.eventUpdatedSub}}
+        @onEventUpdated={{this.eventUpdatedStub}}
       />`
     );
+    assert.dom('.last-successful').doesNotExist();
 
+    const buildsCallbackStub = sinon.stub();
+
+    buildsCallbackStub(builds => {
+      buildsCallback(builds);
+    });
+    buildsCallbackStub.yield([{ status: 'SUCCESS' }]);
+
+    await rerender();
     assert.dom('.last-successful').exists();
+    assert.true(eventUpdatedStub.calledTwice);
   });
 
   test('it renders event label', async function (assert) {

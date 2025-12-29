@@ -65,18 +65,14 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   @action
   async initialize() {
     const { event } = this.args;
-    const pipeline = this.pipelinePageState.getPipeline();
-
-    if (pipeline) {
-      await this.shuttle
-        .fetchFromApi('get', `/pipelines/${pipeline.id}/lastSuccessfulEvent`)
-        .then(lastSuccessfulEvent => {
-          this.lastSuccessfulEvent = lastSuccessfulEvent;
-        })
-        .catch(() => {
-          this.lastSuccessfulEvent = null;
-        });
-    }
+    await this.shuttle
+      .fetchFromApi(
+        'get',
+        `/pipelines/${this.pipelinePageState.getPipelineId()}/lastSuccessfulEvent`
+      )
+      .then(lastSuccessfulEvent => {
+        this.lastSuccessfulEvent = lastSuccessfulEvent;
+      });
 
     if (event) {
       await this.fetchNeighborEvents(event).then(() => {
