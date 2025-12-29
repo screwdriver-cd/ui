@@ -19,8 +19,6 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @tracked showStartEventModal = false;
 
-  @tracked showSyncPrModal = false;
-
   @tracked events;
 
   @tracked firstItemId;
@@ -154,10 +152,6 @@ export default class PipelineWorkflowEventRailComponent extends Component {
             `/pipelines/${pipeline.id}/events?type=${this.eventType}&prNum=${prNumToFetch}`
           )
           .then(events => {
-            if (events.length === 0) {
-              this.showSyncPrModal = true;
-            }
-
             return events[0];
           });
       });
@@ -258,11 +252,6 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   @action
   closeStartEventModal() {
     this.showStartEventModal = false;
-  }
-
-  @action
-  closeSyncPrModal() {
-    this.showSyncPrModal = false;
   }
 
   @action
