@@ -99,6 +99,7 @@
             @displayStageTooltip={{true}}
             @setShowStageTooltip={{this.setShowStageTooltip}}
             @toggleStageView={{this.toggleStageView}}
+            @toggledJob={{this.jobToggledByTooltip}}
           />
 
           {{#if this.showTooltip}}
@@ -107,6 +108,7 @@
               @event={{this.event}}
               @builds={{this.builds}}
               @workflowGraph={{this.workflowGraphToDisplay}}
+              @onJobToggle={{this.onJobToggle}}
             />
           {{/if}}
           {{#if this.showStageTooltip}}

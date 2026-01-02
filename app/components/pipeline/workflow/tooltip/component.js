@@ -144,6 +144,7 @@ export default class PipelineWorkflowTooltipComponent extends Component {
 
     if (updated) {
       this.setTooltipData();
+      this.args.onJobToggle(this.tooltipData.job);
     }
   }
 

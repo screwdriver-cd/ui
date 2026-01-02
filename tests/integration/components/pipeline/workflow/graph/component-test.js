@@ -7,6 +7,7 @@ import sinon from 'sinon';
 module('Integration | Component | pipeline/workflow/graph', function (hooks) {
   setupRenderingTest(hooks);
 
+  let getJobsStub;
   const stages = [];
   const jobs = [];
 
@@ -15,11 +16,12 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
     const settings = this.owner.lookup('service:settings');
 
     sinon.stub(pipelinePageState, 'getStages').returns(stages);
-    sinon.stub(pipelinePageState, 'getJobs').returns(jobs);
     sinon.stub(pipelinePageState, 'getPipelineId').returns(1);
     sinon
       .stub(settings, 'getSettingsForPipeline')
       .returns({ showPRJobs: false });
+    getJobsStub = sinon.stub(pipelinePageState, 'getJobs');
+    getJobsStub.returns(jobs);
 
     jobs.push({ id: 1 });
   });
@@ -411,5 +413,48 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
     await rerender();
 
     assert.dom('svg [data-stage=test]').hasClass('build-success');
+  });
+
+  test('it re-renders graph when job state changes', async function (assert) {
+    const jobId = 1;
+
+    getJobsStub.reset();
+    getJobsStub
+      .onCall(0)
+      .returns([{ id: jobId, state: 'ENABLED' }])
+      .onCall(1)
+      .returns([{ id: jobId, state: 'DISABLED' }]);
+
+    this.setProperties({
+      workflowGraph: {
+        nodes: [{ name: '~commit' }, { name: 'main', id: jobId }],
+        edges: [{ src: '~commit', dest: 'main' }]
+      },
+      event: { startFrom: '~commit' },
+      builds: [],
+      collapsedStages: new Set([]),
+      displayJobNameLength: 20,
+      toggledJob: null
+    });
+    await render(
+      hbs`<Pipeline::Workflow::Graph
+            @workflowGraph={{this.workflowGraph}}
+            @event={{this.event}}
+            @builds={{this.builds}}
+            @collapsedStages={{this.collapsedStages}}
+            @chainPr={{false}}
+            @displayJobNameLength={{this.displayJobNameLength}}
+            @toggledJob={{this.toggledJob}}
+      />`
+    );
+
+    assert.dom('svg [data-job=main]').doesNotHaveClass('build-disabled');
+
+    this.setProperties({
+      toggledJob: {}
+    });
+    await rerender();
+
+    assert.dom('svg [data-job=main]').hasClass('build-disabled');
   });
 });

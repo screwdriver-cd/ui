@@ -54,6 +54,8 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked collapsedStages;
 
+  @tracked jobToggledByTooltip;
+
   workflowGraph;
 
   workflowGraphWithDownstreamTriggers;
@@ -395,5 +397,10 @@ export default class PipelineWorkflowComponent extends Component {
   setShowBuildCostsTable() {
     this.showGraph = false;
     this.showEventJobsTable = false;
+  }
+
+  @action
+  onJobToggle(job) {
+    this.jobToggledByTooltip = job;
   }
 }
