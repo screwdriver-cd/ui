@@ -96,6 +96,15 @@
         }
       }
 
+      .last-successful {
+        display: inline-block;
+        background-color: colors.$sd-success;
+        color: colors.$sd-white;
+        border-radius: 3px;
+        padding: 3px 5px;
+        margin: auto 0 auto 5px;
+      }
+
       .abort-event-button,
       .start-event-button {
         margin-left: auto;
