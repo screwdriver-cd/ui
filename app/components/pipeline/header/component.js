@@ -146,39 +146,15 @@ export default class PipelineHeaderComponent extends Component {
 
   @action
   switchUi() {
-    const currentUrl = this.router.currentURL;
-
-    this.optInRouteMapping.resetUiSwitch();
-    this.optInRouteMapping.returnUrl = currentUrl;
-
-    let legacyRoute = currentUrl.replace('/v2', '');
+    localStorage.setItem('oldUi', 'true');
+    let legacyRoute = this.router.currentURL.replace('/v2', '');
 
     switch (this.router.currentRoute.name) {
-      case 'v2.pipeline.secrets':
-        break;
-      case 'v2.pipeline.build':
-      case 'v2.pipeline.child-pipelines':
-      case 'v2.pipeline.jobs':
-      case 'v2.pipeline.metrics':
       case 'v2.pipeline.secrets.tokens':
         legacyRoute = legacyRoute.replace('/tokens', '');
         break;
-      case 'v2.pipeline.events.index':
-      case 'v2.pipeline.events.show':
-      case 'v2.pipeline.pulls.index':
-        if (this.router.currentRoute.attributes.event?.id) {
-          this.optInRouteMapping.setEventId(
-            this.router.currentRoute.attributes.event.id
-          );
-        }
-        break;
       case 'v2.pipeline.pulls.show':
-        if (this.router.currentRoute.attributes.event?.id) {
-          this.optInRouteMapping.setEventId(
-            this.router.currentRoute.attributes.event.id
-          );
-          legacyRoute = `${legacyRoute.split('/pulls/')[0]}/pulls`;
-        }
+        legacyRoute = `${legacyRoute.split('/pulls/')[0]}/pulls`;
         break;
       case 'v2.pipeline.settings.cache':
       case 'v2.pipeline.settings.index':
@@ -191,7 +167,6 @@ export default class PipelineHeaderComponent extends Component {
         break;
     }
 
-    this.optInRouteMapping.switchFromV2 = true;
     this.router.replaceWith(legacyRoute);
   }
 }

@@ -3,11 +3,26 @@ import { service } from '@ember/service';
 import { NotFoundError } from 'screwdriver-ui/utils/not-found-error';
 
 export default class NewPipelineRoute extends Route {
+  @service router;
+
   @service('shuttle') shuttle;
 
   @service('banners') banners;
 
   @service('pipeline-page-state') pipelinePageState;
+
+  activate(transition) {
+    if (
+      transition.from?.name === 'pipeline.build.index' &&
+      localStorage.getItem('oldUi') === 'true'
+    ) {
+      const [pipelineId, eventId] = transition.intent.contexts;
+      const v1Url = `/pipelines/${pipelineId}/events/${eventId}`;
+
+      transition.abort();
+      this.router.transitionTo(v1Url);
+    }
+  }
 
   async model(params) {
     const pipelineId = params.pipeline_id;

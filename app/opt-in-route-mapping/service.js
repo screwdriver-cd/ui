@@ -3,11 +3,7 @@ import Service from '@ember/service';
 export default class OptInRouteMappingService extends Service {
   routeMappings;
 
-  returnUrl;
-
-  eventMeta;
-
-  switchFromV2;
+  prEventId;
 
   constructor() {
     super(...arguments);
@@ -27,24 +23,5 @@ export default class OptInRouteMappingService extends Service {
     this.routeMappings.set('pipeline.pulls', 'v2.pipeline.pulls.show');
     this.routeMappings.set('pipeline.options', 'v2.pipeline.settings.index');
     this.routeMappings.set('pipeline.secrets', 'v2.pipeline.secrets.index');
-  }
-
-  resetUiSwitch() {
-    this.returnUrl = null;
-    this.eventMeta = null;
-  }
-
-  setEventId(eventId) {
-    if (!this.eventMeta) {
-      this.eventMeta = {};
-    }
-
-    this.eventMeta.eventId = eventId;
-  }
-
-  setLegacyEventId(legacyEventId) {
-    if (this.eventMeta) {
-      this.eventMeta.legacyEventId = legacyEventId;
-    }
   }
 }

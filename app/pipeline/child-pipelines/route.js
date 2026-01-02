@@ -9,12 +9,7 @@ export default Route.extend({
   optInRouteMapping: service(),
   routeAfterAuthentication: 'pipeline.child-pipelines',
   beforeModel() {
-    if (
-      this.optInRouteMapping.switchFromV2 ||
-      localStorage.getItem('oldUi') === 'true'
-    ) {
-      this.optInRouteMapping.switchFromV2 = false;
-
+    if (localStorage.getItem('oldUi') === 'true') {
       return;
     }
 

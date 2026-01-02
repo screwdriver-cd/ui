@@ -6,6 +6,8 @@ import {
 } from 'screwdriver-ui/utils/pipeline/pull-request';
 
 export default class V2PipelinePullsIndexRoute extends Route {
+  @service router;
+
   @service('shuttle') shuttle;
 
   @service('pipeline-page-state') pipelinePageState;
@@ -42,7 +44,10 @@ export default class V2PipelinePullsIndexRoute extends Route {
     const { event } = model;
 
     if (event) {
-      const transition = this.replaceWith('v2.pipeline.pulls.show', event.id);
+      const transition = this.router.replaceWith(
+        'v2.pipeline.pulls.show',
+        event.id
+      );
 
       transition.data = {
         event

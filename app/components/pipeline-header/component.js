@@ -125,26 +125,15 @@ export default Component.extend({
         });
     },
     switchUi() {
-      const { returnUrl } = this.optInRouteMappingService;
+      localStorage.removeItem('oldUi');
+      let v2Url = `/v2${this.router.currentURL}`;
 
-      let v2Url = returnUrl;
-
-      if (this.optInRouteMappingService.eventMeta) {
-        const { eventId, legacyEventId } =
-          this.optInRouteMappingService.eventMeta;
-
-        if (legacyEventId && legacyEventId !== eventId) {
-          const currentUrl = this.router.currentURL;
-
-          if (currentUrl.endsWith('/pulls')) {
-            v2Url = `/v2${currentUrl}/${legacyEventId}`;
-          } else {
-            v2Url = `/v2${currentUrl}`.replace(eventId, legacyEventId);
-          }
-        }
+      if (v2Url.endsWith('/options')) {
+        v2Url = v2Url.replace('/options', '/settings');
+      } else if (this.optInRouteMappingService.prEventId) {
+        v2Url = `${v2Url}/${this.optInRouteMappingService.prEventId}`;
       }
 
-      this.optInRouteMappingService.resetUiSwitch();
       this.router.replaceWith(v2Url);
     }
   }

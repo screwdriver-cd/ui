@@ -3,6 +3,8 @@ import { service } from '@ember/service';
 import { NotFoundError } from 'ember-ajax/errors';
 
 export default class NewPipelineEventsIndexRoute extends Route {
+  @service router;
+
   @service('shuttle') shuttle;
 
   @service('pipeline-page-state') pipelinePageState;
@@ -31,7 +33,7 @@ export default class NewPipelineEventsIndexRoute extends Route {
     const { latestEvent } = model;
 
     if (latestEvent) {
-      const transition = this.replaceWith(
+      const transition = this.router.replaceWith(
         'v2.pipeline.events.show',
         latestEvent.id
       );

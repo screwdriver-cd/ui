@@ -82,7 +82,7 @@ export default Component.extend({
   actions: {
     selectPR() {
       set(this, 'selected', this.eventId);
-      this.optInRouteMappingService.setLegacyEventId(this.eventId);
+      this.optInRouteMappingService.prEventId = this.eventId;
     }
   }
 });
