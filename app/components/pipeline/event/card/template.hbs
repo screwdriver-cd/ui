@@ -34,6 +34,11 @@
         {{this.truncatedSha}}
       </a>
     </div>
+    {{#if (and this.isLastSuccessfulEvent (not this.isPR))}}
+      <div class="last-successful">
+        Last successful
+      </div>
+    {{/if}}
     {{#if (eq this.status "RUNNING")}}
       {{#if @allowEventAction}}
         <BsButton
@@ -245,6 +250,7 @@
               @event={{@event}}
               @isPR={{this.isPR}}
               @closeModal={{this.closeEventHistoryModal}}
+              @lastSuccessfulEvent={{@lastSuccessfulEvent}}
             />
           {{/if}}
         </BsButton>

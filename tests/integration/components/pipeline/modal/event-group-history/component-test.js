@@ -40,19 +40,21 @@ module(
       };
 
       mockApiResponse.push(
-        { ...mockEvent, id: 3 },
+        { ...mockEvent, id: 3, sha: '111999111999' },
         { ...mockEvent, id: 2 },
         { ...mockEvent, id: 1 }
       );
 
       this.setProperties({
         event: { ...mockEvent, id: 1 },
+        lastSuccessfulEvent: { id: 3 },
         closeModal: () => {}
       });
 
       await render(
         hbs`<Pipeline::Modal::EventGroupHistory
             @event={{this.event}}
+            @lastSuccessfulEvent={{this.lastSuccessfulEvent}}
             @closeModal={{this.closeModal}}
         />`
       );
@@ -61,6 +63,10 @@ module(
       assert.dom('.modal-header').hasText(`Events in group: ${groupEventId} ×`);
       assert.dom('.modal-body').exists({ count: 1 });
       assert.dom('.modal-footer').doesNotExist();
+      assert.dom('.event-card').exists({ count: 3 });
+      assert
+        .dom('.event-card:has(.last-successful)')
+        .hasTextContaining('#111999');
 
       await clearRender();
     });
