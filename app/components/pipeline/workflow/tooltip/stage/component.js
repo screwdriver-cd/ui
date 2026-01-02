@@ -11,6 +11,8 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
 
   @tracked showConfirmActionModal = false;
 
+  @tracked stageAction;
+
   get canStartStageFromView() {
     const activeTab = this.router.currentRoute.name.includes('events')
       ? 'events'
@@ -23,16 +25,12 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
     );
   }
 
-  get stageStatus() {
-    return this.args.d3Data.stage.status;
-  }
-
   get job() {
     const setupJob = this.args.d3Data.stage.setup;
 
     return {
       ...setupJob,
-      status: this.stageStatus
+      status: this.args.d3Data.stage.status
     };
   }
 
@@ -62,7 +60,8 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
   }
 
   @action
-  openConfirmActionModal() {
+  openConfirmActionModal(stageAction) {
+    this.stageAction = stageAction;
     this.showConfirmActionModal = true;
   }
 
