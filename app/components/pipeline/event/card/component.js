@@ -176,7 +176,7 @@ export default class PipelineEventCardComponent extends Component {
   latestCommitEventCallback(latestCommitEvent) {
     this.latestCommitEvent = latestCommitEvent;
 
-    if (this.latestCommitEvent.id !== this.event.id) {
+    if (this.latestCommitEvent && this.latestCommitEvent.id !== this.event.id) {
       this.workflowDataReload.removeLatestCommitEventCallback(
         this.queueName,
         this.event.id
