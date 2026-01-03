@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { clearRender, render } from '@ember/test-helpers';
+import { clearRender, render, waitFor } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
@@ -58,6 +58,7 @@ module(
             @closeModal={{this.closeModal}}
         />`
       );
+      await waitFor('.event-card', { count: 3 });
 
       assert.dom('.modal-header').exists({ count: 1 });
       assert.dom('.modal-header').hasText(`Events in group: ${groupEventId} ×`);
