@@ -1,8 +1,8 @@
-import Component from '@glimmer/component';
+import Component from '@ember/component';
 
-export default class ObjectTreeComponent extends Component {
+export default Component.extend({
   get entries() {
-    const { data } = this.args;
+    const data = this.get('data');
 
     if (!data || typeof data !== 'object' || this.isEmptyObject) return [];
 
@@ -17,11 +17,11 @@ export default class ObjectTreeComponent extends Component {
 
       return { key, kind: 'primitive', value };
     });
-  }
+  },
 
   get isEmptyObject() {
-    const { data } = this.args;
+    const data = this.get('data');
 
     return data && typeof data === 'object' && Object.keys(data).length === 0;
   }
-}
+});

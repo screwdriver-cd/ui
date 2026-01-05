@@ -1,15 +1,15 @@
 {{#if this.isEmptyObject}}
-  <span>None defined</span>
+  <span class="object-value">None defined</span>
 {{else}}
   <ul>
     {{#each this.entries as |item|}}
       <li>
-        <strong>{{item.key}}:</strong>
+        <span class="object-key">{{item.key}}:</span>
 
         {{#if (eq item.kind "object")}}
           <ObjectTree @data={{item.value}} />
         {{else}}
-          <span> {{item.value}}</span>
+          <span class="object-value"> {{item.value}}</span>
         {{/if}}
       </li>
     {{/each}}

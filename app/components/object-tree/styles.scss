@@ -1,0 +1,14 @@
+& {
+  span {
+    display: inline-block;
+    vertical-align: text-top;
+  }
+
+  span.object-key {
+    white-space: initial;
+  }
+
+  span.object-value {
+    color: $sd-text-med;
+  }
+}
