@@ -33,7 +33,7 @@ module('Integration | Component | validator job', function (hooks) {
     assert.dom('.env .label').hasText('Environment Variables:');
     assert.dom('.env ul li').hasText('None defined');
     assert.dom('.settings .label').hasText('Settings:');
-    assert.dom('.settings ul li').hasText('None defined');
+    assert.dom('.settings span.object-value').hasText('None defined');
     assert.dom('.annotations .label').hasText('Annotations:');
     assert.dom('.annotations .value').hasText('None defined');
   });
@@ -116,14 +116,23 @@ module('Integration | Component | validator job', function (hooks) {
     assert.dom('.env .label').hasText('Environment Variables:');
     assert.dom('.env ul li').hasText('FOO: bar');
     assert.dom('.settings .label').hasText('Settings:');
-    assert.dom('.settings ul li:nth-of-type(1)').hasText('FOO: bar');
-    assert.dom('.settings ul li:nth-of-type(2) div.name').hasText('BAZ:');
     assert
-      .dom('.settings ul li:nth-of-type(2) div.value')
-      .hasText('name: test');
-    assert.dom('.settings ul li:nth-of-type(3) div.name').hasText('QUX:');
+      .dom('.settings ul li:nth-of-type(1) span.object-key')
+      .hasText('FOO:');
     assert
-      .dom('.settings ul li:nth-of-type(3) div.value')
+      .dom('.settings ul li:nth-of-type(1) span.object-value')
+      .hasText('bar');
+    assert
+      .dom('.settings ul li:nth-of-type(2) span.object-key')
+      .hasText('BAZ:');
+    assert
+      .dom('.settings ul li:nth-of-type(2) span.object-value')
+      .hasText('test');
+    assert
+      .dom('.settings ul li:nth-of-type(3) span.object-key')
+      .hasText('QUX:');
+    assert
+      .dom('.settings ul li:nth-of-type(3) span.object-value')
       .hasText('None defined');
     assert.dom('.annotations .label').hasText('Annotations:');
     assert.dom('.annotations ul li').hasText('FOO: bar');
@@ -154,7 +163,7 @@ module('Integration | Component | validator job', function (hooks) {
     assert.dom('.env .label').hasText('Environment Variables:');
     assert.dom('.env ul li').hasText('None defined');
     assert.dom('.settings .label').hasText('Settings:');
-    assert.dom('.settings ul li').hasText('None defined');
+    assert.dom('.settings span.object-value').hasText('None defined');
     assert.dom('.annotations .label').hasText('Annotations:');
     assert.dom('.annotations .value').hasText('None defined');
     assert.dom('.sourcePaths .label').hasText('Source Paths:');
