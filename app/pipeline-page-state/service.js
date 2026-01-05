@@ -1,4 +1,5 @@
 import Service from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 
 export default class PipelinePageStateService extends Service {
   pipeline;
@@ -9,7 +10,7 @@ export default class PipelinePageStateService extends Service {
 
   stages;
 
-  jobs;
+  @tracked jobs = [];
 
   adminUsers;
 
