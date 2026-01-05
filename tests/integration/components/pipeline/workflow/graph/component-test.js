@@ -150,6 +150,37 @@ module('Integration | Component | pipeline/workflow/graph', function (hooks) {
     assert.equal(this.element.querySelector('svg').children.length, 7);
   });
 
+  test('it renders a virtual CREATED job as outline', async function (assert) {
+    this.setProperties({
+      workflowGraph: {
+        nodes: [{ name: '~commit' }, { id: 1, name: 'main', virtual: true }],
+        edges: [{ src: '~commit', dest: 'main' }]
+      },
+      event: { startFrom: '~commit' },
+      builds: [{ id: 1, jobId: 1, status: 'CREATED' }],
+      collapsedStages: new Set([]),
+      displayJobNameLength: 20
+    });
+    await render(
+      hbs`<Pipeline::Workflow::Graph
+          @workflowGraph={{this.workflowGraph}}
+          @event={{this.event}}
+          @builds={{this.builds}}
+          @collapsedStages={{this.collapsedStages}}
+          @chainPr={{false}}
+          @displayJobNameLength={{this.displayJobNameLength}}
+      />`
+    );
+
+    assert
+      .dom('svg g.graph-node.virtual.build-created[data-job="main"]')
+      .exists({ count: 1 });
+
+    assert
+      .dom('svg g.graph-node.virtual.build-created[data-job="main"] text')
+      .hasText('\ue911');
+  });
+
   test('it renders stage', async function (assert) {
     stages.push({ id: 10, name: 'test', jobIds: [1], setup: 11, teardown: 12 });
     jobs.splice(0).push(

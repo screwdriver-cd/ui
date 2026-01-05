@@ -29,18 +29,16 @@ export default EventsRoute.extend({
       return;
     }
 
-    if (transition.from) {
-      switch (transition.from.name) {
-        case 'pipeline.events':
-        case 'pipeline.events.index':
-        case 'pipeline.events.show':
-          this.set('pipeline', pipeline);
-          this.optInRouteMapping.switchFromV2 = false;
-          break;
-        default:
-          this.replaceWith('v2.pipeline.pulls', pipeline.id);
-          break;
-      }
+    switch (transition.from?.name) {
+      case 'pipeline.events':
+      case 'pipeline.events.index':
+      case 'pipeline.events.show':
+        this.set('pipeline', pipeline);
+        this.optInRouteMapping.switchFromV2 = false;
+        break;
+      default:
+        this.replaceWith('v2.pipeline.pulls', pipeline.id);
+        break;
     }
   },
   async model() {
