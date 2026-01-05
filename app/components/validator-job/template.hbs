@@ -309,39 +309,6 @@
     {{else}}
       None defined
     {{/if}}
-    <ul>
-      {{!TODO handle settings properly}}
-      {{#each-in this.job.settings as |name svalue|}}
-        <li>
-          <div class="value-item">
-            <div class="name">
-              {{name}}:
-            </div>
-            <div class="value">
-              {{#if (is-object svalue)}}
-                {{#each-in svalue as |xname xvalue|}}
-                  <div>
-                    {{xname}}: {{xvalue}}
-                  </div>
-                {{else}}
-                  <div>
-                    None defined
-                  </div>
-                {{/each-in}}
-              {{else}}
-                <div>
-                  {{svalue}}
-                </div>
-              {{/if}}
-            </div>
-          </div>
-        </li>
-      {{else}}
-        <li>
-          None defined
-        </li>
-      {{/each-in}}
-    </ul>
   </span>
 </div>
 <div
