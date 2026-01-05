@@ -1,4 +1,4 @@
-{{#if this.isEmptyObject}}
+{{#if (not this.isListableObject)}}
   <span class="object-value">None defined</span>
 {{else}}
   <ul>

@@ -4,7 +4,7 @@ export default Component.extend({
   get entries() {
     const data = this.get('data');
 
-    if (!data || typeof data !== 'object' || this.isEmptyObject) return [];
+    if (!this.isListableObject) return [];
 
     return Object.entries(data).map(([key, value]) => {
       if (Array.isArray(value)) {
@@ -19,9 +19,9 @@ export default Component.extend({
     });
   },
 
-  get isEmptyObject() {
+  get isListableObject() {
     const data = this.get('data');
 
-    return data && typeof data === 'object' && Object.keys(data).length === 0;
+    return typeof data === 'object' && Object.keys(data).length > 0;
   }
 });
