@@ -16,12 +16,8 @@ export default Route.extend(AuthenticatedRouteMixin, {
   beforeModel() {
     const { pipeline } = this.modelFor('pipeline');
 
-    if (
-      this.optInRouteMapping.switchFromV2 ||
-      localStorage.getItem('oldUi') === 'true'
-    ) {
+    if (localStorage.getItem('oldUi') === 'true') {
       this.set('pipeline', pipeline);
-      this.optInRouteMapping.switchFromV2 = false;
 
       return;
     }
