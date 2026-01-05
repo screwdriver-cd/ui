@@ -19,6 +19,8 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   let event;
 
+  let lastSuccessfulEvent;
+
   hooks.beforeEach(function () {
     const settings = this.owner.lookup('service:settings');
 
@@ -33,6 +35,8 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
       creator: { name: 'batman' },
       meta: {}
     };
+
+    lastSuccessfulEvent = { id: 11 };
 
     sinon.stub(settings, 'getSettings').returns({});
 
@@ -145,6 +149,83 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     );
 
     assert.dom('.highlighted').doesNotExist();
+  });
+
+  test('it renders last successful when event is last successful', async function (assert) {
+    this.setProperties({
+      event,
+      lastSuccessfulEvent
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @lastSuccessfulEvent={{this.lastSuccessfulEvent}}
+      />`
+    );
+
+    assert.dom('.last-successful').exists();
+  });
+
+  test('it does not render last successful', async function (assert) {
+    lastSuccessfulEvent = { id: 99 };
+
+    this.setProperties({
+      event,
+      lastSuccessfulEvent
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @lastSuccessfulEvent={{this.lastSuccessfulEvent}}
+      />`
+    );
+
+    assert.dom('.last-successful').doesNotExist();
+  });
+
+  test('it render last successful when the last successful event is updated', async function (assert) {
+    lastSuccessfulEvent = { id: 99 };
+
+    let buildsCallback;
+    const eventUpdatedStub = sinon.stub();
+
+    eventUpdatedStub.onCall(1).callsFake(updatedEvent => {
+      this.setProperties({ lastSuccessfulEvent: updatedEvent });
+    });
+
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      buildsCallback = callback;
+      callback([]);
+    });
+
+    this.setProperties({
+      event,
+      lastSuccessfulEvent,
+      eventUpdatedStub
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @lastSuccessfulEvent={{this.lastSuccessfulEvent}}
+        @onEventUpdated={{this.eventUpdatedStub}}
+      />`
+    );
+    assert.dom('.last-successful').doesNotExist();
+
+    const buildsCallbackStub = sinon.stub();
+
+    buildsCallbackStub(builds => {
+      buildsCallback(builds);
+    });
+    buildsCallbackStub.yield([{ status: 'SUCCESS' }]);
+
+    await rerender();
+    assert.dom('.last-successful').exists();
+    assert.true(eventUpdatedStub.calledTwice);
   });
 
   test('it renders event label', async function (assert) {
