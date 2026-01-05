@@ -2,8 +2,6 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { cancel, debounce } from '@ember/runloop';
-import { registerDestructor } from '@ember/destroyable';
 
 export default class PipelineModalSearchEventComponent extends Component {
   @service('shuttle') shuttle;
@@ -18,50 +16,13 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   @tracked invalidSha = false;
 
-  _searchDebounceTimer = null;
-
-  debounceDeplayMs = 500;
-
-  constructor(owner, args) {
-    super(owner, args);
-
-    registerDestructor(this, () => {
-      if (this._searchDebounceTimer) {
-        cancel(this._searchDebounceTimer);
-      }
-    });
-  }
-
   searchFieldOptions = ['message', 'sha', 'creator', 'author'];
-
-  _cancelPendingSearch() {
-    if (this._searchDebounceTimer) {
-      cancel(this._searchDebounceTimer);
-      this._searchDebounceTimer = null;
-    }
-  }
-
-  _executeSearch(inputValue) {
-    // Construct search URL with proper query parameters
-    const baseUrl = `/pipelines/${this.pipelinePageState.getPipelineId()}/events?${
-      this.searchField
-    }=${encodeURIComponent(inputValue)}`;
-    const url = `${baseUrl}&type=${
-      this.pipelinePageState.getIsPr() ? 'pr' : 'pipeline'
-    }`;
-
-    this.shuttle.fetchFromApi('get', url).then(events => {
-      this.searchResults = events;
-    });
-  }
 
   @action
   handleInput(inputEvent) {
-    const rawValue = inputEvent?.target?.value ?? this.searchInput ?? '';
-    const inputValue = rawValue.trim();
+    const inputValue = inputEvent?.target?.value?.trim() || this.searchInput;
 
     if (!inputValue) {
-      this._cancelPendingSearch();
       this.searchResults = [];
       this.invalidSha = false;
       this.searchInput = null;
@@ -76,19 +37,23 @@ export default class PipelineModalSearchEventComponent extends Component {
       this.invalidSha = !validHex.test(inputValue);
 
       if (this.invalidSha) {
-        this._cancelPendingSearch();
         this.searchResults = [];
 
         return;
       }
     }
 
-    this._searchDebounceTimer = debounce(
-      this,
-      this._executeSearch,
-      inputValue,
-      this.debounceDeplayMs
-    );
+    // Construct search URL with proper query parameters
+    const baseUrl = `/pipelines/${this.pipelinePageState.getPipelineId()}/events?${
+      this.searchField
+    }=${encodeURIComponent(inputValue)}`;
+    const url = `${baseUrl}&type=${
+      this.pipelinePageState.getIsPr() ? 'pr' : 'pipeline'
+    }`;
+
+    this.shuttle.fetchFromApi('get', url).then(events => {
+      this.searchResults = events;
+    });
   }
 
   @action
@@ -102,7 +67,6 @@ export default class PipelineModalSearchEventComponent extends Component {
     if (event.key === 'Escape') {
       if (this.searchInput?.length > 0) {
         event.stopImmediatePropagation();
-        this._cancelPendingSearch();
         this.searchInput = null;
         this.searchResults = [];
         this.invalidSha = false;

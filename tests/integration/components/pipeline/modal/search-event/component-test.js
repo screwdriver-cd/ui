@@ -1,11 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import {
-  fillIn,
-  render,
-  triggerKeyEvent,
-  waitUntil
-} from '@ember/test-helpers';
+import { fillIn, render, triggerKeyEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { selectChoose } from 'ember-power-select/test-support';
 import sinon from 'sinon';
@@ -66,7 +61,6 @@ module(
       assert.dom('#search-field-select').hasText('message');
       assert.dom('#search-input input').hasValue('this is a message');
 
-      await waitUntil(() => shuttle.fetchFromApi.callCount === 1);
       assert.equal(shuttle.fetchFromApi.callCount, 1);
     });
 
@@ -96,13 +90,11 @@ module(
 
       await fillIn('input', 'fe155eb');
       assert.dom('#search-input input').hasValue('fe155eb');
-      await waitUntil(() => shuttle.fetchFromApi.callCount === 1);
       assert.equal(shuttle.fetchFromApi.callCount, 1);
 
       await selectChoose('#search-field-select', 'creator');
       assert.dom('#search-field-select').hasText('creator');
       assert.dom('#search-input input').hasValue('fe155eb');
-      await waitUntil(() => shuttle.fetchFromApi.callCount === 2);
       assert.equal(shuttle.fetchFromApi.callCount, 2);
     });
 
@@ -149,7 +141,6 @@ module(
 
       await fillIn('input', 'abc123');
       assert.dom('#search-input input').hasValue('abc123');
-      await waitUntil(() => shuttle.fetchFromApi.callCount === 1);
       assert.equal(shuttle.fetchFromApi.callCount, 1);
 
       await triggerKeyEvent('input', 'keydown', 'Escape');
