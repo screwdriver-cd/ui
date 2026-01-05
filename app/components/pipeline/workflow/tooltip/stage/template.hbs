@@ -3,14 +3,21 @@
 
   {{#if this.canStartStageFromView}}
     <a
-      id="start-job-link"
+      id="start-stage-link"
       href="#"
-      {{on "click" (fn this.openConfirmActionModal)}}
+      {{on "click" (fn this.openConfirmActionModal 'start')}}
     >
-      {{if this.stageStatus "Restart" "Start"}} pipeline from this stage
+      Start pipeline from this stage
+    </a>
+    <a
+      id="restart-stage-link"
+      href="#"
+      {{on "click" (fn this.openConfirmActionModal 'restart')}}
+    >
+      Restart pipeline from this stage
     </a>
   {{else}}
-    <div>Can not {{if this.stageStatus "restart" "start"}} stage</div>
+    <div>Can not start/restart stage</div>
   {{/if}}
 </div>
 
