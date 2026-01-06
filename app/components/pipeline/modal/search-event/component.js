@@ -21,14 +21,12 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   debounceDeplayMs = 500;
 
-  constructor(owner, args) {
-    super(owner, args);
+  willDestroy() {
+    super.willDestroy();
 
-    registerDestructor(this, () => {
-      if (this._searchDebounceTimer) {
-        cancel(this._searchDebounceTimer);
-      }
-    });
+    if (this._searchDebounceTimer) {
+      cancel(this._searchDebounceTimer);
+    }
   }
 
   searchFieldOptions = ['message', 'sha', 'creator', 'author'];
