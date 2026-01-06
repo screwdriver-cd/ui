@@ -84,7 +84,7 @@ export default class PipelineModalSearchEventComponent extends Component {
       this,
       this._executeSearch,
       inputValue,
-      this.debounceDeplayMs
+      this.debounceDelayMs
     );
   }
 
