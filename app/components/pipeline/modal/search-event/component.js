@@ -3,7 +3,6 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { cancel, debounce } from '@ember/runloop';
-import { registerDestructor } from '@ember/destroyable';
 
 export default class PipelineModalSearchEventComponent extends Component {
   @service('shuttle') shuttle;
