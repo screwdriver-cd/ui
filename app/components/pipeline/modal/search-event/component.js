@@ -19,7 +19,7 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   _searchDebounceTimer = null;
 
-  debounceDeplayMs = 500;
+  debounceDelayMs = 500;
 
   willDestroy() {
     super.willDestroy();
