@@ -50,9 +50,9 @@
           .dropdown-menu {
             display: flex;
             flex-direction: column;
-            overflow-x: auto;
-            max-height: 10rem;
-            width: 20rem;
+            overflow: auto;
+            max-width: 40rem;
+            max-height: calc(100vh - 120px);
 
             svg {
               width: 10px;
