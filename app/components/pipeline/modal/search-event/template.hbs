@@ -39,6 +39,8 @@
         <VerticalCollection
           @items={{this.searchResults}}
           @estimateHeight={{150}}
+          @key={{"id"}}
+          @lastReached={{this.loadMore}}
           as |event|
         >
           <Pipeline::Event::Card
@@ -48,6 +50,9 @@
             @lastSuccessfulEvent={{@lastSuccessfulEvent}}
           />
         </VerticalCollection>
+        {{#if this.isLoading}}
+          <div class="loading-more">Loading more…</div>
+        {{/if}}
       </div>
     {{/if}}
   </modal.body>
