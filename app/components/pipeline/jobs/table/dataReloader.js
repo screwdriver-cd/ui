@@ -92,7 +92,7 @@ export default class DataReloader {
 
     this.intervalId = setInterval(() => {
       this.fetchBuildsForJobs().then(() => {});
-    }, ENV.APP.BUILD_RELOAD_TIMER);
+    }, ENV.APP.EVENT_RELOAD_TIMER);
   }
 
   stop(eventId) {
