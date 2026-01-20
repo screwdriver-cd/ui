@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { cancel, debounce } from '@ember/runloop';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 import _ from 'lodash';
 import { statuses } from 'screwdriver-ui/utils/build';
@@ -42,6 +43,10 @@ export default class PipelineJobsTableComponent extends Component {
   @tracked data;
 
   columns;
+
+  displayDataChangeDebounceTimer = null;
+
+  debounceDelayMs = 500;
 
   constructor() {
     super(...arguments);
@@ -148,6 +153,11 @@ export default class PipelineJobsTableComponent extends Component {
     super.willDestroy();
 
     this.dataReloader.stop(this.event?.id);
+
+    if (this.displayDataChangeDebounceTimer) {
+      cancel(this.displayDataChangeDebounceTimer);
+      this.displayDataChangeDebounceTimer = null;
+    }
   }
 
   initialize() {
@@ -225,6 +235,15 @@ export default class PipelineJobsTableComponent extends Component {
 
   @action
   onDisplayDataChanged(data) {
+    this.displayDataChangeDebounceTimer = debounce(
+      this,
+      this._handleDisplayDataChange,
+      data,
+      this.debounceDelayMs
+    );
+  }
+
+  _handleDisplayDataChange(data) {
     const jobIds = data.filteredContent.map(record => record.job.id);
 
     this.dataReloader.updateJobsMatchingFilter(
