@@ -77,11 +77,11 @@
   <modal.footer>
     <BsButton
       id="submit-action"
-      disabled={{this.isSubmitButtonDisabled}}
+      disabled={{if this.isNotFoundError false this.isSubmitButtonDisabled}}
       @type="primary"
-      @defaultText="Yes"
-      @pendingText={{this.pendingAction}}
-      @onClick={{fn this.startBuild}}
+      @defaultText={{if this.isNotFoundError "Close" "Yes"}}
+      @pendingText={{unless this.isNotFoundError this.pendingAction}}
+      @onClick={{if this.isNotFoundError (fn @closeModal) (fn this.startBuild)}}
     />
   </modal.footer>
 </BsModal>
