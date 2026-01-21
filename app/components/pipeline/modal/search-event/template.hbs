@@ -51,7 +51,16 @@
           />
         </VerticalCollection>
         {{#if this.isLoading}}
-          <div class="loading-more">Loading more…</div>
+          <div class="loading-more">
+            <FaIcon
+              @icon="spinner"
+              @fixedWidth="true"
+              @prefix="fa"
+              @spin="true"
+              @flip="false"
+              @size="2x"
+            />
+          </div>
         {{/if}}
       </div>
     {{/if}}
