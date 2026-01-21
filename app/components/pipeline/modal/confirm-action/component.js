@@ -30,6 +30,8 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   @tracked wasActionSuccessful = false;
 
+  @tracked isNotFoundError = false;
+
   @tracked reason = '';
 
   pipeline;
@@ -120,6 +122,10 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isSubmitButtonDisabled() {
+    if (this.isNotFoundError) {
+      return false;
+    }
+
     if (this.wasActionSuccessful || this.isAwaitingResponse) {
       return true;
     }
@@ -143,6 +149,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
   @action
   async startBuild() {
     this.isAwaitingResponse = true;
+    this.isNotFoundError = false;
 
     const event =
       this.args.action === 'start' && !this.pipelinePageState.getIsPr()
@@ -186,6 +193,12 @@ export default class PipelineModalConfirmActionComponent extends Component {
         this.wasActionSuccessful = false;
         this.errorMessage =
           err?.payload?.message || err?.message || 'Unknown error';
+
+        const statusCode = err?.payload?.statusCode || err?.status;
+
+        if (statusCode === 404) {
+          this.isNotFoundError = true;
+        }
       })
       .finally(() => {
         this.isAwaitingResponse = false;

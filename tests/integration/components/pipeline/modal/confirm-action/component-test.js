@@ -304,5 +304,40 @@ module(
       assert.dom('#confirm-action-error').exists({ count: 1 });
       assert.dom('#confirm-action-error .alert > span').hasText(errorMessage);
     });
+
+    test('it switches Yes to Close on 404 and closes modal', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const errorMessage = 'Not found';
+      const shuttleStub = sinon
+        .stub(shuttle, 'fetchFromApi')
+        .rejects({ payload: { statusCode: 404, message: errorMessage } });
+      const closeModalSpy = sinon.spy();
+
+      this.setProperties({
+        action: 'start',
+        closeModal: closeModalSpy
+      });
+
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      assert.dom('#submit-action').hasText('Yes');
+
+      await click('#submit-action');
+
+      assert.equal(shuttleStub.calledOnce, true);
+      assert.dom('#confirm-action-error').exists({ count: 1 });
+      assert.dom('#confirm-action-error .alert > span').hasText(errorMessage);
+      assert.dom('#submit-action').hasText('Close');
+
+      await click('#submit-action');
+
+      assert.equal(closeModalSpy.calledOnce, true);
+      assert.equal(shuttleStub.calledOnce, true, 'no additional API call');
+    });
   }
 );
