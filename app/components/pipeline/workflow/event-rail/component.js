@@ -63,6 +63,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   @action
   async initialize() {
     const { event } = this.args;
+
     await this.shuttle
       .fetchFromApi(
         'get',
@@ -214,7 +215,7 @@ export default class PipelineWorkflowEventRailComponent extends Component {
           }
 
           this.addNewerEvents(this.newestEvent);
-        }, ENV.APP.BUILD_RELOAD_TIMER);
+        }, ENV.APP.EVENT_RELOAD_TIMER);
       }
     });
   }
