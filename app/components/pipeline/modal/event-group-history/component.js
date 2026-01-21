@@ -21,7 +21,7 @@ export default class PipelineModalEventGroupHistoryComponent extends Component {
     this.fetchGroupEvents();
     this.intervalId = setInterval(
       () => this.fetchGroupEvents(),
-      ENV.APP.BUILD_RELOAD_TIMER
+      ENV.APP.EVENT_RELOAD_TIMER
     );
   }
 

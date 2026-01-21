@@ -1,5 +1,3 @@
-import ENV from 'screwdriver-ui/config/environment';
-
 export default class DataReloader {
   shuttle;
 
@@ -29,14 +27,14 @@ export default class DataReloader {
     this.idCounts = new Map();
   }
 
-  start() {
+  start(intervalMs) {
     this.stop();
 
     this.fetchData().then(() => {});
 
     this.intervalId = setInterval(
       () => this.fetchData().then(() => {}),
-      ENV.APP.BUILD_RELOAD_TIMER
+      intervalMs
     );
   }
 

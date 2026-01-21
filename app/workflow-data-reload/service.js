@@ -1,4 +1,5 @@
 import Service, { service } from '@ember/service';
+import ENV from 'screwdriver-ui/config/environment';
 import BuildsDataReloader from './buildsDataReloader';
 import StageBuildsDataReloader from './stageBuildsDataReloader';
 import LatestCommitEventReloader from './latestCommitEventReloader';
@@ -43,15 +44,15 @@ export default class WorkflowDataReloadService extends Service {
     if (!isPR) {
       this.requiresLatestCommitEvent = true;
       this.latestCommitEventReloader.setPipelineId(pipelineId);
-      this.latestCommitEventReloader.start();
+      this.latestCommitEventReloader.start(ENV.APP.EVENT_RELOAD_TIMER);
     } else {
       this.requiresLatestCommitEvent = false;
       this.openPrsReloader.setPipelineId(pipelineId);
-      this.openPrsReloader.start();
+      this.openPrsReloader.start(ENV.APP.EVENT_RELOAD_TIMER);
     }
 
-    this.buildsReloader.start();
-    this.stageBuildsReloader.start();
+    this.buildsReloader.start(ENV.APP.BUILD_RELOAD_TIMER);
+    this.stageBuildsReloader.start(ENV.APP.BUILD_RELOAD_TIMER);
 
     return this.id;
   }
