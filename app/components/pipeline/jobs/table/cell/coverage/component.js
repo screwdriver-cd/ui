@@ -24,7 +24,7 @@ export default class PipelineJobsTableCellCoverageComponent extends Component {
           endTime: this.args.record.build.endTime,
           jobName: job.name,
           pipelineName: pipeline.name,
-          projectKey: `pipeline:${pipeline.id}`
+          projectKey: this.args.record.build.meta?.build?.coverageKey
         })
         .then(response => {
           if (response.coverage) {

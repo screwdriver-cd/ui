@@ -43,13 +43,20 @@ module(
     test('it renders coverage value', async function (assert) {
       sinon.stub(shuttle, 'fetchFromApi').resolves({ coverage: '90.0' });
 
+      const coverageKey = 'job:cov-1';
+
       this.setProperties({
         record: {
           job,
           build: {
             id: 999,
             startTime: '2021-01-01T12:00:00.000Z',
-            endTime: '2021-01-01T12:02:00.000Z'
+            endTime: '2021-01-01T12:02:00.000Z',
+            meta: {
+              build: {
+                coverageKey
+              }
+            }
           }
         }
       });
@@ -60,11 +67,25 @@ module(
         />`
       );
 
+      assert.true(
+        shuttle.fetchFromApi.calledOnceWithExactly('get', '/coverage/info', {
+          jobId: job.id,
+          buildId: 999,
+          startTime: '2021-01-01T12:00:00.000Z',
+          endTime: '2021-01-01T12:02:00.000Z',
+          jobName: job.name,
+          pipelineName: 'myPipeline',
+          projectKey: coverageKey
+        })
+      );
+
       assert.dom(this.element).hasText('90.0%');
     });
 
     test('it renders when no coverage available', async function (assert) {
       sinon.stub(shuttle, 'fetchFromApi').resolves({ coverage: 'N/A' });
+
+      const coverageKey = 'job:cov-2';
 
       this.setProperties({
         record: {
@@ -72,7 +93,12 @@ module(
           build: {
             id: 999,
             startTime: '2021-01-01T12:00:00.000Z',
-            endTime: '2021-01-01T12:02:00.000Z'
+            endTime: '2021-01-01T12:02:00.000Z',
+            meta: {
+              build: {
+                coverageKey
+              }
+            }
           }
         }
       });
