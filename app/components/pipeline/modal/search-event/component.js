@@ -17,6 +17,14 @@ export default class PipelineModalSearchEventComponent extends Component {
 
   @tracked invalidSha = false;
 
+  @tracked isLoading = false;
+
+  @tracked hasMore = true;
+
+  @tracked page = 1;
+
+  count = 10;
+
   _searchDebounceTimer = null;
 
   debounceDelayMs = 500;
@@ -38,18 +46,32 @@ export default class PipelineModalSearchEventComponent extends Component {
     }
   }
 
-  _executeSearch(inputValue) {
+  _executeSearch(inputValue, { append = false } = {}) {
     // Construct search URL with proper query parameters
     const baseUrl = `/pipelines/${this.pipelinePageState.getPipelineId()}/events?${
       this.searchField
     }=${encodeURIComponent(inputValue)}`;
     const url = `${baseUrl}&type=${
       this.pipelinePageState.getIsPr() ? 'pr' : 'pipeline'
-    }`;
+    }&page=${this.page}&count=${this.count}`;
 
-    this.shuttle.fetchFromApi('get', url).then(events => {
-      this.searchResults = events;
-    });
+    this.isLoading = true;
+
+    this.shuttle
+      .fetchFromApi('get', url)
+      .then(events => {
+        if (append) {
+          this.searchResults = [...this.searchResults, ...events];
+        } else {
+          this.searchResults = events;
+        }
+
+        this.hasMore = Array.isArray(events) && events.length === this.count;
+        this.page += 1;
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   @action
@@ -62,6 +84,9 @@ export default class PipelineModalSearchEventComponent extends Component {
       this.searchResults = [];
       this.invalidSha = false;
       this.searchInput = null;
+      this.page = 1;
+      this.hasMore = true;
+      this.isLoading = false;
 
       return;
     }
@@ -80,6 +105,9 @@ export default class PipelineModalSearchEventComponent extends Component {
       }
     }
 
+    this.searchInput = inputValue;
+    this.page = 1;
+    this.hasMore = true;
     this._searchDebounceTimer = debounce(
       this,
       this._executeSearch,
@@ -105,5 +133,24 @@ export default class PipelineModalSearchEventComponent extends Component {
         this.invalidSha = false;
       }
     }
+  }
+
+  @action
+  loadMore() {
+    if (this.isLoading || !this.hasMore) {
+      return;
+    }
+
+    const inputValue = this.searchInput?.trim();
+
+    if (!inputValue) {
+      return;
+    }
+
+    if (this.searchField === 'sha' && this.invalidSha) {
+      return;
+    }
+
+    this._executeSearch(inputValue, { append: true });
   }
 }

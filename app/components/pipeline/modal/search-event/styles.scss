@@ -33,6 +33,17 @@
           max-height: 35rem;
           overflow: auto;
         }
+
+        .loading-more {
+          display: flex;
+          height: 4rem;
+          justify-content: center;
+          align-items: center;
+
+          svg {
+            color: colors.$sd-running;
+          }
+        }
       }
     }
   }
