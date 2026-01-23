@@ -68,8 +68,10 @@ module('Unit | Component | pipeline/event/card/util', function () {
   });
 
   test('getDuration returns correct duration', function (assert) {
-    assert.equal(getDuration(null), 0);
-    assert.equal(getDuration([]), 0);
+    const virtualJobIds = new Set();
+
+    assert.equal(getDuration(null, virtualJobIds), 0);
+    assert.equal(getDuration([], virtualJobIds), 0);
 
     const builds = [
       {
@@ -86,27 +88,45 @@ module('Unit | Component | pipeline/event/card/util', function () {
       }
     ];
 
-    assert.equal(getDuration(builds), 15 * 60 * 1000);
+    assert.equal(getDuration(builds, virtualJobIds), 15 * 60 * 1000);
+
+    const virtualJobId = 123;
+
+    assert.equal(
+      getDuration(
+        [
+          ...builds,
+          { jobId: virtualJobId, createTime: '2024-03-05T18:32:07.760Z' }
+        ],
+        new Set([virtualJobId])
+      ),
+      16 * 60 * 1000
+    );
   });
 
   test('getDurationText returns correct text format', function (assert) {
-    assert.equal(getDurationText(null), '0s');
-    assert.equal(getDurationText([]), '0s');
+    const virtualJobIds = new Set();
+
+    assert.equal(getDurationText(null, virtualJobIds), '0s');
+    assert.equal(getDurationText([], virtualJobIds), '0s');
     assert.equal(
-      getDurationText([
-        {
-          createTime: '2024-03-05T18:30:07.760Z',
-          endTime: '2024-03-05T18:31:17.760Z'
-        },
-        {
-          createTime: '2024-03-05T18:25:07.760Z',
-          endTime: '2024-03-05T18:26:07.760Z'
-        },
-        {
-          createTime: '2024-03-05T18:16:07.760Z',
-          endTime: '2024-03-05T18:17:07.760Z'
-        }
-      ]),
+      getDurationText(
+        [
+          {
+            createTime: '2024-03-05T18:30:07.760Z',
+            endTime: '2024-03-05T18:31:17.760Z'
+          },
+          {
+            createTime: '2024-03-05T18:25:07.760Z',
+            endTime: '2024-03-05T18:26:07.760Z'
+          },
+          {
+            createTime: '2024-03-05T18:16:07.760Z',
+            endTime: '2024-03-05T18:17:07.760Z'
+          }
+        ],
+        virtualJobIds
+      ),
       '15m 10s'
     );
   });

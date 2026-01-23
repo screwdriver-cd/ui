@@ -20,9 +20,14 @@ export const isSkipped = (event, builds) => {
  * Determines if the all builds have completed
  * @param {Array} builds Array of builds in the format returned by the API
  * @param {Array} previousBuilds Array of previous builds in the format returned by the API
+ * @param {Set} virtualJobIds A set of virtual job IDs
  * @returns {boolean} true if all builds have a status that indicates they have completed
  */
-export const isComplete = (builds, previousBuilds) => {
+export const isComplete = (
+  builds,
+  previousBuilds,
+  virtualJobIds = new Set()
+) => {
   const CREATED = 'CREATED';
 
   if (!builds || builds.length === 0) {
@@ -30,11 +35,25 @@ export const isComplete = (builds, previousBuilds) => {
   }
 
   const currentCreatedBuildIds = new Set(
-    builds.filter(build => build.status === CREATED).map(build => build.id)
+    builds
+      .filter(build => {
+        if (virtualJobIds.has(build.jobId)) {
+          return false;
+        }
+
+        return build.status === CREATED;
+      })
+      .map(build => build.id)
   );
   const previousCreatedBuildIds = new Set(
     previousBuilds
-      .filter(build => build.status === CREATED)
+      .filter(build => {
+        if (virtualJobIds.has(build.jobId)) {
+          return false;
+        }
+
+        return build.status === CREATED;
+      })
       .map(build => build.id)
   );
 

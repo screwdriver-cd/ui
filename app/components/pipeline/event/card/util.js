@@ -55,13 +55,19 @@ export const getFirstCreateTime = builds => {
     : null;
 };
 
-export const getDuration = builds => {
+export const getDuration = (builds, virtualJobIds) => {
   const firstCreateTime = getFirstCreateTime(builds);
 
   const lastEndTime = builds
     ? builds
         .map(build => {
-          return new Date(build.endTime);
+          if (build.endTime) {
+            return new Date(build.endTime);
+          }
+
+          return virtualJobIds.has(build.jobId)
+            ? new Date(build.createTime)
+            : new Date(build.endTime);
         })
         .sort()
         .pop()
@@ -74,8 +80,8 @@ export const getDuration = builds => {
   return lastEndTime.getTime() - firstCreateTime.getTime();
 };
 
-export const getDurationText = builds => {
-  return shortEnglishHumanizer(getDuration(builds));
+export const getDurationText = (builds, virtualJobIds) => {
+  return shortEnglishHumanizer(getDuration(builds, virtualJobIds));
 };
 
 export const getRunningDurationText = (startTime, endTime) => {
