@@ -70,6 +70,8 @@ export default class PipelineEventCardComponent extends Component {
 
   previousBuilds;
 
+  virtualJobIds;
+
   constructor() {
     super(...arguments);
 
@@ -84,6 +86,13 @@ export default class PipelineEventCardComponent extends Component {
 
     this.builds = [];
     this.previousBuilds = [];
+
+    this.virtualJobIds = new Set();
+    this.pipelinePageState.getJobs().forEach(job => {
+      if (job.permutations[0].annotations['screwdriver.cd/virtualJob']) {
+        this.virtualJobIds.add(job.id);
+      }
+    });
   }
 
   willDestroy() {
@@ -187,7 +196,11 @@ export default class PipelineEventCardComponent extends Component {
   @action
   buildsCallback(builds) {
     const isEventSkipped = isSkipped(this.event, builds);
-    const isEventComplete = isComplete(builds, this.previousBuilds);
+    const isEventComplete = isComplete(
+      builds,
+      this.previousBuilds,
+      this.virtualJobIds
+    );
 
     if (isEventSkipped || isEventComplete) {
       this.workflowDataReload.removeBuildsCallback(
@@ -199,8 +212,7 @@ export default class PipelineEventCardComponent extends Component {
         clearInterval(this.durationIntervalId);
       }
       this.durationIntervalId = null;
-
-      this.durationText = getDurationText(builds);
+      this.durationText = getDurationText(builds, this.virtualJobIds);
     }
 
     const beforeStatus = this.status;
