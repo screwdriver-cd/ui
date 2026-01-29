@@ -204,6 +204,7 @@ export default class PipelineEventCardComponent extends Component {
 
     if (!this.isBuildsCallbackCalled) {
       this.previousBuilds = builds;
+      this.isBuildsCallbackCalled = true;
     }
     const isEventComplete = isComplete(
       builds,
