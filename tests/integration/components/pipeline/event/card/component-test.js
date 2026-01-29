@@ -524,6 +524,25 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.outlined').exists();
   });
 
+  test('it renders event status correctly for created status', async function (assert) {
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }, { status: 'CREATED' }]);
+    });
+
+    this.setProperties({
+      event
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+      />`
+    );
+
+    assert.dom('.event-card-title .event-status.SUCCESS').exists();
+  });
+
   test('it renders event status correctly for warning status', async function (assert) {
     registerBuildsCallbackStub.reset();
     registerBuildsCallbackStub.callsFake((queueName, id, callback) => {

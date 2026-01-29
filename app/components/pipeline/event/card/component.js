@@ -72,6 +72,8 @@ export default class PipelineEventCardComponent extends Component {
 
   virtualJobIds;
 
+  isBuildsCallbackCalled;
+
   constructor() {
     super(...arguments);
 
@@ -86,6 +88,8 @@ export default class PipelineEventCardComponent extends Component {
 
     this.builds = [];
     this.previousBuilds = [];
+
+    this.isBuildsCallbackCalled = false;
 
     this.virtualJobIds = new Set();
     this.pipelinePageState.getJobs().forEach(job => {
@@ -139,6 +143,7 @@ export default class PipelineEventCardComponent extends Component {
 
   @action
   initialize() {
+    this.isBuildsCallbackCalled = false;
     this.workflowDataReload.registerLatestCommitEventCallback(
       this.queueName,
       this.event.id,
@@ -196,6 +201,10 @@ export default class PipelineEventCardComponent extends Component {
   @action
   buildsCallback(builds) {
     const isEventSkipped = isSkipped(this.event, builds);
+
+    if (!this.isBuildsCallbackCalled) {
+      this.previousBuilds = builds;
+    }
     const isEventComplete = isComplete(
       builds,
       this.previousBuilds,
