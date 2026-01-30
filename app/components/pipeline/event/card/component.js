@@ -164,6 +164,9 @@ export default class PipelineEventCardComponent extends Component {
     );
     this.workflowDataReload.removeBuildsCallback(this.queueName, this.event.id);
 
+    if (this.event.id !== event.id) {
+      this.isBuildsCallbackCalled = false;
+    }
     this.event = event;
     this.previousBuilds = [];
 
