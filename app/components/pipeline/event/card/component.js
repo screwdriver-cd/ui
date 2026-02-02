@@ -141,6 +141,10 @@ export default class PipelineEventCardComponent extends Component {
     }
   }
 
+  hasNoBuilds(builds) {
+    return !builds || builds.length === 0;
+  }
+
   @action
   initialize() {
     this.isBuildsCallbackCalled = false;
@@ -209,11 +213,9 @@ export default class PipelineEventCardComponent extends Component {
       this.previousBuilds = builds;
       this.isBuildsCallbackCalled = true;
     }
-    const isEventComplete = isComplete(
-      builds,
-      this.previousBuilds,
-      this.virtualJobIds
-    );
+    const isEventComplete =
+      isComplete(builds, this.previousBuilds, this.virtualJobIds) ||
+      this.hasNoBuilds(builds);
 
     if (isEventSkipped || isEventComplete) {
       this.workflowDataReload.removeBuildsCallback(
