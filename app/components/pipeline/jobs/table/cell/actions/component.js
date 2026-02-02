@@ -18,7 +18,7 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
 
   isPipelineInactive = true;
 
-  confirmAction;
+  @tracked confirmAction;
 
   event;
 
