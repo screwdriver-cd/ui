@@ -133,9 +133,12 @@ module(
       );
 
       assert
+        .dom('#not-latest-warning')
+        .hasText('This is NOT the latest commit. ');
+      assert
         .dom('#user-notice')
         .hasText(
-          'This is NOT the latest commit. Make sure this job (main) and any downstream jobs can be successfully completed without rerunning any upstream jobs (i.e., does this job depend on any metadata that was previously set?)'
+          'Make sure this job (main) and any downstream jobs can be successfully completed without rerunning any upstream jobs (i.e., does this job depend on any metadata that was previously set?)'
         );
     });
 

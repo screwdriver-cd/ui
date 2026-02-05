@@ -17,6 +17,15 @@
       />
     {{/if}}
 
+    {{#if this.isNotLatestCommit}}
+      <div
+        id="not-latest-warning"
+        class="alert alert-warning"
+      >
+        <FaIcon @icon="triangle-exclamation" />
+        This is <strong> NOT </strong> the latest commit.
+      </div>
+    {{/if}}
     {{#if this.notice}}
       <div
         id="user-notice"
