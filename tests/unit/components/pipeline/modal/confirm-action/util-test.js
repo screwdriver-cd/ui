@@ -26,16 +26,30 @@ module('Unit | Component | pipeline/modal/confirm-action/util', function () {
   });
 
   test('isParameterized returns true if pipeline or event has parameters', function (assert) {
-    assert.equal(isParameterized({}, {}), false);
-    assert.equal(isParameterized({ parameters: { a: 4 } }, {}), true);
-    assert.equal(isParameterized({}, { meta: {} }), false);
+    assert.equal(isParameterized({}, {}, {}), false);
+    assert.equal(isParameterized({ parameters: { a: 4 } }, {}, {}), true);
+    assert.equal(isParameterized({}, {}, { meta: {} }), false);
     assert.equal(
-      isParameterized({}, { meta: { parameters: { p1: { value: 'foo' } } } }),
+      isParameterized(
+        {},
+        {},
+        { meta: { parameters: { p1: { value: 'foo' } } } }
+      ),
       true
     );
     assert.equal(
       isParameterized(
         { parameters: { a: 4 } },
+        {},
+        { meta: { parameters: { p1: { value: 'foo' } } } }
+      ),
+      true
+    );
+    assert.equal(isParameterized({}, { job1: { a: { value: 1 } } }, {}), true);
+    assert.equal(
+      isParameterized(
+        { parameters: { a: 4 } },
+        { job1: { a: { value: 1 } } },
         { meta: { parameters: { p1: { value: 'foo' } } } }
       ),
       true

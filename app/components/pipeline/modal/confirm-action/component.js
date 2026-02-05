@@ -122,7 +122,11 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isParameterized() {
-    return isParameterized(this.pipeline, this.args.event);
+    return isParameterized(
+      this.pipeline,
+      this.defaultJobParameters,
+      this.args.event
+    );
   }
 
   get isSubmitButtonDisabled() {
