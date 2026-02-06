@@ -122,7 +122,9 @@ export default class PipelineJobsTableComponent extends Component {
       {
         title: 'START TIME',
         className: 'start-time-column',
-        component: 'startTimeCell'
+        component: 'startTimeCell',
+        propertyName: 'startTime',
+        sortBy: 'startTime'
       },
       {
         title: 'COVERAGE',
@@ -323,7 +325,8 @@ export default class PipelineJobsTableComponent extends Component {
           build: buildsForJob ? _.last(buildsForJob) : null,
           builds: buildsForJob,
           jobName: getDisplayName(job, this.event?.prNum),
-          stageName: getStageName(job)
+          stageName: getStageName(job),
+          startTime: buildsForJob ? _.last(buildsForJob)?.startTime : null
         });
       });
 
