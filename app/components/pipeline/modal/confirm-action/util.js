@@ -26,12 +26,14 @@ export function capitalizeFirstLetter(string) {
  * @param event
  * @returns {boolean}
  */
-export function isParameterized(pipeline, event) {
+export function isParameterized(pipeline, defaultJobParameters, event) {
   const pipelineParameters = pipeline.parameters || {};
+  const jobParameters = defaultJobParameters || {};
   const eventParameters = event?.meta?.parameters || {};
 
   return (
     Object.keys(pipelineParameters).length > 0 ||
+    Object.keys(jobParameters).length > 0 ||
     Object.keys(eventParameters).length > 0
   );
 }

@@ -97,6 +97,14 @@ export default class PipelineModalConfirmActionComponent extends Component {
     return this.args.event.sha.substring(0, 7);
   }
 
+  get isNotLatestCommit() {
+    if (!this.pipelinePageState.getIsPr() && !this.isLatestCommitEvent) {
+      return true;
+    }
+
+    return false;
+  }
+
   get notice() {
     if (this.startFrom === '~commit' || this.startFrom === '~pr') {
       return null;
@@ -106,10 +114,6 @@ export default class PipelineModalConfirmActionComponent extends Component {
     const name = this.args.stage ? this.args.stage.name : this.jobName;
     const notice = `Make sure this ${type} (${name}) and any downstream jobs can be successfully completed without rerunning any upstream jobs (i.e., does this job depend on any metadata that was previously set?)`;
 
-    if (!this.pipelinePageState.getIsPr() && !this.isLatestCommitEvent) {
-      return `This is NOT the latest commit. ${notice}`;
-    }
-
     return notice;
   }
 
@@ -118,7 +122,11 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isParameterized() {
-    return isParameterized(this.pipeline, this.args.event);
+    return isParameterized(
+      this.pipeline,
+      this.defaultJobParameters,
+      this.args.event
+    );
   }
 
   get isSubmitButtonDisabled() {
