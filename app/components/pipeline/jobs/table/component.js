@@ -312,6 +312,10 @@ export default class PipelineJobsTableComponent extends Component {
       }
     }
 
+    if (this.event && jobBuildsMap.size === 0) {
+      buildsHaveChanged = true;
+    }
+
     if (buildsHaveChanged) {
       this.previousBuilds = jobBuildsMap;
 
