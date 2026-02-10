@@ -18,10 +18,12 @@
     </div>
 
     <BsButton
+      id="edit-pipeline-configuration"
       @type="primary"
       @onClick={{this.showUpdatePipelineModal}}
       @outline={{true}}
       title="Edit pipeline"
+      disabled={{this.pipeline.configPipelineId}}
     >
       <FaIcon @icon="pen" />
       {{#if this.isUpdatePipelineModalOpen}}
