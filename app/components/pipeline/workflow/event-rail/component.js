@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
+import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 
 const EVENT_BATCH_SIZE = 10;
 
@@ -58,6 +59,10 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   get eventType() {
     return this.isPR ? 'pr' : 'pipeline';
+  }
+
+  get isStartButtonDisabled() {
+    return !isActivePipeline(this.pipelinePageState.getPipeline());
   }
 
   @action
