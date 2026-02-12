@@ -1,6 +1,8 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { service } from '@ember/service';
+import { hasInactivePipelines } from 'screwdriver-ui/utils/pipeline';
 
 export default class PipelineChildrenComponent extends Component {
   @tracked isStartAllChildrenModalOpen;
@@ -9,6 +11,8 @@ export default class PipelineChildrenComponent extends Component {
 
   @tracked showTable;
 
+  @service('pipeline-page-state') pipelinePageState;
+
   pipelineId;
 
   constructor() {
@@ -16,6 +20,10 @@ export default class PipelineChildrenComponent extends Component {
 
     this.pipelineId = this.args.pipelineId;
     this.showTable = true;
+  }
+
+  get hasInactivePipelines() {
+    return hasInactivePipelines(this.pipelinePageState.getChildPipelines());
   }
 
   rerenderTable() {

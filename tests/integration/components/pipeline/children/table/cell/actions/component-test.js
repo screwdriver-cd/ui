@@ -10,12 +10,30 @@ module(
 
     test('it renders', async function (assert) {
       this.setProperties({
-        record: {}
+        record: {
+          state: 'INACTIVE'
+        }
       });
 
-      await render(hbs`<Pipeline::Children::Table::Cell::Actions />`);
+      await render(
+        hbs`<Pipeline::Children::Table::Cell::Actions @record={{this.record}}/>`
+      );
 
       assert.dom('svg').exists({ count: 1 });
+    });
+
+    test('it does not render', async function (assert) {
+      this.setProperties({
+        record: {
+          state: 'ACTIVE'
+        }
+      });
+
+      await render(
+        hbs`<Pipeline::Children::Table::Cell::Actions @record={{this.record}}/>`
+      );
+
+      assert.dom('svg').doesNotExist({ count: 1 });
     });
   }
 );

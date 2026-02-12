@@ -28,6 +28,7 @@
         @defaultText="Start a new event"
         @onClick={{this.openStartEventModal}}
         title="Start a new event"
+        disabled={{this.isStartButtonDisabled}}
       />
       {{#if this.showStartEventModal}}
         <Pipeline::Modal::ConfirmAction

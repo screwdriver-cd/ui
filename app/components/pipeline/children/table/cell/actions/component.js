@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { isInactivePipeline } from 'screwdriver-ui/utils/pipeline';
 
 export default class PipelineChildrenTableCellActionsComponent extends Component {
   @tracked isDeletePipelineModalOpen;
@@ -9,6 +10,10 @@ export default class PipelineChildrenTableCellActionsComponent extends Component
     super(...arguments);
 
     this.isDeletePipelineModalOpen = false;
+  }
+
+  get showTrashIcon() {
+    return isInactivePipeline(this.args.record);
   }
 
   @action

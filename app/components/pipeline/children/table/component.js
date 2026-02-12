@@ -20,12 +20,14 @@ export default class PipelineChildrenTableComponent extends Component {
 
     this.data = this.pipelinePageState.getChildPipelines().map(pipeline => {
       const scm = this.scm.getScm(pipeline.scmContext);
+      const { branch, rootDir } = pipeline.scmRepo;
+      const branchName = rootDir ? `${branch}:${rootDir}` : branch;
 
       return {
         pipeline,
         id: pipeline.id,
         name: pipeline.name,
-        branchName: pipeline.scmRepo.branch,
+        branchName,
         scmRepo: pipeline.scmRepo,
         scmIcon: scm.iconType,
         scmName: scm.displayName,
