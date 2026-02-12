@@ -1,4 +1,4 @@
-import { unfinishedStatuses } from 'screwdriver-ui/utils/build';
+import { stoppableStatuses } from 'screwdriver-ui/utils/build';
 
 /**
  * Checks if the job can be triggered
@@ -42,5 +42,5 @@ export const isStartButtonDisabled = (
  * @returns {boolean}
  */
 export const isStopButtonDisabled = build => {
-  return build ? !unfinishedStatuses.includes(build.status) : true;
+  return build ? !stoppableStatuses.includes(build.status) : true;
 };
