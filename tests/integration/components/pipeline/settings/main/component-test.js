@@ -50,6 +50,21 @@ module('Integration | Component | pipeline/settings/main', function (hooks) {
     assert.dom('.pipeline-settings-danger-zone').exists({ count: 1 });
   });
 
+  test('it disabled edit pipeline details button for child pipeline', async function (assert) {
+    const pipelineMock = {
+      scmRepo: { name: 'myOrg/myRepo', private: true },
+      scmUri: 'github.com:12345:master',
+      admins: {},
+      configPipelineId: 321
+    };
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns(pipelineMock);
+
+    await render(hbs`<Pipeline::Settings::Main />`);
+
+    assert.dom('#edit-pipeline-configuration').isDisabled();
+  });
+
   test('it renders when pipeline visibility is false', async function (assert) {
     const privatePipelineMock = {
       scmRepo: { name: 'myOrg/myRepo', private: true },
