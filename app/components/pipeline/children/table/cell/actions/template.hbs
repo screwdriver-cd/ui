@@ -1,18 +1,20 @@
 <div class="actions-cell">
-  <BsButton
-    @type="primary"
-    @outline={{true}}
-    @onClick={{this.showDeletePipelineModal}}
-  >
-    <FaIcon
-      @icon="trash"
-    />
-
-    {{#if this.isDeletePipelineModalOpen}}
-      <Pipeline::Modal::DeletePipeline
-        @pipeline={{@record.pipeline}}
-        @closeModal={{this.closeDeletePipelineModal}}
+  {{#if this.showTrashIcon}}
+    <BsButton
+      @type="primary"
+      @outline={{true}}
+      @onClick={{this.showDeletePipelineModal}}
+    >
+      <FaIcon
+        @icon="trash"
       />
-    {{/if}}
-  </BsButton>
+
+      {{#if this.isDeletePipelineModalOpen}}
+        <Pipeline::Modal::DeletePipeline
+          @pipeline={{@record.pipeline}}
+          @closeModal={{this.closeDeletePipelineModal}}
+        />
+      {{/if}}
+    </BsButton>
+  {{/if}}
 </div>
