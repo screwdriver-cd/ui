@@ -101,6 +101,7 @@ const unfinishedStatuses = [
   'BLOCKED',
   'FROZEN'
 ];
+const stoppableStatuses = ['RUNNING', 'QUEUED', 'BLOCKED', 'FROZEN'];
 const statuses = [
   'ABORTED',
   'CREATED',
@@ -120,5 +121,6 @@ export {
   statusIcon,
   getActiveStep,
   unfinishedStatuses,
+  stoppableStatuses,
   statuses
 };
