@@ -19,12 +19,13 @@ export default class PipelineParametersComponent extends Component {
   constructor() {
     super(...arguments);
     const pipeline = this.pipelinePageState.getPipeline();
-    const { pipelineParameters, jobParameters } = this.args.event
-      ? extractEventParameters(this.args.event)
-      : {
-          pipelineParameters: this.args.pipelineParameters,
-          jobParameters: this.args.jobParameters
-        };
+    const { pipelineParameters, jobParameters } =
+      this.args.event && this.args.action !== 'start'
+        ? extractEventParameters(this.args.event)
+        : {
+            pipelineParameters: this.args.pipelineParameters,
+            jobParameters: this.args.jobParameters
+          };
 
     this.parameters = getNormalizedParameterGroups(
       pipelineParameters,
