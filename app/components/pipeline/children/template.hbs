@@ -2,6 +2,9 @@
   id="child-pipelines-container"
   {{did-update this.update @pipelineId}}
 >
+  {{#if this.hasInactivePipelines}}
+    {{info-message message="You have one or more inactive pipelines. You can activate these by adding back the corresponding SCM URL in the yaml configuration." type="info" icon="triangle-exclamation"}}
+  {{/if}}
   <div id="start-all-button-container">
     <BsButton
       id="start-all-button"

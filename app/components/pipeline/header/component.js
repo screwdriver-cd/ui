@@ -4,7 +4,10 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 
-import { hasSonarBadge } from 'screwdriver-ui/utils/pipeline';
+import {
+  hasSonarBadge,
+  isInactivePipeline
+} from 'screwdriver-ui/utils/pipeline';
 
 export default class PipelineHeaderComponent extends Component {
   @service router;
@@ -93,6 +96,10 @@ export default class PipelineHeaderComponent extends Component {
     const { branch, rootDir } = this.pipeline.scmRepo;
 
     return rootDir ? `${branch}:${rootDir}` : branch;
+  }
+
+  get isInactivePipeline() {
+    return isInactivePipeline(this.pipeline);
   }
 
   @action
