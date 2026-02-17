@@ -59,15 +59,15 @@ export default class PipelineModalConfirmActionComponent extends Component {
       this.args.latestCommitEvent ||
       this.workflowDataReload.getLatestCommitEvent();
 
+    this.defaultPipelineParameters = extractDefaultParameters(
+      this.pipeline.parameters
+    );
+    this.defaultJobParameters = extractDefaultJobParameters(
+      this.pipelinePageState.getJobs()
+    );
     if (this.args.action === 'start' && !job) {
       this.startFrom = this.pipelinePageState.getIsPr() ? '~pr' : '~commit';
       this.jobName = this.startFrom;
-      this.defaultPipelineParameters = extractDefaultParameters(
-        this.pipeline.parameters
-      );
-      this.defaultJobParameters = extractDefaultJobParameters(
-        this.pipelinePageState.getJobs()
-      );
     } else {
       this.startFrom = job.name;
 
@@ -98,6 +98,9 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   get isNotLatestCommit() {
+    if (this.startFrom === '~commit' || this.startFrom === '~pr') {
+      return false;
+    }
     if (!this.pipelinePageState.getIsPr() && !this.isLatestCommitEvent) {
       return true;
     }

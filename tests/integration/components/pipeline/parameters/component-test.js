@@ -112,6 +112,16 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
             job1: { p1: { value: 'abc' }, p2: { value: 'xyz' } }
           }
         }
+      },
+      defaultPipelineParameters: {
+        bar: { value: 'barbar' },
+        foo: { value: 'foo' }
+      },
+      defaultJobParameters: {
+        job1: {
+          p1: { value: 'p1' },
+          p2: { value: 'p2' }
+        }
       }
     });
 
@@ -119,6 +129,74 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @event={{this.event}}
+        @pipelineParameters={{this.defaultPipelineParameters}}
+        @jobParameters={{this.defaultJobParameters}}
+      />`
+    );
+
+    assert.dom('.group-title').exists({ count: 2 });
+    assert
+      .dom(this.element.querySelectorAll('.group-title')[0])
+      .hasText('Shared');
+    assert.dom('.parameter-list.expanded .parameter').exists({ count: 2 });
+
+    const parameters = this.element.querySelectorAll(
+      '.parameter-list.expanded .parameter'
+    );
+
+    assert.dom(parameters[0].querySelector('label')).hasText('bar');
+    assert
+      .dom(parameters[0].querySelector('.dropdown-selection-container'))
+      .hasText('barbar');
+    assert.dom(parameters[1].querySelector('label')).hasText('foo awesome');
+    assert.dom(parameters[1].querySelector('label svg')).exists({ count: 1 });
+    assert.dom(parameters[1].querySelector('input')).hasValue('foo');
+  });
+
+  test('it renders parameters with shared group expanded from restart event', async function (assert) {
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        bar: ['barbar', 'bazbaz'],
+        foo: { value: 'foo', description: 'awesome' }
+      }
+    });
+    sinon.stub(pipelinePageState, 'getJobs').returns([
+      {
+        name: 'job1',
+        permutations: [
+          { parameters: { p1: { value: 'p1' }, p2: { value: 'p2' } } }
+        ]
+      }
+    ]);
+
+    this.setProperties({
+      event: {
+        meta: {
+          parameters: {
+            bar: { value: 'barzy' },
+            foo: { value: 'foo' },
+            job1: { p1: { value: 'abc' }, p2: { value: 'xyz' } }
+          }
+        }
+      },
+      defaultPipelineParameters: {
+        bar: { value: 'barbar' },
+        foo: { value: 'foo' }
+      },
+      defaultJobParameters: {
+        job1: {
+          p1: { value: 'p1' },
+          p2: { value: 'p2' }
+        }
+      }
+    });
+
+    await render(
+      hbs`<Pipeline::Parameters
+        @action="restart"
+        @event={{this.event}}
+        @pipelineParameters={{this.defaultPipelineParameters}}
+        @jobParameters={{this.defaultJobParameters}}
       />`
     );
 
@@ -167,7 +245,17 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
           }
         }
       },
-      job: { name: 'job1' }
+      job: { name: 'job1' },
+      defaultPipelineParameters: {
+        bar: { value: 'barbar' },
+        foo: { value: 'foofoo' }
+      },
+      defaultJobParameters: {
+        job1: {
+          p1: { value: 'p1' },
+          p2: { value: 'p2' }
+        }
+      }
     });
 
     await render(
@@ -175,6 +263,73 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
         @action="start"
         @event={{this.event}}
         @job={{this.job}}
+        @pipelineParameters={{this.defaultPipelineParameters}}
+        @jobParameters={{this.defaultJobParameters}}
+      />`
+    );
+
+    assert.dom('.group-title').exists({ count: 2 });
+    assert
+      .dom(this.element.querySelectorAll('.group-title')[0])
+      .hasText('Job: job1');
+    assert.dom('.parameter-list.expanded .parameter').exists({ count: 2 });
+
+    const parameters = this.element.querySelectorAll(
+      '.parameter-list.expanded .parameter'
+    );
+
+    assert.dom(parameters[0].querySelector('label')).hasText('p1');
+    assert.dom(parameters[0].querySelector('input')).hasValue('p1');
+    assert.dom(parameters[1].querySelector('label')).hasText('p2');
+    assert.dom(parameters[1].querySelector('input')).hasValue('p2');
+  });
+
+  test('it renders parameters job group expanded from restart event', async function (assert) {
+    sinon.stub(pipelinePageState, 'getPipeline').returns({
+      parameters: {
+        bar: ['barbar', 'bazbaz'],
+        foo: { value: 'foofoo' }
+      }
+    });
+    sinon.stub(pipelinePageState, 'getJobs').returns([
+      {
+        name: 'job1',
+        permutations: [
+          { parameters: { p1: { value: 'p1' }, p2: { value: 'p2' } } }
+        ]
+      }
+    ]);
+
+    this.setProperties({
+      event: {
+        meta: {
+          parameters: {
+            bar: { value: 'barzy' },
+            foo: { value: 'foozy' },
+            job1: { p1: { value: 'p1' }, p2: { value: 'xyz' } }
+          }
+        }
+      },
+      job: { name: 'job1' },
+      defaultPipelineParameters: {
+        bar: { value: 'barbar' },
+        foo: { value: 'foofoo' }
+      },
+      defaultJobParameters: {
+        job1: {
+          p1: { value: 'p1' },
+          p2: { value: 'p2' }
+        }
+      }
+    });
+
+    await render(
+      hbs`<Pipeline::Parameters
+        @action="restart"
+        @event={{this.event}}
+        @job={{this.job}}
+        @pipelineParameters={{this.defaultPipelineParameters}}
+        @jobParameters={{this.defaultJobParameters}}
       />`
     );
 
@@ -289,6 +444,14 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
           }
         }
       },
+      defaultPipelineParameters: {
+        foo: { value: 'foofoo' }
+      },
+      defaultJobParameters: {
+        job1: {
+          p1: { value: 'p1' }
+        }
+      },
       onUpdateParameters
     });
 
@@ -296,6 +459,8 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @event={{this.event}}
+        @pipelineParameters={{this.defaultPipelineParameters}}
+        @jobParameters={{this.defaultJobParameters}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />`
     );
@@ -305,7 +470,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     assert.true(
       onUpdateParameters.getCall(1).calledWith({
         foo: 'foobar',
-        job1: { p1: 'abc' }
+        job1: { p1: 'p1' }
       })
     );
   });
@@ -335,6 +500,14 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
         }
       },
       job: { name: 'job1' },
+      defaultPipelineParameters: {
+        foo: { value: 'foofoo' }
+      },
+      defaultJobParameters: {
+        job1: {
+          p1: { value: 'p1' }
+        }
+      },
       onUpdateParameters
     });
 
@@ -343,6 +516,8 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
         @action="start"
         @event={{this.event}}
         @job={{this.job}}
+        @pipelineParameters={{this.defaultPipelineParameters}}
+        @jobParameters={{this.defaultJobParameters}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />`
     );
@@ -351,7 +526,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
     assert.equal(onUpdateParameters.callCount, 2);
     assert.true(
       onUpdateParameters.getCall(1).calledWith({
-        foo: 'foozy',
+        foo: 'foofoo',
         job1: { p1: 'job123abc' }
       })
     );
@@ -375,6 +550,9 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
           }
         }
       },
+      defaultPipelineParameters: {
+        foo: { value: 'foo' }
+      },
       onUpdateParameters
     });
 
@@ -382,6 +560,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @event={{this.event}}
+        @pipelineParameters={{this.defaultPipelineParameters}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />`
     );
@@ -399,7 +578,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
   test('it adds icon when input is not equal to default value', async function (assert) {
     sinon.stub(pipelinePageState, 'getPipeline').returns({
       parameters: {
-        foo: { value: 'foobar' }
+        foo: { value: 'foo' }
       }
     });
     sinon.stub(pipelinePageState, 'getJobs').returns([]);
@@ -412,6 +591,9 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
           }
         }
       },
+      defaultPipelineParameters: {
+        foo: { value: 'foo' }
+      },
       onUpdateParameters: () => {}
     });
 
@@ -419,6 +601,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       hbs`<Pipeline::Parameters
         @action="start"
         @event={{this.event}}
+        @pipelineParameters={{this.defaultPipelineParameters}}
         @onUpdateParameters={{this.onUpdateParameters}}
       />`
     );
@@ -440,7 +623,7 @@ module('Integration | Component | pipeline/parameters', function (hooks) {
       .dom(
         '.parameter-list.expanded .parameter label svg.fa-triangle-exclamation title'
       )
-      .hasText('Default value: foobar');
+      .hasText('Default value: foo');
   });
 
   test('it renders inputs as read only when no action is set', async function (assert) {

@@ -7,10 +7,11 @@
   <div class="parameters-container">
     {{#each this.parameters as |parameterGroup|}}
       <div class="parameter-group">
-        <div class="group-title">
+        <div class="group-title"
+          {{on "click" (fn this.toggleParameterGroup parameterGroup.paramGroupTitle)}}
+        >
           <FaIcon
             @icon={{if parameterGroup.isOpen "square-minus" "square-plus"}}
-            {{on "click" (fn this.toggleParameterGroup parameterGroup.paramGroupTitle)}}
           />
           <div
             class="title"
