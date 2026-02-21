@@ -149,6 +149,6 @@
     "sass-embedded": "^1.77.0",
     "screwdriver-data-schema": "^25.6.0",
     "sinon": "^18.0.0",
-    "webpack": "^5.76.2"
+    "webpack": "^5.105.0"
   }
 }
