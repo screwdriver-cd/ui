@@ -20,7 +20,7 @@ export default class PipelineSettingsMainModalPipelineAliasComponent extends Com
     super(...arguments);
 
     this.pipeline = this.pipelinePageState.getPipeline();
-    this.alias = this.pipeline.settings.aliasName;
+    this.alias = this.pipeline.settings?.aliasName;
   }
 
   get isDisabled() {
@@ -28,7 +28,7 @@ export default class PipelineSettingsMainModalPipelineAliasComponent extends Com
       return true;
     }
 
-    return this.alias === this.pipeline.settings.aliasName;
+    return this.alias === this.pipeline.settings?.aliasName;
   }
 
   @action
