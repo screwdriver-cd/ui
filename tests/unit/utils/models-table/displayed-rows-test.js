@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { getDisplayedRows } from 'screwdriver-ui/utils/models-table/displayed-rows';
+import getDisplayedRows from 'screwdriver-ui/utils/models-table/displayed-rows';
 
 module('Unit | Utility | models-table/displayed-rows', function () {
   test('it returns filtered content when page size is not provided', function (assert) {
