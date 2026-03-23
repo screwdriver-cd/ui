@@ -12,6 +12,10 @@
 
 @mixin styles {
   #workflow-graph {
+    .graph-label.selected-job {
+      fill: colors.$sd-failure;
+    }
+
     .graph-node {
       font-family: 'screwdriver';
       fill: colors.$sd-text-light;

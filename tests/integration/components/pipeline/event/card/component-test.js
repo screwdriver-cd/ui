@@ -151,6 +151,27 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     assert.dom('.highlighted').doesNotExist();
   });
 
+  test('it renders highlight when the URL contains jobId query params', async function (assert) {
+    routerStub.reset();
+    routerStub.value(`/pipelines/1/events/${event.id}?jobId=245`);
+    registerBuildsCallbackStub.reset();
+    registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
+      callback([{ status: 'SUCCESS' }]);
+    });
+
+    this.setProperties({
+      event
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+      />`
+    );
+
+    assert.dom('.highlighted').exists();
+  });
+
   test('it renders last successful when event is last successful', async function (assert) {
     this.setProperties({
       event,
