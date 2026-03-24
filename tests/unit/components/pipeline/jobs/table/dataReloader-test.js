@@ -91,7 +91,7 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
 
     let resolveSecondRequest;
 
-    sinon.stub(shuttle, 'fetchFromApi').callsFake(url => {
+    sinon.stub(shuttle, 'fetchFromApi').callsFake((_method, url) => {
       if (url.includes('jobIds=1')) {
         return new Promise(resolve => {
           resolveFirstRequest = resolve;
