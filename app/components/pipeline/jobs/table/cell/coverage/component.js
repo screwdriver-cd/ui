@@ -17,7 +17,7 @@ export default class PipelineJobsTableCellCoverageComponent extends Component {
       const pipeline = this.pipelinePageState.getPipeline();
 
       this.shuttle
-        .fetchFromApi('get', '/coverage/info', {
+        .fetchCoverage({
           jobId: job.id,
           buildId: this.args.record.build.id,
           startTime: this.args.record.build.startTime,
