@@ -144,6 +144,63 @@ module('Unit | Utility | graph tools', function () {
     assert.deepEqual(result, expectedOutput);
   });
 
+  test('it hides edges from unknown external triggers to existing external jobs', function (assert) {
+    const inputGraph = {
+      nodes: [
+        { name: '~commit' },
+        { name: 'main-job' },
+        { name: 'sd@123:external-job' }
+      ],
+      edges: [
+        { src: '~commit', dest: 'main-job' },
+        {
+          src: 'main-job',
+          dest: 'sd@123:external-job'
+        },
+        {
+          src: '~sd@456:upstream-job',
+          dest: 'sd@123:external-job'
+        }
+      ]
+    };
+    const expectedOutput = {
+      nodes: [
+        { name: '~commit', pos: { x: 0, y: 0 } },
+        { name: 'main-job', pos: { x: 1, y: 0 } },
+        { name: 'sd@123:external-job', pos: { x: 2, y: 0 } }
+      ],
+      edges: [
+        {
+          src: '~commit',
+          dest: 'main-job',
+          from: { x: 0, y: 0 },
+          to: { x: 1, y: 0 }
+        },
+        {
+          src: 'main-job',
+          dest: 'sd@123:external-job',
+          from: { x: 1, y: 0 },
+          to: { x: 2, y: 0 }
+        },
+        {
+          src: '~sd@456:upstream-job',
+          dest: 'sd@123:external-job',
+          hidden: true
+        }
+      ],
+      stages: [],
+      stageEdges: [],
+      meta: {
+        height: 1,
+        width: 3
+      }
+    };
+
+    const result = decorateGraph({ inputGraph });
+
+    assert.deepEqual(result, expectedOutput);
+  });
+
   test('it processes a more complex graph without builds', function (assert) {
     const expectedOutput = {
       nodes: [
