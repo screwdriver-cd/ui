@@ -203,7 +203,7 @@ module('Integration | Component | build banner', function (hooks) {
     assert.dom('li.job-name .banner-value').hasText('main');
     assert
       .dom('li.job-name a')
-      .hasAttribute('href', '/v2/pipelines/12345/events/abcd');
+      .hasAttribute('href', '/v2/pipelines/12345/events/abcd?jobId=1');
   });
 
   test('it renders pr link if pr url info is available', async function (assert) {

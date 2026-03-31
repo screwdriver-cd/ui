@@ -218,6 +218,53 @@ export default Component.extend({
       }
     }
   },
+  getSelectedJobKey() {
+    const eventId = this.selectedEventObj?.id;
+    const selectedJobId = this.jobId;
+
+    if (!eventId || !selectedJobId || this.minified) {
+      return null;
+    }
+
+    return `${eventId}:${selectedJobId}`;
+  },
+
+  applySelectedJobLabel(svg) {
+    if (!svg) {
+      return;
+    }
+
+    const selectedJobId = this.jobId ? `${this.jobId}` : '';
+
+    let jobFound = false;
+
+    svg.selectAll('.graph-label').classed('selected-job', node => {
+      const isSelected =
+        !this.minified && !!selectedJobId && `${node?.id}` === selectedJobId;
+
+      if (isSelected) {
+        jobFound = true;
+      }
+
+      return isSelected;
+    });
+
+    const selectedJobKey = this.getSelectedJobKey();
+
+    if (!jobFound) {
+      this.set('lastScrolledSelectedJobKey', null);
+
+      return;
+    }
+
+    if (selectedJobKey && this.lastScrolledSelectedJobKey !== selectedJobKey) {
+      const selectedLabel = svg.select('.graph-label.selected-job').node();
+
+      selectedLabel?.scrollIntoView({ block: 'center', inline: 'center' });
+      this.set('lastScrolledSelectedJobKey', selectedJobKey);
+    }
+  },
+
   async redraw(data) {
     if (!data) return;
     const el = d3.select(this.element);
@@ -238,14 +285,10 @@ export default Component.extend({
 
       if (n) {
         const txt = n.select('text');
+        const virtualClass = node.virtual ? ' virtual' : '';
 
-        txt.text(icon(node.status, node.virtual));
-        n.attr(
-          'class',
-          `graph-node${
-            node.status ? ` build-${node.status.toLowerCase()}` : ''
-          }`
-        )
+        txt
+          .text(icon(node.status, node.virtual))
           .attr(
             'font-size',
             `${
@@ -262,6 +305,12 @@ export default Component.extend({
                 ? ICON_SIZE / 2
                 : 0)
           );
+        n.attr(
+          'class',
+          `graph-node${virtualClass}${
+            node.status ? ` build-${node.status.toLowerCase()}` : ''
+          }`
+        );
       }
     });
 
@@ -278,6 +327,8 @@ export default Component.extend({
         );
       }
     });
+
+    this.applySelectedJobLabel(el);
   },
   async draw(data) {
     if (this.isDestroying || this.isDestroyed) {
@@ -378,5 +429,7 @@ export default Component.extend({
         horizontalDisplacements
       );
     }
+
+    this.applySelectedJobLabel(svg);
   }
 });

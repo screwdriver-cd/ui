@@ -1,3 +1,5 @@
+import { compare } from '@ember/utils';
+
 /**
  * Comparator function that sorts jobs by the build status first, then stage name, and finally job name.
  * When sorting by build status, the ordering is ordered by the status color: red, yellow, blue, green, grey, no-status (i.e., jobs that did not run).
@@ -37,4 +39,29 @@ export default function sortJobs(a, b) {
   statusOrder.set(undefined, 6);
 
   return statusOrder.get(statusA) - statusOrder.get(statusB);
+}
+
+/**
+ * Sort filtered table rows using the active sort descriptor emitted by ember-models-table.
+ */
+export function sortByProperties(records, sortProperty) {
+  const sortedRecords = records.slice();
+
+  if (!sortProperty) {
+    return sortedRecords;
+  }
+
+  const [propertyName, direction = 'asc'] = sortProperty.split(':');
+
+  sortedRecords.sort((leftRow, rightRow) => {
+    const result = compare(leftRow[propertyName], rightRow[propertyName]);
+
+    if (result !== 0) {
+      return direction === 'desc' ? -1 * result : result;
+    }
+
+    return 0;
+  });
+
+  return sortedRecords;
 }

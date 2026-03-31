@@ -52,6 +52,29 @@
 
           th {
             border: none;
+
+            .sort-header {
+              cursor: pointer;
+              display: inline-flex;
+              align-items: center;
+              gap: 0.35rem;
+            }
+
+            .sort-header-indicator {
+              color: colors.$sd-text-light;
+              font-size: 0.875rem;
+              line-height: 1;
+              min-width: 0.75rem;
+              text-align: center;
+            }
+
+            .sort-header.is-sorted {
+              color: colors.$sd-link;
+
+              .sort-header-indicator {
+                color: colors.$sd-link;
+              }
+            }
           }
         }
 

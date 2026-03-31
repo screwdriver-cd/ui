@@ -13,7 +13,7 @@ import {
 } from 'screwdriver-ui/utils/pipeline/job';
 import { canJobStart } from 'screwdriver-ui/utils/pipeline-workflow';
 import DataReloader from './dataReloader';
-import sortJobs from './util';
+import sortJobs, { sortByProperties } from './util';
 
 const INITIAL_PAGE_SIZE = 10;
 
@@ -111,6 +111,7 @@ export default class PipelineJobsTableComponent extends Component {
         propertyName: 'jobName',
         className: 'job-column',
         component: 'jobCell',
+        componentForSortCell: 'pipeline/jobs/table/sort-header',
         filteredBy: 'jobName'
       },
       historyColumnConfiguration,
@@ -123,6 +124,7 @@ export default class PipelineJobsTableComponent extends Component {
         title: 'START TIME',
         className: 'start-time-column',
         component: 'startTimeCell',
+        componentForSortCell: 'pipeline/jobs/table/sort-header',
         propertyName: 'startTime',
         sortBy: 'startTime'
       },
@@ -136,6 +138,7 @@ export default class PipelineJobsTableComponent extends Component {
         propertyName: 'stageName',
         className: 'stage-column',
         component: 'stageCell',
+        componentForSortCell: 'pipeline/jobs/table/sort-header',
         filteredBy: 'stageName'
       },
       {
@@ -246,12 +249,17 @@ export default class PipelineJobsTableComponent extends Component {
   }
 
   _handleDisplayDataChange(data) {
-    const jobIds = data.filteredContent.map(record => record.job.id);
+    const [sortProperty] = data.sort;
+    const jobIds = sortByProperties(data.filteredContent, sortProperty).map(
+      record => record.job.id
+    );
+    const shouldFetchAllSortedJobs = Boolean(sortProperty);
 
     this.dataReloader.updateJobsMatchingFilter(
       jobIds,
       data.pageSize,
-      data.currentPageNumber
+      data.currentPageNumber,
+      shouldFetchAllSortedJobs
     );
 
     if (!this.event) {

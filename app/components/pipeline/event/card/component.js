@@ -325,7 +325,15 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   get isHighlighted() {
-    return this.router.currentURL.endsWith(this.event.id);
+    const routeEventId = this.router.currentRoute?.attributes?.id
+      ? this.router.currentRoute.attributes.id
+      : this.router.currentRoute?.params?.event_id;
+
+    if (routeEventId !== undefined) {
+      return `${routeEventId}` === `${this.event.id}`;
+    }
+
+    return this.router.currentURL.split('?')[0].endsWith(`/${this.event.id}`);
   }
 
   get isOutlined() {
