@@ -903,7 +903,7 @@ export function addJobNames(
 export function updateJobStatuses(svg, data, sizes, nodeWidth) {
   const { ICON_SIZE } = sizes;
 
-  svg
+  const nodeGroups = svg
     .selectAll('.graph-node')
     .data(data.nodes)
     .join()
@@ -913,7 +913,10 @@ export function updateJobStatuses(svg, data, sizes, nodeWidth) {
       return `graph-node${virtualClass}${
         node.status ? ` build-${node.status.toLowerCase()}` : ''
       }`;
-    })
+    });
+
+  nodeGroups
+    .select('text')
     .attr('font-size', node => {
       return `${
         icon(node.status, node.virtual) === STATUS_MAP.VIRTUAL.icon
@@ -929,7 +932,6 @@ export function updateJobStatuses(svg, data, sizes, nodeWidth) {
           : 0)
       );
     })
-    .select('text')
     .html(node => {
       return icon(node.status, node.virtual);
     });

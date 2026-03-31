@@ -1,12 +1,14 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { next } from '@ember/runloop';
 import { service } from '@ember/service';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 import {
   getDisplayName,
   getStageName
 } from 'screwdriver-ui/utils/pipeline/job';
+import getDisplayedRows from 'screwdriver-ui/utils/models-table/displayed-rows';
 
 export default class PipelineSettingsCacheTableComponent extends Component {
   @service('shuttle') shuttle;
@@ -17,9 +19,13 @@ export default class PipelineSettingsCacheTableComponent extends Component {
 
   @tracked data;
 
+  @tracked selectedRows = [];
+
   @tracked isClearJobsCacheModalOpen = false;
 
   @tracked selectedJobs = new Set();
+
+  @tracked isTableVisible = true;
 
   clearedJobIds = new Set();
 
@@ -123,16 +129,40 @@ export default class PipelineSettingsCacheTableComponent extends Component {
 
   @action
   onDisplayDataChanged(displaySettings) {
-    this.selectedJobs = new Set(
-      displaySettings.selectedItems
-        .map(job => {
-          return {
-            id: job.id,
-            name: job.name
-          };
-        })
-        .filter(job => !this.clearedJobIds.has(job.id))
+    const displayedJobIds = new Set(
+      getDisplayedRows(displaySettings).map(job => job.id)
     );
+
+    this.selectedRows = displaySettings.selectedItems.filter(
+      job => displayedJobIds.has(job.id) && !this.clearedJobIds.has(job.id)
+    );
+
+    this.selectedJobs = new Set(
+      this.selectedRows.map(job => {
+        return {
+          id: job.id,
+          name: job.name
+        };
+      })
+    );
+  }
+
+  resetTableSelection(selectedJobIds = []) {
+    const selectedJobIdSet = new Set(selectedJobIds);
+
+    this.selectedRows = this.data.filter(job => selectedJobIdSet.has(job.id));
+    this.selectedJobs = new Set(
+      this.selectedRows.map(job => {
+        return {
+          id: job.id,
+          name: job.name
+        };
+      })
+    );
+    this.isTableVisible = false;
+    next(this, () => {
+      this.isTableVisible = true;
+    });
   }
 
   get isClearJobsCacheButtonDisabled() {
@@ -153,17 +183,12 @@ export default class PipelineSettingsCacheTableComponent extends Component {
         this.clearedJobIds.add(jobId);
       });
 
-      const unclearedJobs = new Set();
-
-      this.selectedJobs.forEach(job => {
-        if (!this.clearedJobIds.has(job.id)) {
-          unclearedJobs.add(job);
-        }
-      });
-
-      this.selectedJobs = unclearedJobs;
-
       this.setJobsData();
+      this.resetTableSelection(
+        [...this.selectedJobs]
+          .map(job => job.id)
+          .filter(jobId => !this.clearedJobIds.has(jobId))
+      );
     }
   }
 }
