@@ -436,6 +436,10 @@ const calcNodeDepths = graph => {
     depth[n.name] = 0;
   });
   graph.edges.forEach(({ src, dest }) => {
+    if (!nodes[src] || !nodes[dest]) {
+      return;
+    }
+
     if (!edges[src]) {
       edges[src] = [];
     }
@@ -955,6 +959,8 @@ const decorateGraph = ({
     const destNode = node(nodes, e.dest);
 
     if (!srcNode || !destNode) {
+      e.hidden = true;
+
       return;
     }
 
