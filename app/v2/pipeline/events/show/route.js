@@ -10,13 +10,14 @@ export default class NewPipelineEventsShowRoute extends Route {
   async model(params, transition) {
     const eventId = params.event_id;
     const pipelineId = this.pipelinePageState.getPipelineId();
+    const transitionLatestEvent = transition.data?.latestEvent;
 
     let latestEvent;
 
     let event;
 
-    if (transition.data.latestEvent) {
-      event = transition.data.latestEvent;
+    if (`${transitionLatestEvent?.id}` === `${eventId}`) {
+      event = transitionLatestEvent;
       latestEvent = event;
     } else {
       event = await this.shuttle

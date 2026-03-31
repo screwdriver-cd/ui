@@ -1,12 +1,14 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { next } from '@ember/runloop';
 import { service } from '@ember/service';
 import { dom } from '@fortawesome/fontawesome-svg-core';
 import {
   getDisplayName,
   getStageName
 } from 'screwdriver-ui/utils/pipeline/job';
+import getDisplayedRows from 'screwdriver-ui/utils/models-table/displayed-rows';
 
 export default class PipelineSettingsMetricsTableComponent extends Component {
   @service('pipeline-page-state') pipelinePageState;
@@ -15,15 +17,17 @@ export default class PipelineSettingsMetricsTableComponent extends Component {
 
   @tracked data;
 
+  @tracked selectedRows = [];
+
   @tracked selectedJobs = [];
 
   @tracked isToggleMultipleModalOpen = false;
 
+  @tracked isTableVisible = true;
+
   jobs;
 
   downtimeJobIds;
-
-  jobIdsDisplaying;
 
   constructor() {
     super(...arguments);
@@ -135,7 +139,6 @@ export default class PipelineSettingsMetricsTableComponent extends Component {
   }
 
   setJobsData() {
-    this.jobIdsDisplaying = new Set();
     this.data = [];
     this.jobs.forEach((job, jobId) => {
       if (this.args.isToggleMultiple) {
@@ -148,7 +151,6 @@ export default class PipelineSettingsMetricsTableComponent extends Component {
         }
       }
 
-      this.jobIdsDisplaying.add(jobId);
       this.data.push({
         id: jobId,
         name: getDisplayName(job),
@@ -172,16 +174,31 @@ export default class PipelineSettingsMetricsTableComponent extends Component {
   @action
   onDisplayDataChanged(displaySettings) {
     if (this.args.isToggleMultiple) {
-      this.selectedJobs = displaySettings.selectedItems
-        .filter(job => this.jobIdsDisplaying.has(job.id))
-        .map(job => {
-          return {
-            id: job.id,
-            name: job.name,
-            state: job.state
-          };
-        });
+      const displayedJobIds = new Set(
+        getDisplayedRows(displaySettings).map(job => job.id)
+      );
+
+      this.selectedRows = displaySettings.selectedItems.filter(job =>
+        displayedJobIds.has(job.id)
+      );
+
+      this.selectedJobs = this.selectedRows.map(job => {
+        return {
+          id: job.id,
+          name: job.name,
+          state: job.state
+        };
+      });
     }
+  }
+
+  resetTableSelection() {
+    this.selectedRows = [];
+    this.selectedJobs = [];
+    this.isTableVisible = false;
+    next(this, () => {
+      this.isTableVisible = true;
+    });
   }
 
   @action
@@ -195,7 +212,7 @@ export default class PipelineSettingsMetricsTableComponent extends Component {
 
     if (updated) {
       this.reloadData();
-      this.selectedJobs = [];
+      this.resetTableSelection();
     }
   }
 }

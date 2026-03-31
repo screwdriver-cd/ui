@@ -152,6 +152,20 @@ export default Component.extend({
     }
   }),
 
+  usesLegacyUi: computed({
+    get() {
+      return localStorage.getItem('oldUi') === 'true';
+    }
+  }),
+
+  eventRoute: computed('usesLegacyUi', {
+    get() {
+      return this.usesLegacyUi
+        ? 'pipeline.events.show'
+        : 'v2.pipeline.events.show';
+    }
+  }),
+
   isButtonDisabledLoaded: false,
   isButtonDisabled: computed(
     'buildAction',
