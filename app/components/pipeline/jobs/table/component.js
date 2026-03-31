@@ -111,6 +111,7 @@ export default class PipelineJobsTableComponent extends Component {
         propertyName: 'jobName',
         className: 'job-column',
         component: 'jobCell',
+        componentForSortCell: 'pipeline/jobs/table/sort-header',
         filteredBy: 'jobName'
       },
       historyColumnConfiguration,
@@ -123,6 +124,7 @@ export default class PipelineJobsTableComponent extends Component {
         title: 'START TIME',
         className: 'start-time-column',
         component: 'startTimeCell',
+        componentForSortCell: 'pipeline/jobs/table/sort-header',
         propertyName: 'startTime',
         sortBy: 'startTime'
       },
@@ -136,6 +138,7 @@ export default class PipelineJobsTableComponent extends Component {
         propertyName: 'stageName',
         className: 'stage-column',
         component: 'stageCell',
+        componentForSortCell: 'pipeline/jobs/table/sort-header',
         filteredBy: 'stageName'
       },
       {

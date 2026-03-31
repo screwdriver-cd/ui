@@ -1,0 +1,16 @@
+<span
+  role="button"
+  tabindex="0"
+  class="sort-header {{if (or @column.sortAsc @column.sortDesc) 'is-sorted'}}"
+  {{on "click" @sortColumn}}
+>
+  <span>{{@column.columnTitle}}</span>
+
+  {{#if @column.sortAsc}}
+    <span class="sort-header-indicator" aria-hidden="true">↑</span>
+  {{else if @column.sortDesc}}
+    <span class="sort-header-indicator" aria-hidden="true">↓</span>
+  {{else}}
+    <span class="sort-header-indicator" aria-hidden="true">↕</span>
+  {{/if}}
+</span>
