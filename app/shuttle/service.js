@@ -15,6 +15,12 @@ export default Service.extend({
   store: service(),
   session: service(),
 
+  init() {
+    this._super(...arguments);
+    this.coverageCache = new Map();
+    this.coverageRequests = new Map();
+  },
+
   storeHost: `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}`,
 
   apiHost: `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}`,
@@ -39,16 +45,19 @@ export default Service.extend({
     };
   },
 
-  fetchFrom(host = 'store', method = 'get', url, data = {}, raw = false) {
+  fetchFrom(host, method, url, data = {}, raw = false) {
+    const requestHost = host || 'store';
+    const requestMethod = method || 'get';
+
     let baseHost = this.apiHost;
 
-    if (host === 'store') {
+    if (requestHost === 'store') {
       baseHost = this.storeHost;
     }
 
-    const optionsType = method.toUpperCase();
+    const optionsType = requestMethod.toUpperCase();
 
-    let requestType = method.toLowerCase();
+    let requestType = requestMethod.toLowerCase();
 
     if (raw) {
       requestType = 'raw';
@@ -65,11 +74,11 @@ export default Service.extend({
     return this.ajax[requestType](uri, options);
   },
 
-  fetchFromApi(method = 'get', url, data, raw = false) {
+  fetchFromApi(method, url, data = {}, raw = false) {
     return this.fetchFrom('api', method, url, data, raw);
   },
 
-  fetchFromStore(method = 'get', url, data, raw = false) {
+  fetchFromStore(method, url, data = {}, raw = false) {
     return this.fetchFrom('store', method, url, data, raw);
   },
 
@@ -96,6 +105,13 @@ export default Service.extend({
     return this.fetchFromApi(method, url, data);
   },
 
+  getCoverageCacheKey(data = {}) {
+    return Object.keys(data)
+      .sort()
+      .map(key => `${key}:${data[key]}`)
+      .join('|');
+  },
+
   /**
    * Fetch coverage info from coverage plugin
    * @param  {Object}  data
@@ -113,8 +129,29 @@ export default Service.extend({
   async fetchCoverage(data) {
     const method = 'get';
     const url = `/coverage/info`;
+    const cacheKey = this.getCoverageCacheKey(data);
 
-    return this.fetchFromApi(method, url, data);
+    if (this.coverageCache.has(cacheKey)) {
+      return this.coverageCache.get(cacheKey);
+    }
+
+    if (this.coverageRequests.has(cacheKey)) {
+      return this.coverageRequests.get(cacheKey);
+    }
+
+    const request = this.fetchFromApi(method, url, data)
+      .then(response => {
+        this.coverageCache.set(cacheKey, response);
+
+        return response;
+      })
+      .finally(() => {
+        this.coverageRequests.delete(cacheKey);
+      });
+
+    this.coverageRequests.set(cacheKey, request);
+
+    return request;
   },
 
   async openPr(checkoutUrl, yaml = '', pipelineId = 1) {
