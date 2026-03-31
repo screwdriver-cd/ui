@@ -16,6 +16,8 @@ export default class DataReloader {
 
   buildsCallback;
 
+  fetchGeneration = 0;
+
   constructor(apiFetchers, jobIds, pageSize, numBuilds, buildsCallback) {
     const { shuttle, workflowDataReload } = apiFetchers;
 
@@ -34,8 +36,13 @@ export default class DataReloader {
     });
   }
 
-  updateJobsMatchingFilter(jobIds, pageSize, currentPage) {
-    if (jobIds.length < pageSize) {
+  updateJobsMatchingFilter(
+    jobIds,
+    pageSize,
+    currentPage,
+    shouldFetchAll = false
+  ) {
+    if (shouldFetchAll || jobIds.length < pageSize) {
       this.jobIds = jobIds;
     } else {
       const startIndex = (currentPage - 1) * pageSize;
@@ -50,14 +57,23 @@ export default class DataReloader {
       return;
     }
 
+    this.fetchGeneration += 1;
+
+    const { fetchGeneration, jobIds, numBuilds: requestedNumBuilds } = this;
+    const requestedJobIds = [...jobIds];
+
     await this.shuttle
       .fetchFromApi(
         'get',
-        `/builds/statuses?jobIds=${this.jobIds.join('&jobIds=')}&numBuilds=${
-          this.numBuilds
-        }`
+        `/builds/statuses?jobIds=${requestedJobIds.join(
+          '&jobIds='
+        )}&numBuilds=${requestedNumBuilds}`
       )
       .then(response => {
+        if (fetchGeneration !== this.fetchGeneration) {
+          return;
+        }
+
         const buildsMap = new Map();
 
         response.forEach(buildsForJob => {

@@ -13,7 +13,7 @@ import {
 } from 'screwdriver-ui/utils/pipeline/job';
 import { canJobStart } from 'screwdriver-ui/utils/pipeline-workflow';
 import DataReloader from './dataReloader';
-import sortJobs from './util';
+import sortJobs, { sortByProperties } from './util';
 
 const INITIAL_PAGE_SIZE = 10;
 
@@ -249,12 +249,17 @@ export default class PipelineJobsTableComponent extends Component {
   }
 
   _handleDisplayDataChange(data) {
-    const jobIds = data.filteredContent.map(record => record.job.id);
+    const [sortProperty] = data.sort;
+    const jobIds = sortByProperties(data.filteredContent, sortProperty).map(
+      record => record.job.id
+    );
+    const shouldFetchAllSortedJobs = Boolean(sortProperty);
 
     this.dataReloader.updateJobsMatchingFilter(
       jobIds,
       data.pageSize,
-      data.currentPageNumber
+      data.currentPageNumber,
+      shouldFetchAllSortedJobs
     );
 
     if (!this.event) {

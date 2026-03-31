@@ -77,15 +77,15 @@ module('Unit | Service | shuttle', function (hooks) {
       })
     ]);
 
-    const buildId = 243421;
-    const jobId = 21;
-    const startTime = '2020-05-06T23:36:46.779Z';
-    const endTime = '2020-05-06T23:50:18.590Z';
-    const pipelineId = 123456;
-    const prNum = null;
-
     service
-      .fetchCoverage(buildId, jobId, startTime, endTime, pipelineId, prNum)
+      .fetchCoverage({
+        buildId: 243421,
+        jobId: 21,
+        startTime: '2020-05-06T23:36:46.779Z',
+        endTime: '2020-05-06T23:50:18.590Z',
+        pipelineId: 123456,
+        prNum: null
+      })
       .then(result => {
         const { coverage, projectUrl } = result;
 
@@ -96,6 +96,90 @@ module('Unit | Service | shuttle', function (hooks) {
           'project url is sonar.screwdriver.cd'
         );
       });
+  });
+
+  test('fetchCoverage reuses cached response', async function (assert) {
+    assert.expect(2);
+
+    const service = this.owner.lookup('service:shuttle');
+    const config = {
+      buildId: 243421,
+      jobId: 21,
+      startTime: '2020-05-06T23:36:46.779Z',
+      endTime: '2020-05-06T23:50:18.590Z',
+      pipelineName: 'example'
+    };
+
+    server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/coverage/info`, () => [
+      200,
+      {
+        'Content-Type': 'application/json'
+      },
+      JSON.stringify({ coverage: '71.4' })
+    ]);
+
+    const firstResponse = await service.fetchCoverage(config);
+    const secondResponse = await service.fetchCoverage(config);
+
+    assert.strictEqual(
+      firstResponse,
+      secondResponse,
+      'uses cached response object'
+    );
+    assert.equal(
+      server.handledRequests.length,
+      1,
+      'only one coverage request is sent'
+    );
+  });
+
+  test('fetchCoverage allows retry after a failed request', async function (assert) {
+    assert.expect(2);
+
+    const service = this.owner.lookup('service:shuttle');
+
+    let requestCount = 0;
+    const config = {
+      buildId: 243421,
+      jobId: 21,
+      startTime: '2020-05-06T23:36:46.779Z',
+      endTime: '2020-05-06T23:50:18.590Z',
+      pipelineName: 'example'
+    };
+
+    server.get(`${ENV.APP.SDAPI_HOSTNAME}/v4/coverage/info`, () => {
+      requestCount += 1;
+
+      if (requestCount === 1) {
+        return [
+          500,
+          { 'Content-Type': 'application/json' },
+          JSON.stringify({})
+        ];
+      }
+
+      return [
+        200,
+        {
+          'Content-Type': 'application/json'
+        },
+        JSON.stringify({ coverage: '71.4' })
+      ];
+    });
+
+    try {
+      await service.fetchCoverage(config);
+    } catch (error) {
+      assert.ok(true, 'first request fails');
+    }
+
+    const response = await service.fetchCoverage(config);
+
+    assert.equal(
+      response.coverage,
+      '71.4',
+      'second request succeeds after retry'
+    );
   });
 
   test('getLatestCommitEvent payload', function (assert) {

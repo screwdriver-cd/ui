@@ -10,8 +10,9 @@
         </LinkTo>
     {{else}}
       <LinkTo
-        @route="v2.pipeline.events.show"
+        @route={{this.eventRoute}}
         @models={{array this.pipelineId this.event.id}}
+        @query={{hash jobId=this.jobId}}
         class="banner-value"
       >
         {{this.jobName}}

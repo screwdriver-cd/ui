@@ -27,6 +27,11 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
     dataReloader.updateJobsMatchingFilter(jobIds, 50, 1);
     assert.equal(dataReloader.jobIds.length, jobIds.length);
 
+    dataReloader.updateJobsMatchingFilter(jobIds, 3, 2, true);
+    assert.equal(dataReloader.jobIds.length, jobIds.length);
+    assert.equal(dataReloader.jobIds[0], 0);
+    assert.equal(dataReloader.jobIds[9], 9);
+
     dataReloader.updateJobsMatchingFilter(jobIds, 3, 2);
     assert.equal(dataReloader.jobIds.length, 3);
     assert.equal(dataReloader.jobIds[0], 3);
@@ -74,5 +79,56 @@ module('Unit | Component | pipeline/jobs/table/dataReloader', function () {
 
     await dataReloader.fetchBuildsForJobs();
     assert.equal(buildsCallbackSpy.callCount, 1);
+  });
+
+  test('fetchBuildsForJobs ignores stale responses', async function (assert) {
+    assert.expect(3);
+
+    const shuttle = { fetchFromApi: () => {} };
+    const buildsCallbackSpy = sinon.spy();
+
+    let resolveFirstRequest;
+
+    let resolveSecondRequest;
+
+    sinon.stub(shuttle, 'fetchFromApi').callsFake((_method, url) => {
+      if (url.includes('jobIds=1')) {
+        return new Promise(resolve => {
+          resolveFirstRequest = resolve;
+        });
+      }
+
+      return new Promise(resolve => {
+        resolveSecondRequest = resolve;
+      });
+    });
+
+    const dataReloader = new DataReloader(
+      { shuttle },
+      [1],
+      10,
+      null,
+      buildsCallbackSpy
+    );
+
+    const firstFetch = dataReloader.fetchBuildsForJobs();
+
+    dataReloader.updateJobsMatchingFilter([2], 10, 1);
+
+    const secondFetch = dataReloader.fetchBuildsForJobs();
+
+    resolveSecondRequest([
+      { jobId: 2, builds: [{ id: 22, status: 'SUCCESS' }] }
+    ]);
+    await secondFetch;
+
+    resolveFirstRequest([
+      { jobId: 1, builds: [{ id: 11, status: 'FAILURE' }] }
+    ]);
+    await firstFetch;
+
+    assert.equal(buildsCallbackSpy.callCount, 1);
+    assert.equal(buildsCallbackSpy.firstCall.args[0].has(2), true);
+    assert.equal(buildsCallbackSpy.firstCall.args[0].has(1), false);
   });
 });

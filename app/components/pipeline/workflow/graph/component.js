@@ -40,6 +40,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
 
   showPRJobs;
 
+  lastScrolledSelectedJobKey = null;
+
   constructor() {
     super(...arguments);
     this.event = this.args.event;
@@ -59,6 +61,18 @@ export default class PipelineWorkflowGraphComponent extends Component {
       this.args.event,
       this.args.collapsedStages
     );
+  }
+
+  get selectedJobId() {
+    return this.args.selectedJobId ? `${this.args.selectedJobId}` : '';
+  }
+
+  get selectedJobKey() {
+    if (!this.event?.id || !this.selectedJobId) {
+      return null;
+    }
+
+    return `${this.event.id}:${this.selectedJobId}`;
   }
 
   getDecoratedGraph(
@@ -89,6 +103,43 @@ export default class PipelineWorkflowGraphComponent extends Component {
       stages: this.pipelinePageState.getStages(),
       collapsedStages
     });
+  }
+
+  applySelectedJobLabel() {
+    if (!this.graphSvg) {
+      return;
+    }
+
+    let jobFound = false;
+
+    this.graphSvg.selectAll('.graph-label').classed('selected-job', node => {
+      const isSelected =
+        !!this.selectedJobId && `${node?.id}` === this.selectedJobId;
+
+      if (isSelected) {
+        jobFound = true;
+      }
+
+      return isSelected;
+    });
+
+    if (!jobFound) {
+      this.lastScrolledSelectedJobKey = null;
+
+      return;
+    }
+
+    if (
+      this.selectedJobKey &&
+      this.lastScrolledSelectedJobKey !== this.selectedJobKey
+    ) {
+      const selectedLabel = this.graphSvg
+        .select('.graph-label.selected-job')
+        .node();
+
+      selectedLabel?.scrollIntoView({ block: 'center', inline: 'center' });
+      this.lastScrolledSelectedJobKey = this.selectedJobKey;
+    }
   }
 
   @action
@@ -188,6 +239,8 @@ export default class PipelineWorkflowGraphComponent extends Component {
       verticalDisplacements,
       horizontalDisplacements
     );
+
+    this.applySelectedJobLabel();
   }
 
   @action
@@ -243,5 +296,6 @@ export default class PipelineWorkflowGraphComponent extends Component {
       nodeWidth
     );
     updateStageStatuses(this.graphSvg, this.decoratedGraph);
+    this.applySelectedJobLabel();
   }
 }
