@@ -285,14 +285,10 @@ export default Component.extend({
 
       if (n) {
         const txt = n.select('text');
+        const virtualClass = node.virtual ? ' virtual' : '';
 
-        txt.text(icon(node.status, node.virtual));
-        n.attr(
-          'class',
-          `graph-node${
-            node.status ? ` build-${node.status.toLowerCase()}` : ''
-          }`
-        )
+        txt
+          .text(icon(node.status, node.virtual))
           .attr(
             'font-size',
             `${
@@ -309,6 +305,12 @@ export default Component.extend({
                 ? ICON_SIZE / 2
                 : 0)
           );
+        n.attr(
+          'class',
+          `graph-node${virtualClass}${
+            node.status ? ` build-${node.status.toLowerCase()}` : ''
+          }`
+        );
       }
     });
 

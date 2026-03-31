@@ -1,18 +1,20 @@
-<ModelsTable
-  class="pipeline-settings-metrics-table{{if @isToggleMultiple " toggle-multiple"}}"
-  @data={{this.data}}
-  @columns={{this.columns}}
-  @columnComponents={{hash
-    toggleCell=(component "pipeline/settings/metrics/table/cell/toggle")
-  }}
-  @themeInstance={{this.theme}}
-  @multipleSelect={{@isToggleMultiple}}
-  @onDisplayDataChanged={{this.onDisplayDataChanged}}
+{{#if this.isTableVisible}}
+  <ModelsTable
+    class="pipeline-settings-metrics-table{{if @isToggleMultiple " toggle-multiple"}}"
+    @data={{this.data}}
+    @columns={{this.columns}}
+    @columnComponents={{hash
+      toggleCell=(component "pipeline/settings/metrics/table/cell/toggle")
+    }}
+    @themeInstance={{this.theme}}
+    @multipleSelect={{@isToggleMultiple}}
+    @selectedItems={{this.selectedRows}}
+    @onDisplayDataChanged={{this.onDisplayDataChanged}}
 
-  {{did-insert this.initialize}}
+    {{did-insert this.initialize}}
 
-  as |MT|
->
+    as |MT|
+  >
   <div class="toggle-jobs-container">
     {{#if @isToggleMultiple}}
       <BsButton
@@ -82,4 +84,5 @@
       </div>
     </MT.PaginationSimple>
   </div>
-</ModelsTable>
+  </ModelsTable>
+{{/if}}
