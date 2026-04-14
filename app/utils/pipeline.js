@@ -8,6 +8,9 @@ const getStateIcon = state => {
     case 'INACTIVE':
       icon = 'circle-xmark';
       break;
+    case 'DISABLED':
+      icon = 'ban';
+      break;
     default:
       icon = '';
       break;
@@ -36,6 +39,16 @@ const hasActivePipelines = pipelines => {
   return !!activePipeline;
 };
 
+const isDisabledPipeline = pipeline => {
+  return pipeline.state === 'DISABLED';
+};
+
+const hasDisabledPipelines = pipelines => {
+  const disabledPipeline = pipelines.find(p => isDisabledPipeline(p));
+
+  return !!disabledPipeline;
+};
+
 const hasSonarBadge = pipeline => {
   const sonar = pipeline.badges?.sonar;
 
@@ -54,5 +67,7 @@ export {
   hasInactivePipelines,
   isActivePipeline,
   hasActivePipelines,
+  isDisabledPipeline,
+  hasDisabledPipelines,
   hasSonarBadge
 };

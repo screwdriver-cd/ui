@@ -1,0 +1,63 @@
+<BsModal
+  id="toggle-pipeline-modal"
+  @onHide={{fn @closeModal}}
+  as |modal|
+>
+  <modal.header>
+    <div class="modal-title">{{this.modalTitle}}</div>
+  </modal.header>
+  <modal.body>
+    {{#if this.errorMessage}}
+      <InfoMessage
+        @message={{this.errorMessage}}
+        @type="warning"
+        @icon="triangle-exclamation"
+        @dismissible={{false}}
+      />
+    {{/if}}
+
+    <div id="toggle-pipeline-message">
+      {{#if this.isDisabled}}
+        <div>
+          Re-enabling this pipeline will allow new builds to be triggered again.
+        </div>
+        <br />
+        <div>
+          <b>Are you sure you want to enable this pipeline?</b>
+        </div>
+      {{else}}
+        <div class="toggle-pipeline-message-warning">
+          <FaIcon @icon="triangle-exclamation" />
+          <b>Disabling this pipeline will prevent new builds from being triggered.</b>
+        </div>
+        <br />
+        <div>
+          Existing builds will not be affected, but no new events will start new builds.
+        </div>
+        <br />
+        <div>
+          <b>Are you sure you want to disable this pipeline?</b>
+        </div>
+      {{/if}}
+    </div>
+
+    <label>
+      Reason
+      <Input
+        @value={{this.stateChangeMessage}}
+        autofocus="autofocus"
+        placeholder="Reason for the state change (optional)"
+      />
+    </label>
+  </modal.body>
+  <modal.footer>
+    <BsButton
+      id="toggle-pipeline-action"
+      @type="danger"
+      @defaultText={{this.actionButtonText}}
+      @pendingText={{this.pendingText}}
+      @onClick={{fn this.togglePipeline}}
+      disabled={{this.isSubmitting}}
+    />
+  </modal.footer>
+</BsModal>

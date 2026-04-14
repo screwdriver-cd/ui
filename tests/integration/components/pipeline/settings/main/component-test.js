@@ -26,7 +26,7 @@ module('Integration | Component | pipeline/settings/main', function (hooks) {
 
     await render(hbs`<Pipeline::Settings::Main />`);
 
-    assert.dom('.section').exists({ count: 9 });
+    assert.dom('.section').exists({ count: 10 });
     assert.dom('.pipeline-settings-danger-zone').exists();
     assert
       .dom('#pipeline-settings-main-visibility')
@@ -45,7 +45,7 @@ module('Integration | Component | pipeline/settings/main', function (hooks) {
 
     await render(hbs`<Pipeline::Settings::Main />`);
 
-    assert.dom('.section').exists({ count: 8 });
+    assert.dom('.section').exists({ count: 9 });
     assert.dom('.pipeline-settings-danger-zone').exists();
     assert.dom('.pipeline-settings-danger-zone').exists({ count: 1 });
   });
@@ -77,7 +77,7 @@ module('Integration | Component | pipeline/settings/main', function (hooks) {
 
     await render(hbs`<Pipeline::Settings::Main />`);
 
-    assert.dom('.section').exists({ count: 9 });
+    assert.dom('.section').exists({ count: 10 });
     assert.dom('.pipeline-settings-danger-zone').exists();
     assert
       .dom('#pipeline-settings-main-visibility')
@@ -97,11 +97,87 @@ module('Integration | Component | pipeline/settings/main', function (hooks) {
 
     await render(hbs`<Pipeline::Settings::Main />`);
 
-    assert.dom('.section').exists({ count: 9 });
+    assert.dom('.section').exists({ count: 10 });
     assert.dom('.pipeline-settings-danger-zone').exists();
     assert
       .dom('#pipeline-settings-main-visibility')
       .hasText('Visibility: Public');
     assert.dom('.pipeline-settings-danger-zone').exists({ count: 2 });
+  });
+
+  test('it shows pipeline state as ACTIVE when pipeline is enabled', async function (assert) {
+    const pipelineMock = {
+      scmRepo: { name: 'myOrg/myRepo' },
+      scmUri: 'github.com:12345:master',
+      admins: {},
+      state: 'ACTIVE'
+    };
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns(pipelineMock);
+
+    await render(hbs`<Pipeline::Settings::Main />`);
+
+    assert
+      .dom('#pipeline-settings-main-pipeline-state')
+      .hasText('State: ACTIVE');
+  });
+
+  test('it shows pipeline state as DISABLED when pipeline is disabled', async function (assert) {
+    const pipelineMock = {
+      scmRepo: { name: 'myOrg/myRepo' },
+      scmUri: 'github.com:12345:master',
+      admins: {},
+      state: 'DISABLED'
+    };
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns(pipelineMock);
+
+    await render(hbs`<Pipeline::Settings::Main />`);
+
+    assert
+      .dom('#pipeline-settings-main-pipeline-state')
+      .hasText('State: DISABLED');
+  });
+
+  test('it shows state changer info when stateChanger is present', async function (assert) {
+    const pipelineMock = {
+      scmRepo: { name: 'myOrg/myRepo' },
+      scmUri: 'github.com:12345:master',
+      admins: {},
+      state: 'DISABLED',
+      stateChanger: 'jdoe',
+      stateChangeTime: new Date().toISOString(),
+      stateChangeMessage: 'Disabling for maintenance'
+    };
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns(pipelineMock);
+
+    await render(hbs`<Pipeline::Settings::Main />`);
+
+    assert.dom('#pipeline-settings-main-state-changer').exists();
+    assert
+      .dom('#pipeline-settings-main-state-changer')
+      .containsText('Disabled');
+    assert.dom('#pipeline-settings-main-state-changer').containsText('jdoe');
+    assert.dom('#pipeline-settings-main-state-change-message').exists();
+    assert
+      .dom('#pipeline-settings-main-state-change-message')
+      .containsText('Disabling for maintenance');
+  });
+
+  test('it does not show state changer info when stateChanger is absent', async function (assert) {
+    const pipelineMock = {
+      scmRepo: { name: 'myOrg/myRepo' },
+      scmUri: 'github.com:12345:master',
+      admins: {},
+      state: 'ACTIVE'
+    };
+
+    sinon.stub(pipelinePageState, 'getPipeline').returns(pipelineMock);
+
+    await render(hbs`<Pipeline::Settings::Main />`);
+
+    assert.dom('#pipeline-settings-main-state-changer').doesNotExist();
+    assert.dom('#pipeline-settings-main-state-change-message').doesNotExist();
   });
 });

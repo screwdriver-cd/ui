@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import humanizeDuration from 'humanize-duration';
 
 import { hasSonarBadge } from 'screwdriver-ui/utils/pipeline';
 import { getCheckoutUrl } from 'screwdriver-ui/utils/git';
@@ -27,6 +28,8 @@ export default class PipelineSettingsMainComponent extends Component {
 
   @tracked isSetVisibilityModalOpen = false;
 
+  @tracked isTogglePipelineModalOpen = false;
+
   @tracked pipeline;
 
   @tracked syncType;
@@ -35,6 +38,23 @@ export default class PipelineSettingsMainComponent extends Component {
     super(...arguments);
 
     this.pipeline = this.pipelinePageState.getPipeline();
+  }
+
+  get isPipelineDisabled() {
+    return this.pipeline.state === 'DISABLED';
+  }
+
+  get stateChangeTimeWords() {
+    const { stateChangeTime } = this.pipeline;
+
+    if (!stateChangeTime) {
+      return null;
+    }
+
+    return `${humanizeDuration(Date.now() - new Date(stateChangeTime), {
+      round: true,
+      largest: 1
+    })} ago`;
   }
 
   get isPublic() {
@@ -211,6 +231,20 @@ export default class PipelineSettingsMainComponent extends Component {
 
     if (pipelineDeleted) {
       this.router.transitionTo('home');
+    }
+  }
+
+  @action
+  showTogglePipelineModal() {
+    this.isTogglePipelineModalOpen = true;
+  }
+
+  @action
+  async closeTogglePipelineModal(wasChanged) {
+    this.isTogglePipelineModalOpen = false;
+
+    if (wasChanged) {
+      this.pipeline = this.pipelinePageState.getPipeline();
     }
   }
 
