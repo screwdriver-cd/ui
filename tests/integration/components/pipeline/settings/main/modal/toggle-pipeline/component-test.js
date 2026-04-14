@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { render } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
@@ -60,9 +60,7 @@ module(
 
       assert.dom('.modal-title').hasText('Disable pipeline: myOrg/myRepo?');
       assert.dom('.toggle-pipeline-message-warning').exists({ count: 1 });
-      assert
-        .dom('#toggle-pipeline-action')
-        .hasAttribute('data-default-text', 'Disable');
+      assert.dom('#toggle-pipeline-action').hasText('Disable');
     });
 
     test('it renders enable confirmation when pipeline is disabled', async function (assert) {
@@ -83,9 +81,7 @@ module(
 
       assert.dom('.modal-title').hasText('Enable pipeline: myOrg/myRepo?');
       assert.dom('.toggle-pipeline-message-warning').doesNotExist();
-      assert
-        .dom('#toggle-pipeline-action')
-        .hasAttribute('data-default-text', 'Enable');
+      assert.dom('#toggle-pipeline-action').hasText('Enable');
     });
 
     test('it handles failed API call', async function (assert) {
@@ -108,9 +104,7 @@ module(
         />`
       );
 
-      await (
-        await import('@ember/test-helpers')
-      ).click('#toggle-pipeline-action');
+      await click('#toggle-pipeline-action');
 
       assert.dom('.alert').exists({ count: 1 });
     });
@@ -144,9 +138,7 @@ module(
         />`
       );
 
-      await (
-        await import('@ember/test-helpers')
-      ).click('#toggle-pipeline-action');
+      await click('#toggle-pipeline-action');
 
       assert.ok(
         setPipelineStub.calledWith(updatedPipeline),
@@ -183,9 +175,7 @@ module(
         />`
       );
 
-      await (
-        await import('@ember/test-helpers')
-      ).click('#toggle-pipeline-action');
+      await click('#toggle-pipeline-action');
 
       assert.ok(
         setPipelineStub.calledWith(updatedPipeline),
