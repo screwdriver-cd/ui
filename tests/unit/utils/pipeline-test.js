@@ -6,6 +6,8 @@ const {
   hasInactivePipelines,
   isActivePipeline,
   hasActivePipelines,
+  isDisabledPipeline,
+  hasDisabledPipelines,
   hasSonarBadge
 } = pipeline;
 
@@ -14,10 +16,13 @@ module('Unit | Utility | pipeline', function () {
   const ACTIVE_PIPELINE_2 = { id: 2, state: 'ACTIVE' };
   const INACTIVE_PIPELINE_1 = { id: 3, state: 'INACTIVE' };
   const INACTIVE_PIPELINE_2 = { id: 4, state: 'INACTIVE' };
+  const DISABLED_PIPELINE_1 = { id: 5, state: 'DISABLED' };
+  const DISABLED_PIPELINE_2 = { id: 6, state: 'DISABLED' };
 
   test('it gets the right fs class name for given state', assert => {
     assert.equal(getStateIcon('ACTIVE'), 'circle-check');
     assert.equal(getStateIcon('INACTIVE'), 'circle-xmark');
+    assert.equal(getStateIcon('DISABLED'), 'ban');
     assert.equal(getStateIcon('some_incorrect_state'), '');
     assert.equal(getStateIcon(''), '');
     assert.equal(getStateIcon(), '');
@@ -63,6 +68,27 @@ module('Unit | Utility | pipeline', function () {
     assert.notOk(hasActivePipelines([INACTIVE_PIPELINE_2]));
     assert.notOk(
       hasActivePipelines([INACTIVE_PIPELINE_1, INACTIVE_PIPELINE_2])
+    );
+  });
+
+  test('it checks if pipeline is disabled', assert => {
+    assert.ok(isDisabledPipeline(DISABLED_PIPELINE_1));
+    assert.ok(isDisabledPipeline(DISABLED_PIPELINE_2));
+
+    assert.notOk(isDisabledPipeline(ACTIVE_PIPELINE_1));
+    assert.notOk(isDisabledPipeline(INACTIVE_PIPELINE_1));
+  });
+
+  test('it checks if disabled pipeline exists', assert => {
+    assert.ok(hasDisabledPipelines([DISABLED_PIPELINE_1]));
+    assert.ok(hasDisabledPipelines([DISABLED_PIPELINE_1, DISABLED_PIPELINE_2]));
+    assert.ok(hasDisabledPipelines([ACTIVE_PIPELINE_1, DISABLED_PIPELINE_1]));
+
+    assert.notOk(hasDisabledPipelines([]));
+    assert.notOk(hasDisabledPipelines([ACTIVE_PIPELINE_1]));
+    assert.notOk(hasDisabledPipelines([INACTIVE_PIPELINE_1]));
+    assert.notOk(
+      hasDisabledPipelines([ACTIVE_PIPELINE_1, INACTIVE_PIPELINE_1])
     );
   });
 

@@ -181,6 +181,57 @@
   <div class="section">
     <div class="text-container">
       <div class="title">
+        {{#if this.isPipelineDisabled}}
+          Enable this pipeline
+        {{else}}
+          Disable this pipeline
+        {{/if}}
+      </div>
+      <div>
+        {{#if this.isPipelineDisabled}}
+          Re-enable the pipeline to allow new builds to be triggered.
+        {{else}}
+          Disabling a pipeline prevents new builds from being triggered.
+        {{/if}}
+      </div>
+      <div class="configuration">
+        <div id="pipeline-settings-main-pipeline-state">
+          State: <b>{{this.pipeline.state}}</b>
+        </div>
+        {{#if this.pipeline.stateChanger}}
+          <div id="pipeline-settings-main-state-changer">
+            {{if this.isPipelineDisabled "Disabled" "Enabled"}}
+            by <b>{{this.pipeline.stateChanger}}</b>
+            {{#if this.stateChangeTimeWords}}
+              <i>{{this.stateChangeTimeWords}}</i>
+            {{/if}}
+          </div>
+          {{#if this.pipeline.stateChangeMessage}}
+            <div id="pipeline-settings-main-state-change-message">
+              Reason: {{this.pipeline.stateChangeMessage}}
+            </div>
+          {{/if}}
+        {{/if}}
+      </div>
+    </div>
+    <BsButton
+      @type="primary"
+      @outline="true"
+      @onClick={{this.showTogglePipelineModal}}
+      title={{if this.isPipelineDisabled "Enable pipeline" "Disable pipeline"}}
+    >
+      <FaIcon @icon={{if this.isPipelineDisabled "play" "ban"}} />
+      {{#if this.isTogglePipelineModalOpen}}
+        <Pipeline::Settings::Main::Modal::TogglePipeline
+          @closeModal={{this.closeTogglePipelineModal}}
+        />
+      {{/if}}
+    </BsButton>
+  </div>
+
+  <div class="section">
+    <div class="text-container">
+      <div class="title">
         Admins
       </div>
       <div class="pipeline-admin-description">
