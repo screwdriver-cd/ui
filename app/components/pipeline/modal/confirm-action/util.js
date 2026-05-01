@@ -41,13 +41,21 @@ export function isParameterized(pipeline, defaultJobParameters, event) {
 /**
  * Build core post body for triggering an event
  * @param jobName {string} Name of the job to start from
+ * @param startAction {string} Name of start type (start or restart)
  * @param event {object} Event object in the shape returned by the API
  * @param sha {string} Commit SHA
  * @param prNum {number} Pull request number
  * @param parameters {object} Parameters to pass to the event
  * @returns {object}
  */
-export const buildPostBody = (jobName, event, sha, prNum, parameters) => {
+export const buildPostBody = (
+  jobName,
+  startAction,
+  event,
+  sha,
+  prNum,
+  parameters
+) => {
   const data = {
     startFrom: jobName
   };
@@ -63,6 +71,7 @@ export const buildPostBody = (jobName, event, sha, prNum, parameters) => {
   } else if (event) {
     data.parentEventId = event.id;
     data.groupEventId = event.groupEventId;
+    data.startAction = startAction;
   } else if (sha) {
     data.sha = sha;
   }
