@@ -170,6 +170,15 @@ export default class PipelineModalConfirmActionComponent extends Component {
         : this.args.event;
     const sha = this.args.event?.sha;
 
+    let startAction = 'START_FROM_LATEST_COMMIT';
+
+    if (event) {
+      startAction =
+        this.args.action === 'start'
+          ? 'START_FROM_EVENT'
+          : 'RESTART_FROM_EVENT';
+    }
+
     const data = {
       pipelineId: this.pipeline.id,
       causeMessage: this.isFrozen
@@ -177,7 +186,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
         : `Manually started by ${this.session.data.authenticated.username}`,
       ...buildPostBody(
         this.startFrom,
-        this.args.action,
+        startAction,
         event,
         sha,
         this.args.event?.prNum,

@@ -27,6 +27,7 @@ export default Model.extend(ModelReloaderMixin, {
   prNum: attr('number'),
   sha: attr('string'),
   startFrom: attr('string'),
+  startAction: attr('string'),
   status: attr('string', { defaultValue: 'UNKNOWN' }),
   type: attr('string'),
   workflow: attr(),

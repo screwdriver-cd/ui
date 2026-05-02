@@ -265,7 +265,7 @@ export default Controller.extend(ModelReloaderMixin, {
           parentBuildId,
           parentEventId,
           causeMessage,
-          startAction: 'start'
+          startAction: 'RESTART_FROM_BUILD'
         };
       } else {
         eventPayload = {
@@ -273,7 +273,7 @@ export default Controller.extend(ModelReloaderMixin, {
           startFrom,
           causeMessage,
           parentEventId,
-          startAction: 'restart'
+          startAction: 'START_FROM_EVENT'
         };
       }
 
