@@ -57,7 +57,8 @@ export const buildPostBody = (
   parameters
 ) => {
   const data = {
-    startFrom: jobName
+    startFrom: jobName,
+    startAction
   };
 
   if (prNum) {
@@ -71,7 +72,6 @@ export const buildPostBody = (
   } else if (event) {
     data.parentEventId = event.id;
     data.groupEventId = event.groupEventId;
-    data.startAction = startAction;
   } else if (sha) {
     data.sha = sha;
   }

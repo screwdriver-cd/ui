@@ -122,7 +122,8 @@ module('Unit | Controller | pipeline/jobs/index', function (hooks) {
       startFrom: 'name',
       parentBuildId: 57,
       parentEventId: 10,
-      causeMessage: 'Manually started by apple'
+      causeMessage: 'Manually started by apple',
+      startAction: 'RESTART_FROM_BUILD'
     });
   });
 
