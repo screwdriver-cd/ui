@@ -93,7 +93,7 @@ export default class PipelineEventCardComponent extends Component {
 
     this.virtualJobIds = new Set();
     this.pipelinePageState.getJobs().forEach(job => {
-      if (job.permutations[0].annotations['screwdriver.cd/virtualJob']) {
+      if (job.permutations[0].annotations?.['screwdriver.cd/virtualJob']) {
         this.virtualJobIds.add(job.id);
       }
     });
