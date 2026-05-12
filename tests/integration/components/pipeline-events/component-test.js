@@ -112,7 +112,8 @@ module('Integration | Component | pipeline events', function (hooks) {
     assert.deepEqual(payload, {
       pipelineId: '1234',
       startFrom: '~commit',
-      causeMessage: 'Manually started by apple'
+      causeMessage: 'Manually started by apple',
+      startAction: 'START_FROM_LATEST_COMMIT'
     });
   });
 
@@ -201,7 +202,8 @@ module('Integration | Component | pipeline events', function (hooks) {
       buildId: 123,
       parentBuildId: 345,
       parentEventId: 1,
-      causeMessage: 'Manually started by apple'
+      causeMessage: 'Manually started by apple',
+      startAction: 'RESTART_FROM_BUILD'
     });
   });
 
@@ -301,7 +303,8 @@ module('Integration | Component | pipeline events', function (hooks) {
       buildId: 123,
       parentBuildId: 345,
       parentEventId: 1,
-      causeMessage: 'Manually started by apple'
+      causeMessage: 'Manually started by apple',
+      startAction: 'RESTART_FROM_BUILD'
     });
   });
 

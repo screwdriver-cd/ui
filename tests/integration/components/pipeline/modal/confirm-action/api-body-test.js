@@ -98,7 +98,8 @@ module(
         shuttleStub.calledWith('post', '/events', {
           pipelineId,
           causeMessage: `Manually started by ${username}`,
-          startFrom: '~commit'
+          startFrom: '~commit',
+          startAction: 'START_FROM_LATEST_COMMIT'
         })
       );
     });
@@ -124,7 +125,8 @@ module(
           pipelineId,
           causeMessage: `Manually started by ${username}`,
           startFrom: '~commit',
-          meta: { parameters }
+          meta: { parameters },
+          startAction: 'START_FROM_LATEST_COMMIT'
         })
       );
     });
@@ -154,7 +156,9 @@ module(
           pipelineId,
           causeMessage: `Manually started by ${username}`,
           startFrom: job.name,
-          sha: event.sha
+          parentEventId: event.id,
+          groupEventId: event.groupEventId,
+          startAction: 'START_FROM_EVENT'
         })
       );
     });
@@ -184,8 +188,10 @@ module(
           pipelineId,
           causeMessage: `Manually started by ${username}`,
           startFrom: job.name,
-          sha: event.sha,
-          meta: { parameters }
+          parentEventId: event.id,
+          groupEventId: event.groupEventId,
+          meta: { parameters },
+          startAction: 'START_FROM_EVENT'
         })
       );
     });
@@ -209,14 +215,14 @@ module(
         />`
       );
       await click('#submit-action');
-
       assert.true(
         shuttleStub.calledWith('post', '/events', {
           pipelineId,
           causeMessage: `Manually started by ${username}`,
           startFrom: job.name,
           parentEventId: event.id,
-          groupEventId: event.groupEventId
+          groupEventId: event.groupEventId,
+          startAction: 'RESTART_FROM_EVENT'
         })
       );
     });
@@ -248,7 +254,8 @@ module(
           startFrom: job.name,
           parentEventId: event.id,
           groupEventId: event.groupEventId,
-          meta: { parameters }
+          meta: { parameters },
+          startAction: 'RESTART_FROM_EVENT'
         })
       );
     });
@@ -280,7 +287,8 @@ module(
           startFrom: '~pr',
           prNum,
           parentEventId: event.id,
-          groupEventId: event.groupEventId
+          groupEventId: event.groupEventId,
+          startAction: 'START_FROM_EVENT'
         })
       );
     });
@@ -313,7 +321,8 @@ module(
           prNum,
           parentEventId: event.id,
           groupEventId: event.groupEventId,
-          meta: { parameters }
+          meta: { parameters },
+          startAction: 'START_FROM_EVENT'
         })
       );
     });
@@ -347,7 +356,8 @@ module(
           startFrom: `PR-${prNum}:${job.name}`,
           prNum,
           parentEventId: event.id,
-          groupEventId: event.groupEventId
+          groupEventId: event.groupEventId,
+          startAction: 'START_FROM_EVENT'
         })
       );
     });
@@ -382,7 +392,8 @@ module(
           prNum,
           parentEventId: event.id,
           groupEventId: event.groupEventId,
-          meta: { parameters }
+          meta: { parameters },
+          startAction: 'START_FROM_EVENT'
         })
       );
     });
@@ -416,7 +427,8 @@ module(
           startFrom: `PR-${prNum}:${job.name}`,
           prNum,
           parentEventId: event.id,
-          groupEventId: event.groupEventId
+          groupEventId: event.groupEventId,
+          startAction: 'RESTART_FROM_EVENT'
         })
       );
     });
@@ -451,7 +463,8 @@ module(
           prNum,
           parentEventId: event.id,
           groupEventId: event.groupEventId,
-          meta: { parameters }
+          meta: { parameters },
+          startAction: 'RESTART_FROM_EVENT'
         })
       );
     });

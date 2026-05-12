@@ -1,4 +1,4 @@
-FROM openresty/openresty:1.21.4.1-2-alpine
+FROM openresty/openresty:1.29.2.3-alpine
 COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 WORKDIR /usr/local/openresty/nginx/html
 RUN set -x \
