@@ -1,6 +1,10 @@
 import { get, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
+import {
+  isDisabledPipeline,
+  getDisabledPipelineMessage
+} from 'screwdriver-ui/utils/pipeline';
 
 export default Component.extend({
   showCollectionModal: false,
@@ -12,6 +16,19 @@ export default Component.extend({
   addCollectionError: null,
   addCollectionSuccess: null,
   dropdownText: 'Add to collection',
+  isDisabledPipeline: computed('pipeline.state', {
+    get() {
+      return isDisabledPipeline(this.pipeline);
+    }
+  }),
+  disabledPipelineMessage: computed(
+    'pipeline.{stateChanger,stateChangeTime,stateChangeMessage}',
+    {
+      get() {
+        return getDisabledPipelineMessage(this.pipeline);
+      }
+    }
+  ),
   sonarBadgeDescription: computed('sonarBadgeName', {
     get() {
       let sonarBadgeDescription = 'SonarQube project';

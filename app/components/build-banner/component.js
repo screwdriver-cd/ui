@@ -175,7 +175,10 @@ export default Component.extend({
     {
       get() {
         if (this.buildAction === 'Restart') {
-          if (this.pipelineState === 'INACTIVE') {
+          if (
+            this.pipelineState === 'INACTIVE' ||
+            this.pipelineState === 'DISABLED'
+          ) {
             this.set('isButtonDisabledLoaded', true);
 
             return true;

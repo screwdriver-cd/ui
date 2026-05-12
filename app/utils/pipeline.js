@@ -1,3 +1,5 @@
+import humanizeDuration from 'humanize-duration';
+
 const getStateIcon = state => {
   let icon;
 
@@ -49,6 +51,45 @@ const hasDisabledPipelines = pipelines => {
   return !!disabledPipeline;
 };
 
+const getDisabledPipelineMessage = pipeline => {
+  const { stateChanger, stateChangeTime, stateChangeMessage } = pipeline;
+
+  let message = 'This pipeline is disabled and new events will not be started.';
+
+  let disabledBy = '';
+
+  if (stateChanger) {
+    disabledBy = `Disabled by ${stateChanger}`;
+  }
+
+  if (stateChangeTime) {
+    const timeAgo = `${humanizeDuration(
+      Date.now() - new Date(stateChangeTime),
+      { round: true, largest: 1 }
+    )} ago`;
+
+    disabledBy = disabledBy
+      ? `${disabledBy} ${timeAgo}`
+      : `Disabled ${timeAgo}`;
+  }
+
+  const contextParts = [];
+
+  if (disabledBy) {
+    contextParts.push(disabledBy);
+  }
+
+  if (stateChangeMessage) {
+    contextParts.push(`Reason: ${stateChangeMessage}`);
+  }
+
+  if (contextParts.length) {
+    message += ` ${contextParts.join('. ')}.`;
+  }
+
+  return message;
+};
+
 const hasSonarBadge = pipeline => {
   const sonar = pipeline.badges?.sonar;
 
@@ -69,5 +110,6 @@ export {
   hasActivePipelines,
   isDisabledPipeline,
   hasDisabledPipelines,
+  getDisabledPipelineMessage,
   hasSonarBadge
 };
