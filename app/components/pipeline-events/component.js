@@ -93,10 +93,13 @@ export async function startDetachedBuild(job, options = {}, stage) {
     startFrom = `PR-${prNum}:${startFrom}`;
   }
 
+  const startAction = buildId ? 'RESTART_FROM_BUILD' : 'START_FROM_EVENT';
+
   const eventPayload = {
     buildId,
     pipelineId,
     startFrom,
+    startAction,
     parentBuildId,
     parentEventId,
     groupEventId,
@@ -626,7 +629,8 @@ export default Component.extend(ModelReloaderMixin, {
       const eventPayload = {
         pipelineId,
         startFrom: '~commit',
-        causeMessage: `Manually started by ${user}`
+        causeMessage: `Manually started by ${user}`,
+        startAction: 'START_FROM_LATEST_COMMIT'
       };
 
       if (parameters) {

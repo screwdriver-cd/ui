@@ -135,7 +135,8 @@ export default Controller.extend({
       const causeMessage = `Manually started by ${user}`;
       const newEvent = this.store.createRecord('event', {
         buildId,
-        causeMessage
+        causeMessage,
+        startAction: 'RESTART_FROM_BUILD'
       });
 
       return newEvent

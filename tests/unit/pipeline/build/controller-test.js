@@ -107,7 +107,8 @@ module('Unit | Controller | pipeline/build', function (hooks) {
 
     assert.deepEqual(payload, {
       buildId: 123,
-      causeMessage: 'Manually started by apple'
+      causeMessage: 'Manually started by apple',
+      startAction: 'RESTART_FROM_BUILD'
     });
   });
 
@@ -159,7 +160,8 @@ module('Unit | Controller | pipeline/build', function (hooks) {
 
     assert.deepEqual(payload, {
       buildId: 123,
-      causeMessage: 'Manually started by apple'
+      causeMessage: 'Manually started by apple',
+      startAction: 'RESTART_FROM_BUILD'
     });
     assert.notOk(controller.isShowingModal);
     assert.ok(invalidateStub.called);

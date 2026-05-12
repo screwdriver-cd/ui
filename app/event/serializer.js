@@ -91,6 +91,10 @@ export default RESTSerializer.extend({
       data.meta = snapshot.attr('meta');
     }
 
+    if (snapshot.attr('startAction')) {
+      data.startAction = snapshot.attr('startAction');
+    }
+
     return assign(hash, data);
   }
 });

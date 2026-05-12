@@ -59,9 +59,20 @@ module('Unit | Component | pipeline/modal/confirm-action/util', function () {
   test('buildPostBody sets correct values for new event', function (assert) {
     const jobName = '~commit';
 
-    assert.deepEqual(buildPostBody(jobName, null, null, null, null), {
-      startFrom: jobName
-    });
+    assert.deepEqual(
+      buildPostBody(
+        jobName,
+        'START_FROM_LATEST_COMMIT',
+        null,
+        null,
+        null,
+        null
+      ),
+      {
+        startFrom: jobName,
+        startAction: 'START_FROM_LATEST_COMMIT'
+      }
+    );
   });
 
   test('buildPostBody sets correct values for new event in event group', function (assert) {
@@ -71,21 +82,29 @@ module('Unit | Component | pipeline/modal/confirm-action/util', function () {
       groupEventId: 2
     };
 
-    assert.deepEqual(buildPostBody(jobName, event, null, null, null), {
-      startFrom: jobName,
-      parentEventId: event.id,
-      groupEventId: event.groupEventId
-    });
+    assert.deepEqual(
+      buildPostBody(jobName, 'START_FROM_EVENT', event, null, null, null),
+      {
+        startFrom: jobName,
+        startAction: 'START_FROM_EVENT',
+        parentEventId: event.id,
+        groupEventId: event.groupEventId
+      }
+    );
   });
 
   test('buildPostBody sets correct values for new event from specific sha', function (assert) {
     const jobName = '~commit';
     const sha = 'abc123';
 
-    assert.deepEqual(buildPostBody(jobName, null, sha), {
-      startFrom: jobName,
-      sha
-    });
+    assert.deepEqual(
+      buildPostBody(jobName, 'START_FROM_LATEST_COMMIT', null, sha),
+      {
+        startFrom: jobName,
+        startAction: 'START_FROM_LATEST_COMMIT',
+        sha
+      }
+    );
   });
 
   test('buildPostBody sets correct values for new PR event', function (assert) {
@@ -96,12 +115,16 @@ module('Unit | Component | pipeline/modal/confirm-action/util', function () {
     };
     const prNum = 7;
 
-    assert.deepEqual(buildPostBody(jobName, event, null, prNum), {
-      prNum,
-      startFrom: jobName,
-      parentEventId: event.id,
-      groupEventId: event.groupEventId
-    });
+    assert.deepEqual(
+      buildPostBody(jobName, 'START_FROM_EVENT', event, null, prNum),
+      {
+        prNum,
+        startFrom: jobName,
+        startAction: 'START_FROM_EVENT',
+        parentEventId: event.id,
+        groupEventId: event.groupEventId
+      }
+    );
   });
 
   test('buildPostBody sets correct values for new PR event from specified job', function (assert) {
@@ -112,12 +135,16 @@ module('Unit | Component | pipeline/modal/confirm-action/util', function () {
     };
     const prNum = 7;
 
-    assert.deepEqual(buildPostBody(jobName, event, null, prNum), {
-      prNum,
-      startFrom: `PR-${prNum}:${jobName}`,
-      parentEventId: event.id,
-      groupEventId: event.groupEventId
-    });
+    assert.deepEqual(
+      buildPostBody(jobName, 'START_FROM_EVENT', event, null, prNum),
+      {
+        prNum,
+        startFrom: `PR-${prNum}:${jobName}`,
+        startAction: 'START_FROM_EVENT',
+        parentEventId: event.id,
+        groupEventId: event.groupEventId
+      }
+    );
   });
 
   test('buildPostBody sets correct values for new PR event from specified job with PR prefix', function (assert) {
@@ -128,23 +155,38 @@ module('Unit | Component | pipeline/modal/confirm-action/util', function () {
       groupEventId: 10
     };
 
-    assert.deepEqual(buildPostBody(jobName, event, null, prNum), {
-      prNum,
-      startFrom: jobName,
-      parentEventId: event.id,
-      groupEventId: event.groupEventId
-    });
+    assert.deepEqual(
+      buildPostBody(jobName, 'START_FROM_EVENT', event, null, prNum),
+      {
+        prNum,
+        startFrom: jobName,
+        startAction: 'START_FROM_EVENT',
+        parentEventId: event.id,
+        groupEventId: event.groupEventId
+      }
+    );
   });
 
   test('buildPostBody sets correct values for new event with parameters', function (assert) {
     const jobName = '~commit';
     const parameters = { param: 4 };
 
-    assert.deepEqual(buildPostBody(jobName, null, null, null, parameters), {
-      startFrom: jobName,
-      meta: {
+    assert.deepEqual(
+      buildPostBody(
+        jobName,
+        'START_FROM_LATEST_COMMIT',
+        null,
+        null,
+        null,
         parameters
+      ),
+      {
+        startFrom: jobName,
+        startAction: 'START_FROM_LATEST_COMMIT',
+        meta: {
+          parameters
+        }
       }
-    });
+    );
   });
 });

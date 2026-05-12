@@ -243,15 +243,14 @@ export default Controller.extend(ModelReloaderMixin, {
 
       let eventPayload;
 
+      const buildQueryConfig = { jobId };
+      const build = await this.store.queryRecord('build', buildQueryConfig);
+      const event = await this.store.findRecord('event', build.eventId);
+      const parentEventId = event.id;
+
       if (buildState === 'RESTART') {
-        const buildQueryConfig = { jobId };
-
-        const build = await this.store.queryRecord('build', buildQueryConfig);
-        const event = await this.store.findRecord('event', build.eventId);
-
         const buildId = build.id;
         const { parentBuildId } = build;
-        const parentEventId = event.id;
         const { prNum } = event;
 
         if (prNum) {
@@ -265,13 +264,16 @@ export default Controller.extend(ModelReloaderMixin, {
           startFrom,
           parentBuildId,
           parentEventId,
-          causeMessage
+          causeMessage,
+          startAction: 'RESTART_FROM_BUILD'
         };
       } else {
         eventPayload = {
           pipelineId,
           startFrom,
-          causeMessage
+          causeMessage,
+          parentEventId,
+          startAction: 'START_FROM_EVENT'
         };
       }
 

@@ -163,10 +163,21 @@ export default class PipelineModalConfirmActionComponent extends Component {
     this.isNotFoundError = false;
 
     const event =
-      this.args.action === 'start' && !this.pipelinePageState.getIsPr()
+      this.args.action === 'start' &&
+      !this.args.job &&
+      !this.pipelinePageState.getIsPr()
         ? null
         : this.args.event;
     const sha = this.args.event?.sha;
+
+    let startAction = 'START_FROM_LATEST_COMMIT';
+
+    if (event) {
+      startAction =
+        this.args.action === 'start'
+          ? 'START_FROM_EVENT'
+          : 'RESTART_FROM_EVENT';
+    }
 
     const data = {
       pipelineId: this.pipeline.id,
@@ -175,6 +186,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
         : `Manually started by ${this.session.data.authenticated.username}`,
       ...buildPostBody(
         this.startFrom,
+        startAction,
         event,
         sha,
         this.args.event?.prNum,
