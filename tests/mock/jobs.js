@@ -9,7 +9,7 @@ export const mockJobs = [
     pipelineId: PIPELINE_ID,
     state: 'ENABLED',
     archived: false,
-    permutations: [{}]
+    permutations: [{ annotations: {} }]
   },
   {
     id: 12346,
@@ -17,7 +17,7 @@ export const mockJobs = [
     pipelineId: PIPELINE_ID,
     state: 'ENABLED',
     archived: false,
-    permutations: [{}]
+    permutations: [{ annotations: {} }]
   },
   {
     id: 12347,
@@ -25,7 +25,7 @@ export const mockJobs = [
     pipelineId: PIPELINE_ID,
     state: 'ENABLED',
     archived: false,
-    permutations: [{}]
+    permutations: [{ annotations: {} }]
   },
   {
     id: 12348,
@@ -33,7 +33,7 @@ export const mockJobs = [
     pipelineId: PIPELINE_ID,
     state: 'ENABLED',
     archived: false,
-    permutations: [{}]
+    permutations: [{ annotations: {} }]
   },
   {
     id: 12349,
@@ -41,6 +41,6 @@ export const mockJobs = [
     pipelineId: PIPELINE_ID,
     state: 'ENABLED',
     archived: false,
-    permutations: [{}]
+    permutations: [{ annotations: {} }]
   }
 ];

@@ -1,6 +1,20 @@
 <div id="pipeline-header"
   {{did-update this.updatePipeline @pipeline}}
 >
+  {{#if this.isInactivePipeline}}
+    <InfoMessage
+        @message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration."
+        @type="info"
+        @icon="triangle-exclamation"
+      />
+  {{/if}}
+  {{#if this.isDisabledPipeline}}
+    <InfoMessage
+        @message={{this.disabledPipelineMessage}}
+        @type="warning"
+        @icon="ban"
+      />
+  {{/if}}
   <div class="header-main">
     <LinkTo
       id="pipeline-link"
@@ -107,12 +121,5 @@
     <div class="pipeline-description">
       {{this.pipelineDescription}}
     </div>
-  {{/if}}
-  {{#if this.isInactivePipeline}}
-    <InfoMessage
-        @message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration."
-        @type="info"
-        @icon="triangle-exclamation"
-      />
   {{/if}}
 </div>

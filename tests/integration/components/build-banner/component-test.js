@@ -933,4 +933,31 @@ module('Integration | Component | build banner', function (hooks) {
         'https://app.saucelabs.com/builds/vdc/aabbccddeeffggIsNotAReadBuildID'
       );
   });
+
+  test('it renders a disabled restart button when pipeline is disabled', async function (assert) {
+    assert.expect(2);
+
+    this.set('buildStepsMock', buildStepsMock);
+    this.set('eventMock', prEventMock);
+    this.set('prEvents', new EmberPromise(resolves => resolves([])));
+    this.set('isButtonDisabledLoaded', true);
+    this.set('jobDisabled', new EmberPromise(resolves => resolves(false)));
+
+    await render(hbs`<BuildBanner
+      @buildContainer="node:6"
+      @duration="5 seconds"
+      @buildStatus="ABORTED"
+      @buildStart="2016-11-04T20:09:41.238Z"
+      @buildSteps={{this.buildStepsMock}}
+      @jobName="PR-671"
+      @jobDisabled={{this.jobDisabled}}
+      @pipelineState="DISABLED"
+      @isAuthenticated={{true}}
+      @event={{this.eventMock}}
+      @prEvents={{this.prEvents}}
+    />`);
+
+    assert.dom('button').hasText('Restart');
+    assert.dom('button').hasAttribute('disabled');
+  });
 });

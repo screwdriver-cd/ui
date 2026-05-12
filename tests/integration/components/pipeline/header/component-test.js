@@ -188,4 +188,38 @@ module('Integration | Component | pipeline/header', function (hooks) {
       .hasAttribute('href', `/v2/pipelines/${newPipelineId}`);
     assert.dom('#repo-pipelines .branch').hasText(newBranch);
   });
+
+  test('it renders a warning banner when pipeline is disabled', async function (assert) {
+    pipeline.state = 'DISABLED';
+    pipeline.stateChanger = 'alice';
+    pipeline.stateChangeMessage = 'Migrating to v2';
+
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
+
+    assert.dom('.alert-warning').exists({ count: 1 });
+    assert.dom('.alert-warning').includesText('disabled');
+    assert.dom('.alert-warning').includesText('alice');
+    assert.dom('.alert-warning').includesText('Migrating to v2');
+  });
+
+  test('it renders default disabled banner message when optional fields are absent', async function (assert) {
+    pipeline.state = 'DISABLED';
+
+    await render(
+      hbs`<Pipeline::Header
+        @pipeline={{this.pipeline}}
+      />`
+    );
+
+    assert.dom('.alert-warning').exists({ count: 1 });
+    assert
+      .dom('.alert-warning')
+      .includesText(
+        'This pipeline is disabled and new events will not be started.'
+      );
+  });
 });

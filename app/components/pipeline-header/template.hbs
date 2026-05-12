@@ -1,3 +1,12 @@
+{{#if this.isDisabledPipeline}}
+  <div class="pipeline-header-message-container">
+    <InfoMessage
+      @message={{this.disabledPipelineMessage}}
+      @type="warning"
+      @icon="ban"
+    />
+  </div>
+{{/if}}
 {{#if this.addCollectionError}}
   <div class="pipeline-header-message-container">
     <InfoMessage
