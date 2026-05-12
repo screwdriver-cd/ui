@@ -105,8 +105,6 @@ export default class PipelineHeaderComponent extends Component {
   }
 
   get isDisabledPipeline() {
-    console.log('check if disbaled', isDisabledPipeline(this.pipeline));
-
     return isDisabledPipeline(this.pipeline);
   }
 
