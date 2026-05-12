@@ -6,7 +6,9 @@ import { htmlSafe } from '@ember/template';
 
 import {
   hasSonarBadge,
-  isInactivePipeline
+  isInactivePipeline,
+  isDisabledPipeline,
+  getDisabledPipelineMessage
 } from 'screwdriver-ui/utils/pipeline';
 
 export default class PipelineHeaderComponent extends Component {
@@ -100,6 +102,16 @@ export default class PipelineHeaderComponent extends Component {
 
   get isInactivePipeline() {
     return isInactivePipeline(this.pipeline);
+  }
+
+  get isDisabledPipeline() {
+    console.log('check if disbaled', isDisabledPipeline(this.pipeline));
+
+    return isDisabledPipeline(this.pipeline);
+  }
+
+  get disabledPipelineMessage() {
+    return getDisabledPipelineMessage(this.pipeline);
   }
 
   @action

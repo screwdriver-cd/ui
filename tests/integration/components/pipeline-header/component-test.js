@@ -200,4 +200,58 @@ module('Integration | Component | pipeline header', function (hooks) {
       .dom('div.header-items-container .header-item:nth-child(4)')
       .hasText('Parent Pipeline');
   });
+
+  test('it renders a warning banner when pipeline is disabled', async function (assert) {
+    const pipelineMock = EmberObject.create({
+      appId: 'batman/batmobile',
+      hubUrl: 'http://example.com/batman/batmobile',
+      branch: 'master',
+      scmContext: 'github:github.com',
+      state: 'DISABLED',
+      stateChanger: 'alice',
+      stateChangeMessage: 'Migrating to v2'
+    });
+
+    injectScmServiceStub(this);
+
+    this.set('pipelineMock', pipelineMock);
+    await render(hbs`<PipelineHeader @pipeline={{this.pipelineMock}} />`);
+
+    assert
+      .dom('.pipeline-header-message-container .alert-warning')
+      .exists({ count: 1 });
+    assert
+      .dom('.pipeline-header-message-container .alert-warning')
+      .includesText('disabled');
+    assert
+      .dom('.pipeline-header-message-container .alert-warning')
+      .includesText('alice');
+    assert
+      .dom('.pipeline-header-message-container .alert-warning')
+      .includesText('Migrating to v2');
+  });
+
+  test('it renders default disabled banner message when optional fields are absent', async function (assert) {
+    const pipelineMock = EmberObject.create({
+      appId: 'batman/batmobile',
+      hubUrl: 'http://example.com/batman/batmobile',
+      branch: 'master',
+      scmContext: 'github:github.com',
+      state: 'DISABLED'
+    });
+
+    injectScmServiceStub(this);
+
+    this.set('pipelineMock', pipelineMock);
+    await render(hbs`<PipelineHeader @pipeline={{this.pipelineMock}} />`);
+
+    assert
+      .dom('.pipeline-header-message-container .alert-warning')
+      .exists({ count: 1 });
+    assert
+      .dom('.pipeline-header-message-container .alert-warning')
+      .includesText(
+        'This pipeline is disabled and new events will not be started.'
+      );
+  });
 });

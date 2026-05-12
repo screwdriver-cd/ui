@@ -60,6 +60,7 @@ export default class PipelineSettingsMainModalTogglePipelineComponent extends Co
       .fetchFromApi('put', `/pipelines/${this.pipeline.id}`, payload)
       .then(pipeline => {
         this.pipelinePageState.setPipeline(pipeline);
+        this.pipelinePageState.forceReloadPipelineHeader();
         this.args.closeModal(true);
       })
       .catch(err => {
