@@ -142,6 +142,25 @@ module(
         );
     });
 
+    test('it does not render warning message without an event', async function (assert) {
+      this.setProperties({
+        action: 'start',
+        event: undefined,
+        job,
+        closeModal: () => {}
+      });
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
+            @event={{this.event}}
+            @job={{this.job}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      assert.dom('#not-latest-warning').doesNotExist();
+    });
+
     test('it does not render warning message for pr commit event', async function (assert) {
       isPr = true;
 

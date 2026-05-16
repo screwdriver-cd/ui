@@ -101,6 +101,9 @@ export default class PipelineModalConfirmActionComponent extends Component {
     if (this.startFrom === '~commit' || this.startFrom === '~pr') {
       return false;
     }
+    if (!this.args.event) {
+      return false;
+    }
     if (!this.pipelinePageState.getIsPr() && !this.isLatestCommitEvent) {
       return true;
     }
