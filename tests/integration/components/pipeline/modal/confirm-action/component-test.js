@@ -38,6 +38,7 @@ module(
       sinon.stub(pipelinePageState, 'getIsPr').returns(isPr);
 
       event = {
+        id: 123,
         commit: { message: 'commit message', url: 'http://foo.com' },
         sha: 'deadbeef0123456789'
       };
@@ -69,6 +70,7 @@ module(
       assert
         .dom('#confirm-action-commit-link')
         .hasAttribute('href', 'http://foo.com');
+      assert.dom('#confirm-action-parent-event').hasText('Parent event: None');
     });
 
     test('it renders restart action', async function (assert) {
@@ -90,6 +92,7 @@ module(
       );
 
       assert.dom('.modal-title').hasText('Are you sure you want to restart?');
+      assert.dom('#confirm-action-parent-event').hasText('Parent event: 123');
     });
 
     test('it renders stage name if set', async function (assert) {
@@ -159,6 +162,7 @@ module(
       );
 
       assert.dom('#not-latest-warning').doesNotExist();
+      assert.dom('#confirm-action-parent-event').doesNotExist();
     });
 
     test('it does not render warning message for pr commit event', async function (assert) {

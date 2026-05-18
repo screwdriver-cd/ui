@@ -9,17 +9,12 @@ import {
   getStartDate,
   getSuccessCount,
   getTruncatedMessage,
-  getTruncatedSha,
   getWarningCount,
   isCommitterDifferent,
   isExternalTrigger
 } from 'screwdriver-ui/components/pipeline/event/card/util';
 
 module('Unit | Component | pipeline/event/card/util', function () {
-  test('getTruncatedSha returns correct value', function (assert) {
-    assert.equal(getTruncatedSha({ sha: 'deadbeef12345' }), 'deadbee');
-  });
-
   test('getTruncatedMessage returns correct value', function (assert) {
     assert.equal(
       getTruncatedMessage({ commit: { message: 'Super duper string' } }, 5),
