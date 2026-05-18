@@ -43,6 +43,29 @@
         color: colors.$sd-light-gray;
         padding-top: 2.5rem;
       }
+
+      .no-parent-event {
+        display: inline-block;
+        background-color: colors.$sd-warn-bg;
+        color: colors.$sd-white !important;
+        border-radius: 3px;
+        padding: 3px 5px;
+      }
+
+      .danger-tooltip {
+        .tooltip-inner {
+          background: colors.$sd-white;
+          color: colors.$sd-warn-bg;
+
+          border: 1px solid colors.$sd-warn-bg;
+          border-radius: 6px;
+
+          font-weight: 600;
+        }
+        .arrow::before {
+          border-right-color: colors.$sd-warn-bg;
+        }
+      }
     }
   }
 }

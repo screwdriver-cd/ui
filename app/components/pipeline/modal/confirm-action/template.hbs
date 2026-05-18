@@ -53,6 +53,23 @@
           #{{this.truncatedSha}}
         </a>
       </div>
+      <div id="confirm-action-parent-event">
+        Parent event:
+        {{#if (eq @action "restart")}}
+          <code>{{@event.id}}</code>
+        {{else}}
+          <span class="no-parent-event">None</span>
+          <BsTooltip
+            @placement="right"
+            @triggerElement=".no-parent-event"
+            @renderInPlace={{true}}
+            @delayHide="100"
+            class="danger-tooltip"
+          >
+            This run will NOT inherit metadata or build statuses from parent event.
+          </BsTooltip>
+        {{/if}}
+      </div>
     {{/if}}
 
     {{#if this.isFrozen}}

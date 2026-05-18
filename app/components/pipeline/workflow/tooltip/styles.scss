@@ -44,5 +44,17 @@
     hr {
       width: 100%;
     }
+
+    #run-job-label {
+      padding-bottom: 0;
+    }
+
+    ul#run-job-block {
+      padding-left: 1em;
+
+      li::marker {
+        content: '';
+      }
+    }
   }
 }

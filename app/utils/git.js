@@ -41,4 +41,14 @@ function getCheckoutUrl(config) {
   return checkoutUrl;
 }
 
-export { parse, getCheckoutUrl };
+/**
+ * Get a truncated commit sha.
+ *   e.g. abc1234
+ * @param {String} sha commit sha
+ * @returns {String}   Returns a truncated commit sha.
+ */
+function getTruncatedSha(sha) {
+  return sha.slice(0, 7);
+}
+
+export { parse, getCheckoutUrl, getTruncatedSha };
