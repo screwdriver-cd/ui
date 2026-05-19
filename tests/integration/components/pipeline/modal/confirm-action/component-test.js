@@ -70,7 +70,9 @@ module(
       assert
         .dom('#confirm-action-commit-link')
         .hasAttribute('href', 'http://foo.com');
-      assert.dom('#confirm-action-parent-event').hasText('Parent event: None');
+      assert
+        .dom('#confirm-action-parent-event')
+        .hasText('Parent event ID: None');
 
       await triggerEvent('.no-parent-event', 'mouseenter');
       assert
@@ -99,7 +101,9 @@ module(
       );
 
       assert.dom('.modal-title').hasText('Are you sure you want to restart?');
-      assert.dom('#confirm-action-parent-event').hasText('Parent event: 123');
+      assert
+        .dom('#confirm-action-parent-event')
+        .hasText('Parent event ID: 123');
     });
 
     test('it renders parent event warning without an event', async function (assert) {
@@ -118,7 +122,9 @@ module(
         />`
       );
 
-      assert.dom('#confirm-action-parent-event').hasText('Parent event: None');
+      assert
+        .dom('#confirm-action-parent-event')
+        .hasText('Parent event ID: None');
     });
 
     test('it renders stage name if set', async function (assert) {
