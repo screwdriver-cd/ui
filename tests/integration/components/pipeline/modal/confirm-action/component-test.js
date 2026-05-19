@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { click, fillIn, render } from '@ember/test-helpers';
+import { click, fillIn, render, triggerEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
@@ -71,6 +71,13 @@ module(
         .dom('#confirm-action-commit-link')
         .hasAttribute('href', 'http://foo.com');
       assert.dom('#confirm-action-parent-event').hasText('Parent event: None');
+
+      await triggerEvent('.no-parent-event', 'mouseenter');
+      assert
+        .dom('.tooltip')
+        .hasText(
+          'This run will NOT inherit metadata or build statuses from parent event.'
+        );
     });
 
     test('it renders restart action', async function (assert) {
@@ -93,6 +100,25 @@ module(
 
       assert.dom('.modal-title').hasText('Are you sure you want to restart?');
       assert.dom('#confirm-action-parent-event').hasText('Parent event: 123');
+    });
+
+    test('it renders parent event warning without an event', async function (assert) {
+      this.setProperties({
+        action: 'start',
+        event: undefined,
+        job,
+        closeModal: () => {}
+      });
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
+            @event={{this.event}}
+            @job={{this.job}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      assert.dom('#confirm-action-parent-event').hasText('Parent event: None');
     });
 
     test('it renders stage name if set', async function (assert) {
@@ -162,7 +188,6 @@ module(
       );
 
       assert.dom('#not-latest-warning').doesNotExist();
-      assert.dom('#confirm-action-parent-event').doesNotExist();
     });
 
     test('it does not render warning message for pr commit event', async function (assert) {
