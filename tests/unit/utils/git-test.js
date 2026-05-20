@@ -83,4 +83,8 @@ module('Unit | Utility | git', function () {
 
     assert.ok(result.valid, `${orgGitUrl} is valid`);
   });
+
+  test('it returns a truncated sha', function (assert) {
+    assert.equal(git.getTruncatedSha('deadbeef12345'), 'deadbee');
+  });
 });

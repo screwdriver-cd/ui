@@ -20,10 +20,6 @@ const shortEnglishHumanizer = humanizeDuration.humanizer({
   }
 });
 
-export const getTruncatedSha = event => {
-  return event.sha.slice(0, 7);
-};
-
 export const getTruncatedMessage = (event, length) => {
   const commitMessage = event.commit.message;
 

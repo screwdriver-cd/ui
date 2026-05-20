@@ -8,6 +8,7 @@ import {
   isComplete,
   isSkipped
 } from 'screwdriver-ui/utils/pipeline/event';
+import { getTruncatedSha } from 'screwdriver-ui/utils/git';
 import {
   getDurationText,
   getExternalPipelineId,
@@ -17,7 +18,6 @@ import {
   getStartDate,
   getSuccessCount,
   getTruncatedMessage,
-  getTruncatedSha,
   getWarningCount,
   isCommitterDifferent,
   isExternalTrigger
@@ -361,7 +361,7 @@ export default class PipelineEventCardComponent extends Component {
   }
 
   get truncatedSha() {
-    return `#${getTruncatedSha(this.event)}`;
+    return `#${getTruncatedSha(this.event.sha)}`;
   }
 
   get isLatestCommit() {
