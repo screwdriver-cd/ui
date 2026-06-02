@@ -38,8 +38,6 @@ export default class PipelineEventCardComponent extends Component {
 
   @tracked builds;
 
-  @tracked latestCommitEvent;
-
   @tracked status;
 
   @tracked aggregateStatus;
@@ -102,10 +100,6 @@ export default class PipelineEventCardComponent extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    this.workflowDataReload.removeLatestCommitEventCallback(
-      this.queueName,
-      this.event.id
-    );
     this.workflowDataReload.removeBuildsCallback(this.queueName, this.event.id);
 
     if (this.durationIntervalId) {
@@ -148,11 +142,6 @@ export default class PipelineEventCardComponent extends Component {
   @action
   initialize() {
     this.isBuildsCallbackCalled = false;
-    this.workflowDataReload.registerLatestCommitEventCallback(
-      this.queueName,
-      this.event.id,
-      this.latestCommitEventCallback
-    );
     this.workflowDataReload.registerBuildsCallback(
       this.queueName,
       this.event.id,
@@ -162,10 +151,6 @@ export default class PipelineEventCardComponent extends Component {
 
   @action
   update(element, [event]) {
-    this.workflowDataReload.removeLatestCommitEventCallback(
-      this.queueName,
-      this.event.id
-    );
     this.workflowDataReload.removeBuildsCallback(this.queueName, this.event.id);
 
     if (this.event.id !== event.id) {
@@ -181,28 +166,11 @@ export default class PipelineEventCardComponent extends Component {
     this.durationText = null;
     this.firstCreateTime = null;
 
-    this.workflowDataReload.registerLatestCommitEventCallback(
-      this.queueName,
-      this.event.id,
-      this.latestCommitEventCallback
-    );
     this.workflowDataReload.registerBuildsCallback(
       this.queueName,
       this.event.id,
       this.buildsCallback
     );
-  }
-
-  @action
-  latestCommitEventCallback(latestCommitEvent) {
-    this.latestCommitEvent = latestCommitEvent;
-
-    if (this.latestCommitEvent && this.latestCommitEvent.id !== this.event.id) {
-      this.workflowDataReload.removeLatestCommitEventCallback(
-        this.queueName,
-        this.event.id
-      );
-    }
   }
 
   @action
@@ -366,6 +334,13 @@ export default class PipelineEventCardComponent extends Component {
 
   get isLatestCommit() {
     return this.latestCommitEvent?.sha === this.event.sha;
+  }
+
+  get latestCommitEvent() {
+    return (
+      this.args.latestCommitEvent ||
+      this.workflowDataReload.getLatestCommitEvent()
+    );
   }
 
   get isLastSuccessfulEvent() {

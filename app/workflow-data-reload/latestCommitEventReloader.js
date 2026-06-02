@@ -9,7 +9,7 @@ export default class LatestCommitEventReloader extends DataReloader {
 
   async fetchDataForId() {
     return this.shuttle
-      .fetchFromApi('get', `/pipelines/${this.pipelineId}/latestCommitEvent`)
+      .getLatestCommitEvent(this.pipelineId)
       .then(latestCommitEvent => {
         return latestCommitEvent;
       })
