@@ -51,7 +51,7 @@ export async function stopBuild(givenEvent, job) {
   }
 }
 
-// eslint-disable-next-line require-jsdoc
+// eslint-disable-next-line require-jsdoc, default-param-last
 export async function startDetachedBuild(job, options = {}, stage) {
   this.set('isShowingModal', true);
 
@@ -93,7 +93,8 @@ export async function startDetachedBuild(job, options = {}, stage) {
     startFrom = `PR-${prNum}:${startFrom}`;
   }
 
-  const startAction = buildId ? 'RESTART_FROM_BUILD' : 'START_FROM_EVENT';
+  // Always restart in V1 tooltip
+  const startAction = buildId ? 'RESTART_FROM_BUILD' : 'RESTART_FROM_EVENT';
 
   const eventPayload = {
     buildId,
