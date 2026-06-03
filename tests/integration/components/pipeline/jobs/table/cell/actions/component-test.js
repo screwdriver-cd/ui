@@ -16,6 +16,8 @@ module(
 
     let shuttleStub;
 
+    let latestCommitEventStub;
+
     hooks.beforeEach(async function () {
       await authenticateSession({ username: 'test-user' });
 
@@ -29,6 +31,9 @@ module(
       sinon.stub(pipelinePageState, 'getIsPr').returns(false);
       pipelinePageState.route = 'v2.pipeline.jobs';
       shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves({});
+      latestCommitEventStub = sinon
+        .stub(shuttle, 'getLatestCommitEvent')
+        .resolves({});
     });
 
     test('it renders', async function (assert) {
@@ -158,9 +163,7 @@ module(
 
       shuttleStub.withArgs('get', '/builds/999').resolves({ eventId: 456 });
       shuttleStub.withArgs('get', '/events/456').resolves(latestEvent);
-      shuttleStub
-        .withArgs('get', `/pipelines/${pipelineId}/latestCommitEvent`)
-        .resolves(latestCommitEvent);
+      latestCommitEventStub.withArgs(pipelineId).resolves(latestCommitEvent);
 
       this.setProperties({
         record: {
@@ -207,9 +210,7 @@ module(
 
       shuttleStub.withArgs('get', '/builds/999').resolves({ eventId: 456 });
       shuttleStub.withArgs('get', '/events/456').resolves(restartEvent);
-      shuttleStub
-        .withArgs('get', `/pipelines/${pipelineId}/latestCommitEvent`)
-        .resolves(latestCommitEvent);
+      latestCommitEventStub.withArgs(pipelineId).resolves(latestCommitEvent);
       shuttleStub.withArgs('post', '/events').resolves({ id: 1000 });
 
       this.setProperties({

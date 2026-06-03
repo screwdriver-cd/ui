@@ -353,6 +353,10 @@ export default Component.extend(ModelReloaderMixin, {
       let newModelEvents = [];
       const newPipelineId = this.get('pipeline.id');
 
+      this.shuttle.getLatestCommitEvent(newPipelineId).then(event => {
+        this.set('latestCommit', event);
+      });
+
       // purge unmatched pipeline events
       if (previousModelEvents.some(e => e.pipelineId !== newPipelineId)) {
         newModelEvents = [...currentModelEvents];
@@ -398,10 +402,6 @@ export default Component.extend(ModelReloaderMixin, {
         const selectedEventId = this.selected;
 
         let filteredEvents = pipelineEvents;
-
-        this.shuttle.getLatestCommitEvent(pipelineId).then(event => {
-          this.set('latestCommit', event);
-        });
 
         // filter events for no builds
         if (this.isFilteredEventsForNoBuilds) {

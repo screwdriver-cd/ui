@@ -7,7 +7,6 @@ import moment from 'moment';
 
 export default Component.extend({
   router: service(),
-  shuttle: service(),
   store: service(),
   errorMessage: '',
   isGroupedEvents: computed('pipeline.settings.groupedEvents', {
@@ -22,10 +21,6 @@ export default Component.extend({
   }),
   eventsList: computed('events.[]', 'pipeline.id', {
     get() {
-      this.shuttle.getLatestCommitEvent(this.get('pipeline.id')).then(event => {
-        this.set('latestCommit', event);
-      });
-
       return this.events;
     }
   }),

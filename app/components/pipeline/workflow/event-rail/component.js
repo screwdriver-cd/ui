@@ -6,6 +6,7 @@ import ENV from 'screwdriver-ui/config/environment';
 import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 
 const EVENT_BATCH_SIZE = 10;
+const LATEST_COMMIT_EVENT_QUEUE_NAME = 'eventRailLatestCommitEvent';
 
 export default class PipelineWorkflowEventRailComponent extends Component {
   @service router;
@@ -28,6 +29,8 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @tracked lastSuccessfulEvent;
 
+  @tracked latestCommitEvent;
+
   collectionApi;
 
   prNums;
@@ -46,6 +49,11 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   willDestroy() {
     super.willDestroy();
+
+    this.workflowDataReload.removeLatestCommitEventCallback(
+      LATEST_COMMIT_EVENT_QUEUE_NAME,
+      this.pipelinePageState.getPipelineId()
+    );
 
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -68,12 +76,16 @@ export default class PipelineWorkflowEventRailComponent extends Component {
   @action
   async initialize() {
     const { event } = this.args;
+    const pipelineId = this.pipelinePageState.getPipelineId();
+
+    this.workflowDataReload.registerLatestCommitEventCallback(
+      LATEST_COMMIT_EVENT_QUEUE_NAME,
+      pipelineId,
+      this.latestCommitEventCallback
+    );
 
     await this.shuttle
-      .fetchFromApi(
-        'get',
-        `/pipelines/${this.pipelinePageState.getPipelineId()}/lastSuccessfulEvent`
-      )
+      .fetchFromApi('get', `/pipelines/${pipelineId}/lastSuccessfulEvent`)
       .then(lastSuccessfulEvent => {
         this.lastSuccessfulEvent = lastSuccessfulEvent;
       })
@@ -268,5 +280,10 @@ export default class PipelineWorkflowEventRailComponent extends Component {
     if (event.status === 'SUCCESS' && event.id > this.lastSuccessfulEvent?.id) {
       this.lastSuccessfulEvent = event;
     }
+  }
+
+  @action
+  latestCommitEventCallback(latestCommitEvent) {
+    this.latestCommitEvent = latestCommitEvent;
   }
 }

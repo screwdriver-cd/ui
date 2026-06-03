@@ -48,10 +48,7 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
   }
 
   async fetchLatestCommitEvent() {
-    return this.shuttle.fetchFromApi(
-      'get',
-      `/pipelines/${this.pipeline.id}/latestCommitEvent`
-    );
+    return this.shuttle.getLatestCommitEvent(this.pipeline.id);
   }
 
   async fetchRestartEvent() {
