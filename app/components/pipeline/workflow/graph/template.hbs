@@ -1,4 +1,5 @@
 <div id="workflow-graph"
   {{did-insert this.draw}}
   {{did-update this.redraw @workflowGraph @builds @stageBuilds @event @collapsedStages @selectedJobId this.pipelinePageState.jobs}}
+  class="{{if this.overflowX 'overflow-x'}} {{if this.overflowY 'overflow-y'}}"
 />

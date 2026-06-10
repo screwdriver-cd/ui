@@ -12,11 +12,6 @@
 
 @mixin styles {
   #workflow-graph {
-    width: max-content;
-    height: max-content;
-    padding-right: 50%;
-    padding-bottom: 50%;
-
     .graph-label.selected-job {
       fill: colors.$sd-failure;
     }
