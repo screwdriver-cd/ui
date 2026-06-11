@@ -20,11 +20,16 @@ import {
   updateStageEdgeStatuses
 } from 'screwdriver-ui/utils/pipeline/graph/d3-graph-util';
 import { nodeCanShowTooltip } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
+import { tracked } from '@glimmer/tracking';
 
 export default class PipelineWorkflowGraphComponent extends Component {
   @service('pipeline-page-state') pipelinePageState;
 
   @service('settings') settings;
+
+  @tracked overflowX = false;
+
+  @tracked overflowY = false;
 
   event;
 
@@ -241,6 +246,13 @@ export default class PipelineWorkflowGraphComponent extends Component {
     );
 
     this.applySelectedJobLabel();
+
+    const container = element.closest('#display-container');
+
+    if (container) {
+      this.overflowX = container.scrollWidth > container.clientWidth;
+      this.overflowY = container.scrollHeight > container.clientHeight;
+    }
   }
 
   @action
