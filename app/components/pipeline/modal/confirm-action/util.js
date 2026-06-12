@@ -39,6 +39,17 @@ export function isParameterized(pipeline, defaultJobParameters, event) {
 }
 
 /**
+ * Detect whether an event originated from a pr-closed webhook or its restart lineage.
+ * @param {object} event Event object in the shape returned by the API
+ * @returns {boolean}
+ */
+function isPrClosedEventLineage(event) {
+  return Boolean(
+    event && (event.startFrom?.startsWith('~pr-closed') || event.meta?.sd?.pr)
+  );
+}
+
+/**
  * Build core post body for triggering an event
  * @param jobName {string} Name of the job to start from
  * @param startAction {string} Name of start type (start or restart)
@@ -48,6 +59,7 @@ export function isParameterized(pipeline, defaultJobParameters, event) {
  * @param parameters {object} Parameters to pass to the event
  * @returns {object}
  */
+// eslint-disable-next-line max-params
 export const buildPostBody = (
   jobName,
   startAction,
@@ -56,12 +68,13 @@ export const buildPostBody = (
   prNum,
   parameters
 ) => {
+  const usePrEventPayload = Boolean(prNum) && !isPrClosedEventLineage(event);
   const data = {
     startFrom: jobName,
     startAction
   };
 
-  if (prNum) {
+  if (usePrEventPayload) {
     data.prNum = prNum;
     data.parentEventId = event.id;
     data.groupEventId = event.groupEventId;
