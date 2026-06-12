@@ -167,6 +167,61 @@ module('Unit | Component | pipeline/modal/confirm-action/util', function () {
     );
   });
 
+  test('buildPostBody does not build PR payload for pr-closed event', function (assert) {
+    const prNum = 7;
+    const jobName = 'pull';
+    const event = {
+      id: 45,
+      groupEventId: 10,
+      startFrom: '~pr-closed:main',
+      meta: {
+        sd: {
+          pr: {
+            merged: true,
+            number: prNum
+          }
+        }
+      }
+    };
+
+    assert.deepEqual(
+      buildPostBody(jobName, 'START_FROM_EVENT', event, null, prNum),
+      {
+        startFrom: jobName,
+        startAction: 'START_FROM_EVENT',
+        parentEventId: event.id,
+        groupEventId: event.groupEventId
+      }
+    );
+  });
+
+  test('buildPostBody does not build PR payload for restarted pr-closed event lineage', function (assert) {
+    const prNum = 7;
+    const event = {
+      id: 45,
+      groupEventId: 10,
+      startFrom: 'main',
+      meta: {
+        sd: {
+          pr: {
+            merged: true,
+            number: prNum
+          }
+        }
+      }
+    };
+
+    assert.deepEqual(
+      buildPostBody('pull', 'RESTART_FROM_EVENT', event, null, prNum),
+      {
+        startFrom: 'pull',
+        startAction: 'RESTART_FROM_EVENT',
+        parentEventId: event.id,
+        groupEventId: event.groupEventId
+      }
+    );
+  });
+
   test('buildPostBody sets correct values for new event with parameters', function (assert) {
     const jobName = '~commit';
     const parameters = { param: 4 };
