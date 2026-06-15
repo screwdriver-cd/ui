@@ -65,7 +65,7 @@ export default class PipelineModalConfirmActionComponent extends Component {
     this.defaultJobParameters = extractDefaultJobParameters(
       this.pipelinePageState.getJobs()
     );
-    if (this.args.action === 'start' && !job) {
+    if (this.isFreshRunAction && !job) {
       this.startFrom = this.pipelinePageState.getIsPr() ? '~pr' : '~commit';
       this.jobName = this.startFrom;
     } else {
@@ -101,11 +101,22 @@ export default class PipelineModalConfirmActionComponent extends Component {
     if (this.startFrom === '~commit' || this.startFrom === '~pr') {
       return false;
     }
+    if (!this.args.event) {
+      return false;
+    }
     if (!this.pipelinePageState.getIsPr() && !this.isLatestCommitEvent) {
       return true;
     }
 
     return false;
+  }
+
+  get isFreshRunAction() {
+    return this.args.action === 'start';
+  }
+
+  get isRestartAction() {
+    return this.args.action === 'restart';
   }
 
   get notice() {
@@ -173,10 +184,9 @@ export default class PipelineModalConfirmActionComponent extends Component {
     let startAction = 'START_FROM_LATEST_COMMIT';
 
     if (event) {
-      startAction =
-        this.args.action === 'start'
-          ? 'START_FROM_EVENT'
-          : 'RESTART_FROM_EVENT';
+      startAction = this.isFreshRunAction
+        ? 'START_FROM_EVENT'
+        : 'RESTART_FROM_EVENT';
     }
 
     const data = {

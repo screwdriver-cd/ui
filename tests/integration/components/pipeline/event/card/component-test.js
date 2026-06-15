@@ -13,8 +13,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   let workflowDataReload;
 
-  let registerLatestCommitEventCallbackStub;
-
   let registerBuildsCallbackStub;
 
   let event;
@@ -39,12 +37,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     lastSuccessfulEvent = { id: 11 };
 
     sinon.stub(settings, 'getSettings').returns({});
-
-    registerLatestCommitEventCallbackStub = sinon.stub(
-      workflowDataReload,
-      'registerLatestCommitEventCallback'
-    );
-    registerLatestCommitEventCallbackStub.callsFake(() => {});
 
     registerBuildsCallbackStub = sinon.stub(
       workflowDataReload,
@@ -346,24 +338,20 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   test('it renders latest commit badge', async function (assert) {
     const latestCommitSha = 'abc123def456';
 
-    registerLatestCommitEventCallbackStub.reset();
-    registerLatestCommitEventCallbackStub.callsFake(
-      (queueName, id, callback) => {
-        callback({ sha: latestCommitSha });
-      }
-    );
     registerBuildsCallbackStub.reset();
     registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
       callback([{ status: 'SUCCESS' }]);
     });
 
     this.setProperties({
-      event
+      event,
+      latestCommitEvent: { sha: latestCommitSha }
     });
 
     await render(
       hbs`<Pipeline::Event::Card
         @event={{this.event}}
+        @latestCommitEvent={{this.latestCommitEvent}}
       />`
     );
 
@@ -372,12 +360,6 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
   });
 
   test('it does not throw when latestCommitEvent is null', async function (assert) {
-    registerLatestCommitEventCallbackStub.reset();
-    registerLatestCommitEventCallbackStub.callsFake(
-      (queueName, id, callback) => {
-        callback(null);
-      }
-    );
     registerBuildsCallbackStub.reset();
     registerBuildsCallbackStub.callsFake((queueName, id, callback) => {
       callback([{ status: 'SUCCESS' }]);

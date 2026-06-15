@@ -5,6 +5,7 @@ import { service } from '@ember/service';
 import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import { getTooltipData } from 'screwdriver-ui/utils/pipeline/graph/tooltip';
 import { canJobStart } from 'screwdriver-ui/utils/pipeline-workflow';
+import { getTruncatedSha } from 'screwdriver-ui/utils/git';
 
 export default class PipelineWorkflowTooltipComponent extends Component {
   @service router;
@@ -99,6 +100,10 @@ export default class PipelineWorkflowTooltipComponent extends Component {
     }
 
     return description;
+  }
+
+  get truncatedSha() {
+    return `#${getTruncatedSha(this.args.event.sha)}`;
   }
 
   @action

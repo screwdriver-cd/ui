@@ -20,9 +20,9 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
 
   @tracked confirmAction;
 
-  event;
+  @tracked event = null;
 
-  latestCommitEvent;
+  @tracked latestCommitEvent = null;
 
   constructor() {
     super(...arguments);
@@ -47,57 +47,50 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
     return isStopButtonDisabled(this.args.record.build);
   }
 
+  async fetchLatestCommitEvent() {
+    return this.shuttle.getLatestCommitEvent(this.pipeline.id);
+  }
+
+  async fetchRestartEvent() {
+    const { build } = this.args.record;
+
+    const eventId = build.meta.build
+      ? build.meta.build.eventId
+      : await this.shuttle
+          .fetchFromApi('get', `/builds/${build.id}`)
+          .then(response => {
+            return response.eventId;
+          });
+
+    return this.shuttle.fetchFromApi('get', `/events/${eventId}`);
+  }
+
   @action
   async openConfirmActionModal(actionType) {
     this.confirmAction = actionType;
-    this.event = this.args.record.event;
+    this.event = this.args.record.event || null;
+    this.latestCommitEvent = null;
 
-    if (!this.event) {
-      const latestCommitEventPromise = this.shuttle.fetchFromApi(
-        'get',
-        `/pipelines/${this.pipeline.id}/latestCommitEvent`
-      );
+    // Jobs view start actions use the latest commit,
+    // so only restart needs to resolve an event from the current build.
+    if (!this.event && actionType === 'restart') {
+      const [event, latestCommitEvent] = await Promise.all([
+        this.fetchRestartEvent(),
+        this.fetchLatestCommitEvent()
+      ]);
 
-      if (actionType === 'start') {
-        Promise.all([
-          this.shuttle.fetchFromApi(
-            'get',
-            `/pipelines/${this.pipeline.id}/events?count=1&type=pipeline`
-          ),
-          latestCommitEventPromise
-        ]).then(([events, latestCommitEvent]) => {
-          this.event = events[0];
-          this.latestCommitEvent = latestCommitEvent;
-          this.showConfirmActionModal = true;
-        });
-      } else {
-        const { build } = this.args.record;
-
-        const eventId = build.meta.build
-          ? build.meta.build.eventId
-          : await this.shuttle
-              .fetchFromApi('get', `/builds/${build.id}`)
-              .then(response => {
-                return response.eventId;
-              });
-
-        Promise.all([
-          this.shuttle.fetchFromApi('get', `/events/${eventId}`),
-          latestCommitEventPromise
-        ]).then(([latestEvent, latestCommitEvent]) => {
-          this.event = latestEvent;
-          this.latestCommitEvent = latestCommitEvent;
-          this.showConfirmActionModal = true;
-        });
-      }
-    } else {
-      this.showConfirmActionModal = true;
+      this.event = event;
+      this.latestCommitEvent = latestCommitEvent;
     }
+
+    this.showConfirmActionModal = true;
   }
 
   @action
   closeConfirmActionModal() {
     this.showConfirmActionModal = false;
+    this.event = null;
+    this.latestCommitEvent = null;
   }
 
   @action

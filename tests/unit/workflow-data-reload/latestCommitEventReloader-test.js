@@ -16,7 +16,7 @@ module(
       const latestCommitEventReloader = new LatestCommitEventReloader(shuttle);
 
       latestCommitEventReloader.setPipelineId(pipelineId);
-      sinon.stub(shuttle, 'fetchFromApi').resolves(fakeResponse);
+      sinon.stub(shuttle, 'getLatestCommitEvent').resolves(fakeResponse);
 
       const response = await latestCommitEventReloader.fetchDataForId(
         pipelineId
@@ -32,7 +32,7 @@ module(
       const latestCommitEventReloader = new LatestCommitEventReloader(shuttle);
 
       latestCommitEventReloader.setPipelineId(pipelineId);
-      sinon.stub(shuttle, 'fetchFromApi').rejects();
+      sinon.stub(shuttle, 'getLatestCommitEvent').rejects();
 
       const response = await latestCommitEventReloader.fetchDataForId(
         pipelineId

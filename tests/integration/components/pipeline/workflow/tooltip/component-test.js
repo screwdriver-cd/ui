@@ -1,9 +1,10 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { render } from '@ember/test-helpers';
+import { render, triggerEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import sinon from 'sinon';
+import { mockGraph } from '../../../../../mock/workflow-graph';
 
 module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
   setupRenderingTest(hooks);
@@ -15,6 +16,56 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       .stub(pipelinePageState, 'getPipeline')
       .returns({ id: 987, state: 'ACTIVE' });
     sinon.stub(pipelinePageState, 'getJobs').returns([]);
+  });
+
+  test('it renders run job actions', async function (assert) {
+    authenticateSession();
+
+    const router = this.owner.lookup('service:router');
+
+    sinon.stub(router, 'currentRoute').value({
+      name: 'events'
+    });
+
+    this.setProperties({
+      d3Data: {
+        node: {
+          name: 'main',
+          isDisabled: false
+        },
+        d3Event: { clientX: 0, clientY: 0 },
+        sizes: { ICON_SIZE: 0 }
+      },
+      event: { sha: '1234567890abcdefg' },
+      builds: [],
+      workflowGraph: mockGraph
+    });
+
+    await render(
+      hbs`<Pipeline::Workflow::Tooltip
+        @d3Data={{this.d3Data}}
+        @event={{this.event}}
+        @builds={{this.builds}}
+        @workflowGraph={{this.workflowGraph}}
+      />`
+    );
+
+    assert.dom('#run-job-label').hasText('Run job at #1234567');
+    assert.dom('#restart-job-link').hasText('Restart (Inherit)');
+    assert.dom('#start-job-link').hasText('New Run (Fresh)');
+
+    await triggerEvent('#restart-job-link', 'mouseenter');
+    assert
+      .dom('.tooltip')
+      .hasText("Use this event's metadata and build statuses.");
+
+    await triggerEvent('#restart-job-link', 'mouseleave');
+    assert.dom('.tooltip').doesNotExist();
+
+    await triggerEvent('#start-job-link', 'mouseenter');
+    assert
+      .dom('.tooltip')
+      .hasText('Clean start from this job. No metadata or build statuses.');
   });
 
   test('it renders build detail and metrics links', async function (assert) {

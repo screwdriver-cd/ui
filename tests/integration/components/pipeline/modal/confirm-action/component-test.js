@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { click, fillIn, render } from '@ember/test-helpers';
+import { click, fillIn, render, triggerEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
@@ -38,6 +38,7 @@ module(
       sinon.stub(pipelinePageState, 'getIsPr').returns(isPr);
 
       event = {
+        id: 123,
         commit: { message: 'commit message', url: 'http://foo.com' },
         sha: 'deadbeef0123456789'
       };
@@ -69,6 +70,16 @@ module(
       assert
         .dom('#confirm-action-commit-link')
         .hasAttribute('href', 'http://foo.com');
+      assert
+        .dom('#confirm-action-parent-event')
+        .hasText('Parent event ID: None');
+
+      await triggerEvent('.no-parent-event', 'mouseenter');
+      assert
+        .dom('.tooltip')
+        .hasText(
+          'This run will NOT inherit metadata or build statuses from parent event.'
+        );
     });
 
     test('it renders restart action', async function (assert) {
@@ -90,6 +101,30 @@ module(
       );
 
       assert.dom('.modal-title').hasText('Are you sure you want to restart?');
+      assert
+        .dom('#confirm-action-parent-event')
+        .hasText('Parent event ID: 123');
+    });
+
+    test('it renders parent event warning without an event', async function (assert) {
+      this.setProperties({
+        action: 'start',
+        event: undefined,
+        job,
+        closeModal: () => {}
+      });
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
+            @event={{this.event}}
+            @job={{this.job}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      assert
+        .dom('#confirm-action-parent-event')
+        .hasText('Parent event ID: None');
     });
 
     test('it renders stage name if set', async function (assert) {
@@ -140,6 +175,25 @@ module(
         .hasText(
           'Make sure this job (main) and any downstream jobs can be successfully completed without rerunning any upstream jobs (i.e., does this job depend on any metadata that was previously set?)'
         );
+    });
+
+    test('it does not render warning message without an event', async function (assert) {
+      this.setProperties({
+        action: 'start',
+        event: undefined,
+        job,
+        closeModal: () => {}
+      });
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
+            @event={{this.event}}
+            @job={{this.job}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      assert.dom('#not-latest-warning').doesNotExist();
     });
 
     test('it does not render warning message for pr commit event', async function (assert) {

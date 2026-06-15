@@ -66,20 +66,57 @@
             </p>
         {{else}}
           {{#if this.canJobStartFromView}}
-            <a
-              id="restart-job-link"
-              href="#"
-              {{on "click" (fn this.openConfirmActionModal "restart")}}
-            >
-              Restart event from here
-            </a>
-            <a
-              id="start-job-link"
-               href="#"
-              {{on "click" (fn this.openConfirmActionModal "start")}}
-            >
-             Start a new event from here
-            </a>
+            <p id="run-job-label">
+              Run job at {{this.truncatedSha}}
+            </p>
+            <ul id="run-job-block">
+              <li>
+                <a
+                  id="restart-job-link"
+                  class="run-job-help"
+                  href="#"
+                  {{on "click" (fn this.openConfirmActionModal "restart")}}
+                >
+                  <FaIcon
+                    @icon="rotate-right"
+                    @fixedWidth="true"
+                    @prefix="fas"
+                  />
+                  Restart (Inherit)
+                </a>
+                <BsTooltip
+                  @placement="right"
+                  @triggerElement="#restart-job-link"
+                  @renderInPlace={{false}}
+                  @delayHide="100"
+                >
+                  Use this event's metadata and build statuses.
+                </BsTooltip>
+              </li>
+              <li>
+                <a
+                  id="start-job-link"
+                  class="run-job-help"
+                  href="#"
+                  {{on "click" (fn this.openConfirmActionModal "start")}}
+                >
+                  <FaIcon
+                    @icon="circle-play"
+                    @fixedWidth="true"
+                    @prefix="far"
+                  />
+                  New Run (Fresh)
+                </a>
+                <BsTooltip
+                  @placement="right"
+                  @triggerElement="#start-job-link"
+                  @renderInPlace={{false}}
+                  @delayHide="100"
+                >
+                  Clean start from this job. No metadata or build statuses.
+                </BsTooltip>
+              </li>
+            </ul>
           {{/if}}
         {{/if}}
       {{/if}}

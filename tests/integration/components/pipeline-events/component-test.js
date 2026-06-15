@@ -117,6 +117,94 @@ module('Integration | Component | pipeline events', function (hooks) {
     });
   });
 
+  test('it starts a build from event', async function (assert) {
+    assert.expect(7);
+    server.get('http://localhost:8080/v4/events/2/builds', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify([{ id: '1234' }])
+    ]);
+    server.post('http://localhost:8080/v4/events', () => [
+      201,
+      { 'Content-Type': 'application/json' },
+      JSON.stringify({
+        id: '2'
+      })
+    ]);
+    server.put('http://localhost:8080/v4/events/5678', () => []);
+
+    const component = this.owner.lookup('component:pipeline-events');
+
+    run(() => {
+      component.store.push({
+        data: {
+          id: '123',
+          type: 'build',
+          attributes: {
+            parentBuildId: '345'
+          }
+        }
+      });
+
+      component.set('previousModelEvents', [
+        {
+          id: '1',
+          sha: 'sha',
+          pipelineId: '1234'
+        }
+      ]);
+
+      component.set('selected', '1');
+
+      component.set('activeTab', 'events');
+
+      component.set(
+        'pipeline',
+        EmberObject.create({
+          id: '1234'
+        })
+      );
+
+      component.set('reload', () => {
+        assert.ok(true);
+
+        return Promise.resolve({});
+      });
+
+      component.set('model', {
+        events: newArray()
+      });
+
+      const routerServiceMock = Service.extend({
+        transitionTo: (routeName, pipelineId) => {
+          assert.equal(routeName, 'pipeline');
+          assert.equal(pipelineId, 1234);
+        }
+      });
+
+      this.owner.unregister('service:router');
+      this.owner.register('service:router', routerServiceMock);
+
+      assert.notOk(component.isShowingModal);
+      component.send('startDetachedBuild', { name: 'deploy' });
+      assert.ok(component.isShowingModal);
+    });
+
+    await waitUntil(() => !component.isShowingModal);
+
+    const [request] = server.handledRequests;
+    const payload = JSON.parse(request.requestBody);
+
+    assert.notOk(component.isShowingModal);
+    assert.deepEqual(payload, {
+      pipelineId: '1234',
+      startFrom: 'deploy',
+      parentEventId: 1,
+      causeMessage: 'Manually started by apple',
+      startAction: 'RESTART_FROM_EVENT'
+    });
+  });
+
   test('it restarts a build', async function (assert) {
     assert.expect(7);
     server.get('http://localhost:8080/v4/events/2/builds', () => [

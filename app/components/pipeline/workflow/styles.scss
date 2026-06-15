@@ -103,12 +103,22 @@
         overflow: auto;
 
         #workflow-graph {
+          width: 100%;
           height: 100%;
+          min-width: max-content;
+          min-height: max-content;
 
           svg {
             min-width: 100%;
             min-height: 100%;
           }
+        }
+
+        #workflow-graph.overflow-x {
+          padding-right: 50%;
+        }
+        #workflow-graph.overflow-y {
+          padding-bottom: 50%;
         }
 
         @include graph.styles;
