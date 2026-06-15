@@ -354,6 +354,7 @@ module('Unit | Utility | graph tools', function () {
         id: 2,
         isDisabled: true,
         state: 'DISABLED',
+        stateChanger: 'TEST user',
         permutations: [
           { annotations: { 'screwdriver.cd/manualStartEnabled': true } }
         ]
@@ -393,7 +394,7 @@ module('Unit | Utility | graph tools', function () {
           id: 2,
           isDisabled: true,
           manualStartDisabled: false,
-          stateChangeMessage: 'Disabled',
+          stateChanger: 'TEST user',
           status: 'DISABLED',
           pos: { x: 2, y: 0 }
         },

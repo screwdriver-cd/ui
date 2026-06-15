@@ -36,6 +36,15 @@ export default Component.extend({
       description.length > this.viewDescriptionMaxLength
     );
   },
+  originalJob: computed(
+    'pipeline.jobs',
+    'tooltipData.job.name',
+    function originalJob() {
+      const jobName = get(this, 'tooltipData.job.name');
+
+      return this.get('pipeline.jobs')?.find(j => j.name === jobName);
+    }
+  ),
   jobState: computed('tooltipData.job.isDisabled', function jobState() {
     const isDisabled = get(this, 'tooltipData.job.isDisabled');
 
@@ -58,13 +67,19 @@ export default Component.extend({
       return description;
     }
   ),
+  stateChangerMessage: computed(
+    'tooltipData.job.isDisabled',
+    function stateChangerMessage() {
+      const job = get(this, 'tooltipData.job');
+      const jobState = job.isDisabled ? 'Disabled' : 'Enabled';
+
+      return job.stateChanger ? `${jobState} by ${job.stateChanger}` : jobState;
+    }
+  ),
   actions: {
     toggleJob(toggleJobName) {
       const state = this.jobState;
-
-      const originalJob = this.get('pipeline.jobs').find(
-        j => j.name === toggleJobName
-      );
+      const { originalJob } = this;
 
       this.set('toggleJobName', toggleJobName);
       this.set(
@@ -72,13 +87,16 @@ export default Component.extend({
         state[0].toUpperCase() + state.slice(1, -1).toLowerCase()
       );
 
-      this.set('originalJobId', originalJob.id);
+      this.set('originalJobId', originalJob?.id);
       this.set('showToggleModal', true);
     },
     updateMessage(message) {
       const { originalJobId, jobState } = this;
 
-      this.setJobState(originalJobId, jobState, message || ' ');
+      if (originalJobId) {
+        this.setJobState(originalJobId, jobState, message || ' ');
+      }
+
       this.set('showToggleModal', false);
       this.set('showTooltip', false);
     },

@@ -146,6 +146,7 @@ export default Component.extend({
       : this.get('pipeline.jobParameters');
   },
 
+  // eslint-disable-next-line default-param-last
   mergeDefaultAndEventParameters(defaultParameters = {}, eventParameters) {
     const defaultParameterNames = Object.keys(defaultParameters);
     const mergedParameters = copy(defaultParameters, true);
@@ -284,7 +285,8 @@ export default Component.extend({
           );
 
           if (originalJob) {
-            job.isDisabled = originalJob.isDisabled;
+            set(job, 'isDisabled', originalJob.isDisabled);
+            set(job, 'stateChanger', originalJob.stateChanger);
           } else {
             delete job.isDisabled;
           }

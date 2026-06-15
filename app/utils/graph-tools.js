@@ -902,13 +902,9 @@ const decorateGraph = ({
       // Set build status to disabled if job is disabled
       if (n.isDisabled) {
         const { state, stateChanger } = originalJob;
-        const stateWithCapitalization =
-          state[0].toUpperCase() + state.substring(1).toLowerCase();
 
         n.status = state;
-        n.stateChangeMessage = stateChanger
-          ? `${stateWithCapitalization} by ${stateChanger}`
-          : stateWithCapitalization;
+        n.stateChanger = stateChanger;
       }
 
       // Set manualStartEnabled on the node

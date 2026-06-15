@@ -204,7 +204,7 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
         node: {
           name: 'main',
           manualStartDisabled: true,
-          isDisabled: true
+          isDisabled: false
         },
         d3Event: { clientX: 0, clientY: 0 },
         sizes: { ICON_SIZE: 0 }
@@ -221,8 +221,38 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       />`
     );
 
-    assert.dom('#toggle-job-link').doesNotExist();
-    assert.dom('p').hasText('Disabled by annotation');
+    assert.dom('#toggle-job-link').exists({ count: 1 });
+    assert.dom('p').hasText('Disabled manually starting by annotation');
+  });
+
+  test('it renders disabled by users when it disabled manually starting', async function (assert) {
+    authenticateSession();
+
+    this.setProperties({
+      d3Data: {
+        node: {
+          name: 'main',
+          manualStartDisabled: true,
+          isDisabled: true,
+          stateChanger: 'test'
+        },
+        d3Event: { clientX: 0, clientY: 0 },
+        sizes: { ICON_SIZE: 0 }
+      },
+      event: {},
+      builds: []
+    });
+
+    await render(
+      hbs`<Pipeline::Workflow::Tooltip
+        @d3Data={{this.d3Data}}
+        @event={{this.event}}
+        @builds={{this.builds}}
+      />`
+    );
+
+    assert.dom('#toggle-job-link').exists({ count: 1 });
+    assert.dom('p').hasText('Disabled by test');
   });
 
   test('it renders stop build link', async function (assert) {
