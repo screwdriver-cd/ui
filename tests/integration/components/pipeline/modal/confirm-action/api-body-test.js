@@ -468,5 +468,91 @@ module(
         })
       );
     });
+
+    test('it does not set PR payload for fresh run from pr-closed event job', async function (assert) {
+      getIsPrStub.returns(false);
+      event.prNum = prNum;
+      event.startFrom = '~pr-closed:main';
+      event.meta = {
+        sd: {
+          pr: {
+            merged: true,
+            number: prNum
+          }
+        }
+      };
+
+      getPipelineStub.returns(pipeline);
+
+      this.setProperties({
+        action: 'start',
+        event,
+        job,
+        closeModal
+      });
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
+            @event={{this.event}}
+            @job={{this.job}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      await click('#submit-action');
+
+      assert.true(
+        shuttleStub.calledWith('post', '/events', {
+          pipelineId,
+          causeMessage: `Manually started by ${username}`,
+          startFrom: job.name,
+          parentEventId: event.id,
+          groupEventId: event.groupEventId,
+          startAction: 'START_FROM_EVENT'
+        })
+      );
+    });
+
+    test('it does not set PR payload for inherited restart from pr-closed event lineage', async function (assert) {
+      getIsPrStub.returns(false);
+      event.prNum = prNum;
+      event.startFrom = 'main';
+      event.meta = {
+        sd: {
+          pr: {
+            merged: true,
+            number: prNum
+          }
+        }
+      };
+
+      getPipelineStub.returns(pipeline);
+
+      this.setProperties({
+        action: 'restart',
+        event,
+        job,
+        closeModal
+      });
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
+            @event={{this.event}}
+            @job={{this.job}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+      await click('#submit-action');
+
+      assert.true(
+        shuttleStub.calledWith('post', '/events', {
+          pipelineId,
+          causeMessage: `Manually started by ${username}`,
+          startFrom: job.name,
+          parentEventId: event.id,
+          groupEventId: event.groupEventId,
+          startAction: 'RESTART_FROM_EVENT'
+        })
+      );
+    });
   }
 );
