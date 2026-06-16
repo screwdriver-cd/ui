@@ -23,38 +23,32 @@
         Go to build metrics
       </LinkTo>
 
-      {{#if this.tooltipData.job.isDisabled}}
-        {{#if this.tooltipData.job.manualStartDisabled}}
-          <p>
-            Disabled by annotation
-          </p>
-        {{else}}
-          <p>
-            {{this.tooltipData.job.stateChangeMessage}}
-          </p>
-          <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
-            Enable this job
+      {{#if (and (not this.tooltipData.job.manualStartDisabled) (not this.tooltipData.job.isDisabled))}}
+        {{#if (and this.canRestartPipeline this.canJobStartFromView)}}
+          <a href="#" {{action this.confirmStartBuild}}>
+            {{if this.tooltipData.job.status "Restart" "Start"}} pipeline from here
           </a>
         {{/if}}
       {{else}}
-        {{#if this.canRestartPipeline}}
-          {{#if this.tooltipData.job.manualStartDisabled}}
-            <p>
-              Disabled manually starting
-            </p>
-          {{else}}
-            {{#if (eq this.canJobStartFromView true)}}
-              <a href="#" {{action this.confirmStartBuild}}>
-                {{if this.tooltipData.job.status "Restart" "Start"}} pipeline from here
-              </a>
-            {{/if}}
-          {{/if}}
+        {{#if this.tooltipData.job.isDisabled}}
+          <p
+            title={{this.tooltipData.job.stateChangeMessage}}
+          >
+            {{this.stateChangerMessage}}
+          </p>
+        {{else}}
+          <p>Disabled manually starting by annotation</p>
         {{/if}}
-        {{#if (eq this.tooltipData.job.isDisabled false)}}
-          <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
-            Disable this job
-          </a>
-        {{/if}}
+      {{/if}}
+
+      {{#if this.tooltipData.job.isDisabled}}
+        <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
+          Enable this job
+        </a>
+      {{else if this.originalJob}}
+        <a href="#" {{action "toggleJob" this.tooltipData.job.name}}>
+          Disable this job
+        </a>
       {{/if}}
 
       {{#if this.tooltipData.displayStop}}

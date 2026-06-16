@@ -7,15 +7,26 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Component | workflow tooltip', function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    const pipelineMock = EmberObject.create({
+      jobs: [
+        { id: 1, name: 'batmobile' },
+        { id: 2, name: 'foo' }
+      ]
+    });
+
+    this.set('pipeline', pipelineMock);
+  });
+
   test('it renders', async function (assert) {
-    await render(hbs`<WorkflowTooltip/>`);
+    await render(hbs`<WorkflowTooltip @pipeline={{this.pipeline}}/>`);
 
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
 
     // Template block usage:
     await render(hbs`
-        <WorkflowTooltip/>
+        <WorkflowTooltip @pipeline={{this.pipeline}}/>
         "template block text"
       `);
 
@@ -34,7 +45,9 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
 
-    await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
+    await render(
+      hbs`<WorkflowTooltip @pipeline={{this.pipeline}} @tooltipData={{this.data}} />`
+    );
 
     assert.dom('.content a').exists({ count: 3 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
@@ -43,7 +56,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
   });
 
   test('it renders disabled build detail link', async function (assert) {
-    await render(hbs`<WorkflowTooltip />`);
+    await render(hbs`<WorkflowTooltip @pipeline={{this.pipeline}} />`);
 
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(1)').hasClass('disabled');
@@ -59,7 +72,9 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     };
 
     this.set('data', data);
-    await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
+    await render(
+      hbs`<WorkflowTooltip @pipeline={{this.pipeline}} @tooltipData={{this.data}} />`
+    );
 
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(1)').hasClass('disabled');
@@ -73,7 +88,9 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     };
 
     this.set('data', data);
-    await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
+    await render(
+      hbs`<WorkflowTooltip @pipeline={{this.pipeline}} @tooltipData={{this.data}} />`
+    );
 
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(1)').hasClass('disabled');
@@ -89,7 +106,9 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
 
-    await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
+    await render(
+      hbs`<WorkflowTooltip @pipeline={{this.pipeline}} @tooltipData={{this.data}} />`
+    );
 
     assert.dom('.content a').exists({ count: 1 });
     assert.dom(this.element).hasText('Go to remote pipeline');
@@ -113,7 +132,9 @@ module('Integration | Component | workflow tooltip', function (hooks) {
 
     this.set('data', data);
 
-    await render(hbs`<WorkflowTooltip @tooltipData={{this.data}} />`);
+    await render(
+      hbs`<WorkflowTooltip @pipeline={{this.pipeline}} @tooltipData={{this.data}} />`
+    );
 
     assert.dom('.content a').exists({ count: 2 });
     assert
@@ -128,8 +149,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       job: {
         buildId: 1234,
         name: 'batmobile',
-        manualStartDisabled: true,
-        isDisabled: true
+        manualStartDisabled: true
       }
     };
 
@@ -137,16 +157,49 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('confirmStartBuild', () => {});
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
       />`);
 
-    assert.dom('.content a').exists({ count: 2 });
+    assert.dom('.content a').exists({ count: 3 });
     assert.dom('.content p').exists({ count: 1 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
-    assert.dom('p:nth-of-type(1)').hasText('Disabled by annotation');
+    assert.dom('a:nth-of-type(3)').hasText('Disable this job');
+    assert
+      .dom('p:nth-of-type(1)')
+      .hasText('Disabled manually starting by annotation');
+  });
+
+  test('it renders disabled by users when it disabled manually starting', async function (assert) {
+    const data = {
+      job: {
+        buildId: 1234,
+        name: 'batmobile',
+        manualStartDisabled: true,
+        isDisabled: true,
+        stateChanger: 'test'
+      }
+    };
+
+    this.set('data', data);
+    this.set('confirmStartBuild', () => {});
+
+    await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
+        @tooltipData={{this.data}}
+        @canRestartPipeline={{true}}
+        @confirmStartBuild={{this.confirmStartBuild}}
+      />`);
+
+    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('.content p').exists({ count: 1 });
+    assert.dom('a:nth-of-type(1)').hasText('Go to build details');
+    assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
+    assert.dom('a:nth-of-type(3)').hasText('Enable this job');
+    assert.dom('p:nth-of-type(1)').hasText('Disabled by test');
   });
 
   test('it renders start link', async function (assert) {
@@ -163,6 +216,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
@@ -191,6 +245,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
@@ -218,6 +273,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
@@ -246,6 +302,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('canJobStartFromView', false);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
@@ -273,6 +330,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('canJobStartFromView', false);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
@@ -300,6 +358,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
@@ -329,6 +388,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
@@ -358,6 +418,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('action', () => {});
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @stopBuild={{this.stopBuild}}
         @action={{this.action}}
@@ -385,6 +446,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
@@ -403,6 +465,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('pos', 'left');
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @showTooltip={{this.show}}
         @showTooltipPosition={{this.pos}}
       />`);
@@ -427,21 +490,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       }
     };
 
-    const pipelineMock = EmberObject.create({
-      jobs: [
-        {
-          id: 1,
-          name: 'batmobile'
-        },
-        {
-          id: 2,
-          name: 'foo'
-        }
-      ]
-    });
-
     this.set('data', data);
-    this.set('pipeline', pipelineMock);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
@@ -467,21 +516,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
       }
     };
 
-    const pipelineMock = EmberObject.create({
-      jobs: [
-        {
-          id: 1,
-          name: 'batmobile'
-        },
-        {
-          id: 2,
-          name: 'foo'
-        }
-      ]
-    });
-
     this.set('data', data);
-    this.set('pipeline', pipelineMock);
 
     await render(hbs`<WorkflowTooltip
         @tooltipData={{this.data}}
@@ -511,16 +546,18 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
         @canJobStartFromView={{this.canJobStartFromView}}
       />`);
 
-    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
     assert.dom('a:nth-of-type(3)').hasText('Start pipeline from here');
+    assert.dom('a:nth-of-type(4)').hasText('Disable this job');
     assert.dom('span').hasText('Test');
   });
 
@@ -543,6 +580,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('enableHiddenDescription', true);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}
@@ -550,10 +588,11 @@ module('Integration | Component | workflow tooltip', function (hooks) {
         @enableHiddenDescription={{this.enableHiddenDescription}}
       />`);
 
-    assert.dom('.content a').exists({ count: 3 });
+    assert.dom('.content a').exists({ count: 4 });
     assert.dom('a:nth-of-type(1)').hasText('Go to build details');
     assert.dom('a:nth-of-type(2)').hasText('Go to build metrics');
     assert.dom('a:nth-of-type(3)').hasText('Start pipeline from here');
+    assert.dom('a:nth-of-type(4)').hasText('Disable this job');
     assert.dom('span').hasText(`${description}`);
 
     await click('span');
@@ -576,6 +615,7 @@ module('Integration | Component | workflow tooltip', function (hooks) {
     this.set('canJobStartFromView', true);
 
     await render(hbs`<WorkflowTooltip
+        @pipeline={{this.pipeline}}
         @tooltipData={{this.data}}
         @canRestartPipeline={{true}}
         @confirmStartBuild={{this.confirmStartBuild}}

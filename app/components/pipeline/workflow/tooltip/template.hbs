@@ -39,96 +39,88 @@
       Go to build metrics
     </LinkTo>
 
-    {{#if this.tooltipData.job.isDisabled}}
-      {{#if this.tooltipData.job.manualStartDisabled}}
-        <p>
-          Disabled by annotation
+    {{#if (and (not this.tooltipData.job.manualStartDisabled) (not this.tooltipData.job.isDisabled))}}
+      {{#if (and this.displayRestartButton this.canJobStartFromView)}}
+        <p id="run-job-label">
+          Run job at {{this.truncatedSha}}
         </p>
-      {{else}}
+        <ul id="run-job-block">
+          <li>
+            <a
+              id="restart-job-link"
+              class="run-job-help"
+              href="#"
+              {{on "click" (fn this.openConfirmActionModal "restart")}}
+            >
+              <FaIcon
+                @icon="rotate-right"
+                @fixedWidth="true"
+                @prefix="fas"
+              />
+              Restart (Inherit)
+            </a>
+            <BsTooltip
+              @placement="right"
+              @triggerElement="#restart-job-link"
+              @renderInPlace={{false}}
+              @delayHide="100"
+            >
+              Use this event's metadata and build statuses.
+            </BsTooltip>
+          </li>
+          <li>
+            <a
+              id="start-job-link"
+              class="run-job-help"
+              href="#"
+              {{on "click" (fn this.openConfirmActionModal "start")}}
+            >
+              <FaIcon
+                @icon="circle-play"
+                @fixedWidth="true"
+                @prefix="far"
+              />
+              New Run (Fresh)
+            </a>
+            <BsTooltip
+              @placement="right"
+              @triggerElement="#start-job-link"
+              @renderInPlace={{false}}
+              @delayHide="100"
+            >
+              Clean start from this job. No metadata or build statuses.
+            </BsTooltip>
+          </li>
+        </ul>
+      {{/if}}
+    {{else}}
+      {{#if this.tooltipData.job.isDisabled}}
         <p
           title={{this.tooltipData.job.stateChangeMessage}}
         >
           {{this.stateChangerMessage}}
         </p>
-        <a
-          id="toggle-job-link"
-          href="#"
-          {{on "click" (fn this.openToggleJobModal "Enable")}}
-        >
-          Enable this job
-        </a>
+      {{else}}
+        <p>Disabled manually starting by annotation</p>
       {{/if}}
+    {{/if}}
+
+    {{#if this.tooltipData.job.isDisabled}}
+      <a
+        id="toggle-job-link"
+        href="#"
+        {{on "click" (fn this.openToggleJobModal "Enable")}}
+      >
+        Enable this job
+      </a>
     {{else}}
-      {{#if this.displayRestartButton}}
-        {{#if this.tooltipData.job.manualStartDisabled}}
-            <p>
-              Disabled manually starting
-            </p>
-        {{else}}
-          {{#if this.canJobStartFromView}}
-            <p id="run-job-label">
-              Run job at {{this.truncatedSha}}
-            </p>
-            <ul id="run-job-block">
-              <li>
-                <a
-                  id="restart-job-link"
-                  class="run-job-help"
-                  href="#"
-                  {{on "click" (fn this.openConfirmActionModal "restart")}}
-                >
-                  <FaIcon
-                    @icon="rotate-right"
-                    @fixedWidth="true"
-                    @prefix="fas"
-                  />
-                  Restart (Inherit)
-                </a>
-                <BsTooltip
-                  @placement="right"
-                  @triggerElement="#restart-job-link"
-                  @renderInPlace={{false}}
-                  @delayHide="100"
-                >
-                  Use this event's metadata and build statuses.
-                </BsTooltip>
-              </li>
-              <li>
-                <a
-                  id="start-job-link"
-                  class="run-job-help"
-                  href="#"
-                  {{on "click" (fn this.openConfirmActionModal "start")}}
-                >
-                  <FaIcon
-                    @icon="circle-play"
-                    @fixedWidth="true"
-                    @prefix="far"
-                  />
-                  New Run (Fresh)
-                </a>
-                <BsTooltip
-                  @placement="right"
-                  @triggerElement="#start-job-link"
-                  @renderInPlace={{false}}
-                  @delayHide="100"
-                >
-                  Clean start from this job. No metadata or build statuses.
-                </BsTooltip>
-              </li>
-            </ul>
-          {{/if}}
-        {{/if}}
-      {{/if}}
-      {{#if (eq this.tooltipData.job.isDisabled false)}}
-        <a
-          id="toggle-job-link"
-          href="#"
-          {{on "click" (fn this.openToggleJobModal "Disable")}}
-        >
-          Disable this job
-        </a>
-      {{/if}}
+      <a
+        id="toggle-job-link"
+        href="#"
+        {{on "click" (fn this.openToggleJobModal "Disable")}}
+      >
+        Disable this job
+      </a>
     {{/if}}
   {{/if}}
 
