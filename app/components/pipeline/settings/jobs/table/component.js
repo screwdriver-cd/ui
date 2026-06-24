@@ -148,12 +148,6 @@ export default class PipelineSettingsJobsTableComponent extends Component {
           return false;
         }
 
-        const annotations = job.permutations?.[0].annotations || {};
-
-        if (annotations['screwdriver.cd/manualStartEnabled'] === false) {
-          return false;
-        }
-
         if (this.args.isToggleMultiple) {
           const jobState = this.args.isEnable ? 'DISABLED' : 'ENABLED';
 
