@@ -10,7 +10,30 @@ module('Integration | Component | pipeline/settings/jobs', function (hooks) {
   hooks.beforeEach(function () {
     const pipelinePageState = this.owner.lookup('service:pipelinePageState');
 
-    sinon.stub(pipelinePageState, 'getJobs').returns([]);
+    sinon.stub(pipelinePageState, 'getJobs').returns([
+      {
+        id: 1,
+        name: 'test-a',
+        permutations: [
+          {
+            annotations: {
+              'screwdriver.cd/manualStartEnabled': false
+            }
+          }
+        ]
+      },
+      {
+        id: 2,
+        name: 'test-b',
+        permutations: [
+          {
+            annotations: {
+              'screwdriver.cd/manualStartEnabled': true
+            }
+          }
+        ]
+      }
+    ]);
   });
 
   test('it renders', async function (assert) {
@@ -19,6 +42,14 @@ module('Integration | Component | pipeline/settings/jobs', function (hooks) {
     assert.dom('.section').exists();
     assert.dom('#enable-jobs-button').exists();
     assert.dom('#disable-jobs-button').exists();
+    assert.dom('td.job-column').exists({ count: 2 });
+    assert
+      .dom(this.element.querySelectorAll('td.job-column')[0])
+      .hasText('test-a');
+    assert
+      .dom(this.element.querySelectorAll('td.job-column')[1])
+      .hasText('test-b');
+    assert.dom('.job-toggle-container').exists({ count: 2 });
   });
 
   test('it toggles cancel button correctly', async function (assert) {
