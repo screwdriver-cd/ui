@@ -63,6 +63,34 @@
           disabled={{this.inputDisabled}}
         />
       </label>
+      <div class="powerselect-wrap">
+        <div>Expires in:</div>
+        <PowerSelect
+          id="expires-select"
+          @options={{this.expiresOptions}}
+          @renderInPlace={{true}}
+          @selected={{this.tokenExpires}}
+          @onChange={{this.setTokenExpires}}
+          @disabled={{this.inputDisabled}}
+          as |selectedValue|
+        >
+          {{selectedValue}}
+        </PowerSelect>
+      </div>
+      <div class="powerselect-wrap">
+        <div>Permission:</div>
+        <PowerSelect
+          id="token-permission-select"
+          @options={{this.tokenPremissionOptions}}
+          @renderInPlace={{true}}
+          @selected={{this.tokenPermission}}
+          @onChange={{this.setTokenPermission}}
+          @disabled={{this.inputDisabled}}
+          as |selectedValue|
+        >
+          {{selectedValue}}
+        </PowerSelect>
+      </div>
     </div>
   </modal.body>
   <modal.footer>

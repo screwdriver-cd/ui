@@ -16,6 +16,10 @@ export default class TokensModalCreateComponent extends Component {
 
   @tracked tokenDescription;
 
+  @tracked tokenExpires = '1day';
+
+  @tracked tokenPermission = 'read';
+
   @tracked isAwaitingResponse;
 
   @tracked wasActionSuccessful;
@@ -23,6 +27,18 @@ export default class TokensModalCreateComponent extends Component {
   @tracked isCopyButtonDisabled;
 
   @tracked newToken;
+
+  expiresList = {
+    '1day': date => date.setDate(date.getDate() + 1),
+    '30days': date => date.setDate(date.getDate() + 30),
+    '90days': date => date.setDate(date.getDate() + 90),
+    '1year': date => date.setFullYear(date.getFullYear() + 1),
+    'No expiration': () => null
+  };
+
+  expiresOptions = Object.keys(this.expiresList);
+
+  tokenPremissionOptions = ['read', 'execute', 'write', 'all'];
 
   constructor() {
     super(...arguments);
@@ -34,6 +50,18 @@ export default class TokensModalCreateComponent extends Component {
 
   isTokenNameInvalid() {
     return this.tokensService.tokenNames.includes(this.tokenName);
+  }
+
+  calculateExpiresAt() {
+    if (this.tokenExpires === 'No expiration') {
+      return '';
+    }
+
+    const date = new Date();
+
+    this.expiresList[this.tokenExpires](date);
+
+    return date.toISOString();
   }
 
   get inputClass() {
@@ -64,6 +92,16 @@ export default class TokensModalCreateComponent extends Component {
   }
 
   @action
+  setTokenExpires(tokenExpires) {
+    this.tokenExpires = tokenExpires;
+  }
+
+  @action
+  setTokenPermission(tokenPermission) {
+    this.tokenPermission = tokenPermission;
+  }
+
+  @action
   async createToken() {
     this.isAwaitingResponse = true;
 
@@ -75,7 +113,11 @@ export default class TokensModalCreateComponent extends Component {
     return this.shuttle
       .fetchFromApi('post', url, {
         name: this.tokenName,
-        description: this.tokenDescription
+        description: this.tokenDescription,
+        expiresAt: this.calculateExpiresAt(),
+        options: {
+          permission: this.tokenPermission
+        }
       })
       .then(response => {
         this.newToken = response;

@@ -38,6 +38,23 @@
                 }
               }
             }
+
+            .powerselect-wrap {
+              display: flex;
+              margin-bottom: 0.5rem;
+
+              > div {
+                width: 6rem;
+              }
+
+              .ember-basic-dropdown {
+                flex: 1;
+
+                .ember-power-select-trigger {
+                  width: 100%;
+                }
+              }
+            }
           }
         }
       }

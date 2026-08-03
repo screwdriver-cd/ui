@@ -6,6 +6,16 @@ export default Model.extend({
   name: attr('string'),
   description: attr('string', { defaultValue: '' }),
   lastUsed: attr('string'),
+  expiresAt: attr('string'),
+  issuerId: attr('string'),
+  options: attr({
+    defaultValue() {
+      return {
+        permission: '',
+        resources: {}
+      };
+    }
+  }),
   value: attr('string'),
   action: attr('string')
 });

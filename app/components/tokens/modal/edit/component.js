@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
 
 export default class TokensModalEditComponent extends Component {
   @service shuttle;
@@ -43,6 +44,14 @@ export default class TokensModalEditComponent extends Component {
     return (
       this.isTokenNameInvalid() || (!this.tokenName && !this.tokenDescription)
     );
+  }
+
+  get expiresDate() {
+    if (this.args.token.expiresAt) {
+      return toCustomLocaleString(new Date(this.args.token.expiresAt));
+    }
+
+    return 'No expiration';
   }
 
   @action

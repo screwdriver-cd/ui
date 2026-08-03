@@ -26,6 +26,16 @@ export default class TokensTableComponent extends Component {
         filteredBy: 'description'
       },
       {
+        title: 'EXPIRES',
+        className: 'expires-column',
+        component: 'expiresCell'
+      },
+      {
+        title: 'PERMISSION',
+        className: 'permission-column',
+        propertyName: 'options.permission'
+      },
+      {
         title: 'LAST USED',
         className: 'last-used-column',
         component: 'lastUsedCell'
@@ -59,6 +69,8 @@ export default class TokensTableComponent extends Component {
         name: token.name,
         description: token.description,
         lastUsed: token.lastUsed,
+        expiresAt: token.expiresAt,
+        options: token.options,
         type: this.args.type,
         onSuccess: this.mapTokens
       };
