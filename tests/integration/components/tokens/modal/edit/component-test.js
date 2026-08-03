@@ -20,6 +20,9 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
     this.setProperties({
       token: {
         name: 'test',
+        description: 'test-description',
+        expiresAt: '2026-08-02T03:14:08.131Z',
+        options: { permission: 'read' },
         type: 'pipeline'
       },
       closeModal: () => {}
@@ -39,6 +42,12 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
     assert.dom('.modal-header').hasText('Edit a pipeline token ×');
     assert.dom('#error-message').doesNotExist();
     assert.dom('#submit-token').exists({ count: 1 });
+    assert.dom('#token-name-input').hasAttribute('placeholder', 'test');
+    assert
+      .dom('#token-description-input')
+      .hasAttribute('placeholder', 'test-description');
+    assert.dom('#token-expires-input').hasValue('08/02/2026, 03:14 AM UTC');
+    assert.dom('#token-permission-input').hasValue('read');
     assert.dom('#submit-token').isDisabled();
   });
 
