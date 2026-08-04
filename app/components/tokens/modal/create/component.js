@@ -4,6 +4,55 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 export default class TokensModalCreateComponent extends Component {
+  expiresOptions = [
+    {
+      label: '1 day',
+      getExpiresAt: () => {
+        const now = new Date();
+
+        now.setDate(now.getDate() + 1);
+
+        return now.toISOString();
+      }
+    },
+    {
+      label: '30 days',
+      getExpiresAt: () => {
+        const now = new Date();
+
+        now.setDate(now.getDate() + 30);
+
+        return now.toISOString();
+      }
+    },
+    {
+      label: '90 days',
+      getExpiresAt: () => {
+        const now = new Date();
+
+        now.setDate(now.getDate() + 90);
+
+        return now.toISOString();
+      }
+    },
+    {
+      label: '1 year',
+      getExpiresAt: () => {
+        const now = new Date();
+
+        now.setFullYear(now.getFullYear() + 1);
+
+        return now.toISOString();
+      }
+    },
+    {
+      label: 'No expiration',
+      getExpiresAt: () => ''
+    }
+  ];
+
+  tokenPermissionOptions = ['read', 'execute', 'write', 'all'];
+
   @service shuttle;
 
   @service pipelinePageState;
@@ -15,6 +64,12 @@ export default class TokensModalCreateComponent extends Component {
   @tracked tokenName;
 
   @tracked tokenDescription;
+
+  // Initial value should be '1 day'
+  @tracked tokenExpires = this.expiresOptions[0];
+
+  // Initial value should be 'read'
+  @tracked tokenPermission = this.tokenPermissionOptions[0];
 
   @tracked isAwaitingResponse;
 
@@ -64,6 +119,16 @@ export default class TokensModalCreateComponent extends Component {
   }
 
   @action
+  setTokenExpires(option) {
+    this.tokenExpires = option;
+  }
+
+  @action
+  setTokenPermission(tokenPermission) {
+    this.tokenPermission = tokenPermission;
+  }
+
+  @action
   async createToken() {
     this.isAwaitingResponse = true;
 
@@ -75,7 +140,11 @@ export default class TokensModalCreateComponent extends Component {
     return this.shuttle
       .fetchFromApi('post', url, {
         name: this.tokenName,
-        description: this.tokenDescription
+        description: this.tokenDescription,
+        expiresAt: this.tokenExpires.getExpiresAt(),
+        options: {
+          permission: this.tokenPermission
+        }
       })
       .then(response => {
         this.newToken = response;

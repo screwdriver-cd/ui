@@ -57,12 +57,41 @@
       <label>
         <div>Description:</div>
         <Input
+          id="token-description-input"
           @type="text"
           @value={{this.tokenDescription}}
           placeholder="Optional"
           disabled={{this.inputDisabled}}
         />
       </label>
+      <div class="powerselect-wrap">
+        <div>Expires in:</div>
+        <PowerSelect
+          id="expires-select"
+          @options={{this.expiresOptions}}
+          @renderInPlace={{true}}
+          @selected={{this.tokenExpires}}
+          @onChange={{this.setTokenExpires}}
+          @disabled={{this.inputDisabled}}
+          as |option|
+        >
+          {{option.label}}
+        </PowerSelect>
+      </div>
+      <div class="powerselect-wrap">
+        <div>Permission:</div>
+        <PowerSelect
+          id="token-permission-select"
+          @options={{this.tokenPermissionOptions}}
+          @renderInPlace={{true}}
+          @selected={{this.tokenPermission}}
+          @onChange={{this.setTokenPermission}}
+          @disabled={{this.inputDisabled}}
+          as |option|
+        >
+          {{option}}
+        </PowerSelect>
+      </div>
     </div>
   </modal.body>
   <modal.footer>

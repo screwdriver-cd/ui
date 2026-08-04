@@ -14,7 +14,11 @@ module('Acceptance | tokens', function (hooks) {
           id: '1',
           name: 'foo',
           description: 'bar',
-          lastUsed: '2016-09-15T23:12:23.760Z'
+          lastUsed: '2016-09-15T23:12:23.760Z',
+          expiresAt: '2017-09-15T23:12:23.760Z',
+          options: {
+            permission: 'read'
+          }
         },
         {
           id: '2',
@@ -26,7 +30,7 @@ module('Acceptance | tokens', function (hooks) {
 
     await visit('/user-settings/access-tokens');
 
-    assert.dom('.token-list tbody tr').exists({ count: 2 });
+    assert.dom('#tokens-table tbody tr').exists({ count: 2 });
     assert.equal(
       getPageTitle(),
       'User Settings > Access Tokens',

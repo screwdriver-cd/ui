@@ -1,10 +1,5 @@
 {{page-title "Access Tokens"}}
 
-<TokenList
-  @tokens={{this.tokens}}
-  @newToken={{this.newToken}}
-  @onCreateToken={{action "createToken"}}
-  @onRefreshToken={{action "refreshToken"}}
-  @tokenName="User access"
-  @tokenScope="your account"
+<Tokens
+  @type="user"
 />

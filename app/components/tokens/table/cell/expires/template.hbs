@@ -1,0 +1,9 @@
+{{#if @record.expiresAt}}
+  {{#if this.isExpiredToken}}
+    This token has expired
+  {{else}}
+    {{moment-from-now @record.expiresAt}}
+  {{/if}}
+{{else}}
+  No expiration
+{{/if}}
