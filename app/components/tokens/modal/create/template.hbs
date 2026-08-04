@@ -73,23 +73,23 @@
           @selected={{this.tokenExpires}}
           @onChange={{this.setTokenExpires}}
           @disabled={{this.inputDisabled}}
-          as |selectedValue|
+          as |option|
         >
-          {{selectedValue}}
+          {{option.label}}
         </PowerSelect>
       </div>
       <div class="powerselect-wrap">
         <div>Permission:</div>
         <PowerSelect
           id="token-permission-select"
-          @options={{this.tokenPremissionOptions}}
+          @options={{this.tokenPermissionOptions}}
           @renderInPlace={{true}}
           @selected={{this.tokenPermission}}
           @onChange={{this.setTokenPermission}}
           @disabled={{this.inputDisabled}}
-          as |selectedValue|
+          as |option|
         >
-          {{selectedValue}}
+          {{option}}
         </PowerSelect>
       </div>
     </div>

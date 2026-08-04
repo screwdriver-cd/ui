@@ -4,6 +4,55 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 export default class TokensModalCreateComponent extends Component {
+  expiresOptions = [
+    {
+      label: '1 day',
+      getExpiresAt: () => {
+        const now = new Date();
+
+        now.setDate(now.getDate() + 1);
+
+        return now.toISOString();
+      }
+    },
+    {
+      label: '30 days',
+      getExpiresAt: () => {
+        const now = new Date();
+
+        now.setDate(now.getDate() + 30);
+
+        return now.toISOString();
+      }
+    },
+    {
+      label: '90 days',
+      getExpiresAt: () => {
+        const now = new Date();
+
+        now.setDate(now.getDate() + 90);
+
+        return now.toISOString();
+      }
+    },
+    {
+      label: '1 year',
+      getExpiresAt: () => {
+        const now = new Date();
+
+        now.setFullYear(now.getFullYear() + 1);
+
+        return now.toISOString();
+      }
+    },
+    {
+      label: 'No expiration',
+      getExpiresAt: () => ''
+    }
+  ];
+
+  tokenPermissionOptions = ['read', 'execute', 'write', 'all'];
+
   @service shuttle;
 
   @service pipelinePageState;
@@ -16,9 +65,11 @@ export default class TokensModalCreateComponent extends Component {
 
   @tracked tokenDescription;
 
-  @tracked tokenExpires = '1day';
+  // Initial value should be '1 day'
+  @tracked tokenExpires = this.expiresOptions[0];
 
-  @tracked tokenPermission = 'read';
+  // Initial value should be 'read'
+  @tracked tokenPermission = this.tokenPermissionOptions[0];
 
   @tracked isAwaitingResponse;
 
@@ -27,18 +78,6 @@ export default class TokensModalCreateComponent extends Component {
   @tracked isCopyButtonDisabled;
 
   @tracked newToken;
-
-  expiresList = {
-    '1day': date => date.setDate(date.getDate() + 1),
-    '30days': date => date.setDate(date.getDate() + 30),
-    '90days': date => date.setDate(date.getDate() + 90),
-    '1year': date => date.setFullYear(date.getFullYear() + 1),
-    'No expiration': () => null
-  };
-
-  expiresOptions = Object.keys(this.expiresList);
-
-  tokenPremissionOptions = ['read', 'execute', 'write', 'all'];
 
   constructor() {
     super(...arguments);
@@ -50,18 +89,6 @@ export default class TokensModalCreateComponent extends Component {
 
   isTokenNameInvalid() {
     return this.tokensService.tokenNames.includes(this.tokenName);
-  }
-
-  calculateExpiresAt() {
-    if (this.tokenExpires === 'No expiration') {
-      return '';
-    }
-
-    const date = new Date();
-
-    this.expiresList[this.tokenExpires](date);
-
-    return date.toISOString();
   }
 
   get inputClass() {
@@ -92,8 +119,8 @@ export default class TokensModalCreateComponent extends Component {
   }
 
   @action
-  setTokenExpires(tokenExpires) {
-    this.tokenExpires = tokenExpires;
+  setTokenExpires(option) {
+    this.tokenExpires = option;
   }
 
   @action
@@ -114,7 +141,7 @@ export default class TokensModalCreateComponent extends Component {
       .fetchFromApi('post', url, {
         name: this.tokenName,
         description: this.tokenDescription,
-        expiresAt: this.calculateExpiresAt(),
+        expiresAt: this.tokenExpires.getExpiresAt(),
         options: {
           permission: this.tokenPermission
         }
