@@ -24,42 +24,38 @@ export const nodeCanShowTooltip = node => {
  * @param builds  Builds for the pipeline (API response from /pipelines/:id/builds)
  */
 export function getTooltipData(node, event, jobs = [], builds = []) {
-  const isTrigger = node.name.startsWith('~');
+  const externalTriggerMatch = node.name.match(EXTERNAL_TRIGGER_ALL);
+  const downstreamTriggerMatch = node.name.match(/^~sd-([\w-]+)-triggers$/);
 
-  if (isTrigger) {
-    const externalTriggerMatch = node.name.match(EXTERNAL_TRIGGER_ALL);
-    const downstreamTriggerMatch = node.name.match(/^~sd-([\w-]+)-triggers$/);
+  // Return external trigger data if relevant
+  if (externalTriggerMatch) {
+    const externalTrigger = {
+      pipelineId: externalTriggerMatch[1],
+      jobName: externalTriggerMatch[2]
+    };
 
-    // Add external trigger data if relevant
-    if (externalTriggerMatch) {
-      const externalTrigger = {
-        pipelineId: externalTriggerMatch[1],
-        jobName: externalTriggerMatch[2]
-      };
+    return {
+      externalTrigger
+    };
+  }
 
-      return {
-        externalTrigger
-      };
-    }
+  // Return downstream trigger data if relevant
+  if (downstreamTriggerMatch) {
+    const triggers = [];
 
-    // Add downstream trigger data if relevant
-    if (downstreamTriggerMatch) {
-      const triggers = [];
+    node.triggers.forEach(t => {
+      const downstreamTrigger = t.match(EXTERNAL_TRIGGER_ALL);
 
-      node.triggers.forEach(t => {
-        const downstreamTrigger = t.match(EXTERNAL_TRIGGER_ALL);
-
-        triggers.push({
-          triggerName: t,
-          pipelineId: downstreamTrigger[1],
-          jobName: downstreamTrigger[2]
-        });
+      triggers.push({
+        triggerName: t,
+        pipelineId: downstreamTrigger[1],
+        jobName: downstreamTrigger[2]
       });
+    });
 
-      return {
-        triggers
-      };
-    }
+    return {
+      triggers
+    };
   }
 
   const tooltip = {
