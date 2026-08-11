@@ -17,7 +17,16 @@ module('Unit | Utility | pipeline-graph | tooltip', function () {
   });
 
   test('it gets tooltip data for external trigger', function (assert) {
+    // Remote trigger
     assert.deepEqual(getTooltipData({ name: '~sd@123:main' }), {
+      externalTrigger: {
+        jobName: 'main',
+        pipelineId: '123'
+      }
+    });
+
+    // Remote join
+    assert.deepEqual(getTooltipData({ name: 'sd@123:main' }), {
       externalTrigger: {
         jobName: 'main',
         pipelineId: '123'
