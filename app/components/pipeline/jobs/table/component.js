@@ -183,17 +183,35 @@ export default class PipelineJobsTableComponent extends Component {
     this.dataReloader.start(this.event?.id);
   }
 
+  getJobsFromWorkflowGraph(workflowGraph) {
+    const latestJobs = {};
+
+    this.pipelinePageState.getJobs().forEach(job => {
+      latestJobs[job.id] = job;
+    });
+
+    return workflowGraph.nodes
+      .filter(node => node.id && !node.name.startsWith('sd@'))
+      .map(job => latestJobs[job.id] || job);
+  }
+
   setJobs() {
     this.jobs = new Map();
 
-    const jobs =
-      this.view === 'pulls'
-        ? this.workflowDataReload.getJobsForPr(this.event.prNum)
-        : this.pipelinePageState.getJobs();
-    const workflowGraph =
-      this.view === 'pulls'
-        ? this.event.workflowGraph
-        : this.pipelinePageState.getPipeline().workflowGraph;
+    let jobs;
+
+    let workflowGraph;
+
+    if (this.view === 'pulls') {
+      workflowGraph = this.event.workflowGraph;
+      jobs = this.workflowDataReload.getJobsForPr(this.event.prNum);
+    } else if (this.event) {
+      workflowGraph = this.event.workflowGraph;
+      jobs = this.getJobsFromWorkflowGraph(workflowGraph);
+    } else {
+      workflowGraph = this.pipelinePageState.getPipeline().workflowGraph;
+      jobs = this.pipelinePageState.getJobs();
+    }
 
     jobs.forEach(job => {
       this.jobs.set(job.id, {
@@ -213,11 +231,16 @@ export default class PipelineJobsTableComponent extends Component {
   @action
   update(element, [pipelineId, event]) {
     this.data = [];
-
     this.dataReloader.stop(this.event.id);
-    this.event = event;
 
-    if (this.pipelineId !== pipelineId) {
+    const pipelineChanged = this.pipelineId !== pipelineId;
+    const eventChanged = this.event?.id !== event?.id;
+
+    if (pipelineChanged || eventChanged) {
+      this.pipelineId = pipelineId;
+      this.event = event;
+      this.previousBuilds = new Map();
+      this.previousEventBuilds = [];
       this.initialize();
 
       return;
