@@ -61,6 +61,24 @@
           }
         }
 
+        .jump-to-job-select-container {
+          width: 240px;
+          align-self: stretch;
+
+          .ember-basic-dropdown {
+            width: 100%;
+            height: 100%;
+          }
+
+          .ember-power-select-trigger {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+          }
+        }
+
         .downstream-triggers-container {
           margin-left: 1rem;
           display: flex;

@@ -40,7 +40,24 @@
             @prefix="fa"
           />
         </BsButton>
-
+        {{#if this.showGraph}}
+          <div class="jump-to-job-select-container">
+            <PowerSelect
+              @triggerId="jump-to-job-select"
+              @options={{this.jumpToJobOptions}}
+              @renderInPlace={{true}}
+              @allowClear={{true}}
+              @selected={{this.selectedJob}}
+              @onChange={{this.setSelectedJob}}
+              @searchEnabled={{true}}
+              @searchField="name"
+              @placeholder="Jump to selected job..."
+              as |job|
+            >
+              {{job.name}}
+            </PowerSelect>
+          </div>
+        {{/if}}
         {{#if (and this.showGraph this.hasDownstreamTriggers)}}
           <div
             class="downstream-triggers-container"
@@ -90,7 +107,7 @@
           <Pipeline::Workflow::Graph
             @workflowGraph={{this.workflowGraphToDisplay}}
             @event={{this.event}}
-            @selectedJobId={{@jobId}}
+            @selectedJobId={{this.selectedJob.id}}
             @builds={{this.builds}}
             @stageBuilds={{this.stageBuilds}}
             @collapsedStages={{this.collapsedStages}}

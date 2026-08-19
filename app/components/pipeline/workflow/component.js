@@ -54,6 +54,8 @@ export default class PipelineWorkflowComponent extends Component {
 
   @tracked collapsedStages;
 
+  @tracked selectedJob;
+
   workflowGraph;
 
   workflowGraphWithDownstreamTriggers;
@@ -71,6 +73,7 @@ export default class PipelineWorkflowComponent extends Component {
   initialize() {
     this.event = null;
     this.selectedEvent = null;
+    this.selectedJob = null;
     this.builds = [];
     this.stageBuilds = null;
     this.workflowGraphToDisplay = null;
@@ -92,6 +95,12 @@ export default class PipelineWorkflowComponent extends Component {
       this.monitorForNewEvents();
     } else {
       this.monitorForNewBuilds();
+    }
+
+    if (this.args.jobId) {
+      this.selectedJob = this.event.workflowGraph.nodes.find(
+        node => `${node.id}` === `${this.args.jobId}`
+      );
     }
   }
 
@@ -171,6 +180,19 @@ export default class PipelineWorkflowComponent extends Component {
     super.willDestroy();
 
     this.workflowDataReload.stop(this.dataReloadId);
+  }
+
+  get jumpToJobOptions() {
+    const jobs = this.event.workflowGraph.nodes || [];
+
+    return jobs
+      .filter(job => job.id)
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  @action
+  setSelectedJob(job) {
+    this.selectedJob = job;
   }
 
   @action
