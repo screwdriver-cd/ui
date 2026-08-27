@@ -12,6 +12,8 @@ module(
 
     const pipelineId = 123;
 
+    let pipeline;
+
     let pipelinePageState;
 
     let shuttleStub;
@@ -24,9 +26,9 @@ module(
       pipelinePageState = this.owner.lookup('service:pipeline-page-state');
       const shuttle = this.owner.lookup('service:shuttle');
 
-      sinon
-        .stub(pipelinePageState, 'getPipeline')
-        .returns({ id: pipelineId, state: 'ACTIVE', parameters: {} });
+      pipeline = { id: pipelineId, state: 'ACTIVE', parameters: {} };
+
+      sinon.stub(pipelinePageState, 'getPipeline').returns(pipeline);
       sinon.stub(pipelinePageState, 'getJobs').returns([]);
       sinon.stub(pipelinePageState, 'getIsPr').returns(false);
       pipelinePageState.route = 'v2.pipeline.jobs';
@@ -54,6 +56,30 @@ module(
       );
 
       assert.dom('button').exists({ count: 3 });
+    });
+
+    test('it disables start actions when the pipeline is disabled', async function (assert) {
+      const job = { id: 123, name: 'main', state: 'ENABLED' };
+
+      pipeline.state = 'DISABLED';
+
+      this.setProperties({
+        record: {
+          job,
+          canStartFromView: true,
+          onCreate: () => {},
+          onDestroy: () => {}
+        }
+      });
+
+      await render(
+        hbs`<Pipeline::Jobs::Table::Cell::Actions
+            @record={{this.record}}
+        />`
+      );
+
+      assert.dom('button:nth-of-type(1)').isDisabled();
+      assert.dom('button:nth-of-type(3)').isDisabled();
     });
 
     test('it renders with start and restart modals', async function (assert) {

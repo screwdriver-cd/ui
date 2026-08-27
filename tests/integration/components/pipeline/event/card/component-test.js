@@ -21,9 +21,11 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
 
   hooks.beforeEach(function () {
     const settings = this.owner.lookup('service:settings');
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
 
     router = this.owner.lookup('service:router');
     workflowDataReload = this.owner.lookup('service:workflow-data-reload');
+    pipelinePageState.setPipeline({ id: 1, state: 'ACTIVE' });
 
     event = {
       id: 11,
@@ -505,6 +507,30 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     );
 
     assert.dom('.event-card-title .start-event-button').exists();
+    assert.dom('.event-card-title .start-event-button').isNotDisabled();
+  });
+
+  test('it disables start event button for PR when pipeline is disabled', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+
+    routerStub.reset();
+    routerStub.value('/pipelines/1/pulls/2');
+    pipelinePageState.setPipeline({ id: 1, state: 'DISABLED' });
+
+    event.type = 'pr';
+    event.prNum = 4;
+    this.setProperties({
+      event
+    });
+
+    await render(
+      hbs`<Pipeline::Event::Card
+        @event={{this.event}}
+        @allowEventAction={{true}}
+      />`
+    );
+
+    assert.dom('.event-card-title .start-event-button').isDisabled();
   });
 
   test('it renders card outline', async function (assert) {
