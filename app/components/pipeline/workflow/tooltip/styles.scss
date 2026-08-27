@@ -1,4 +1,5 @@
 @use 'screwdriver-colors' as colors;
+@use 'stage/styles' as stage;
 
 @mixin styles {
   #workflow-graph-tooltip {
@@ -46,11 +47,11 @@
       width: 100%;
     }
 
-    #run-job-label {
+    .run-build-label {
       padding-bottom: 0;
     }
 
-    ul#run-job-block {
+    ul.run-build-block {
       padding-left: 1em;
 
       li {
@@ -60,5 +61,6 @@
         content: '';
       }
     }
+    @include stage.styles;
   }
 }

@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { canJobStart } from 'screwdriver-ui/utils/pipeline-workflow';
+import { getTruncatedSha } from 'screwdriver-ui/utils/git';
 
 export default class PipelineWorkflowTooltipStageComponent extends Component {
   @service router;
@@ -21,17 +22,25 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
     return canJobStart(
       activeTab,
       this.args.workflowGraph,
-      this.args.d3Data.stage.setup.name
+      this.stage.setup.name
     );
   }
 
+  get stage() {
+    return this.args.d3Data.stage;
+  }
+
   get job() {
-    const setupJob = this.args.d3Data.stage.setup;
+    const setupJob = this.stage.setup;
 
     return {
       ...setupJob,
-      status: this.args.d3Data.stage.status
+      status: this.stage.status
     };
+  }
+
+  get truncatedSha() {
+    return `#${getTruncatedSha(this.args.event.sha)}`;
   }
 
   @action
