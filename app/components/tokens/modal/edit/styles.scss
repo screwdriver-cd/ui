@@ -9,6 +9,29 @@
             display: flex;
             flex-direction: column;
 
+            .powerselect-wrap {
+              display: flex;
+              margin-bottom: 0.5rem;
+
+              > div:first-child {
+                width: 6rem;
+              }
+
+              .current-token-value {
+                width: auto;
+                margin-right: 0.5rem;
+                white-space: nowrap;
+              }
+
+              .ember-basic-dropdown {
+                flex: 1;
+
+                .ember-power-select-trigger {
+                  width: 100%;
+                }
+              }
+            }
+
             label {
               display: flex;
               align-items: center;

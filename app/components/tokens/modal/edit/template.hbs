@@ -39,24 +39,38 @@
           disabled={{this.inputDisabled}}
         />
       </label>
-      <label>
-        <div>Expires at:</div>
-        <Input
-          id="token-expires-input"
-          @type="text"
-          @value={{this.expiresDate}}
-          disabled={{true}}
-        />
-      </label>
-      <label>
+      <div class="powerselect-wrap">
+        <div>Expires in:</div>
+        <div class="current-token-value">Current: {{this.expiresDate}}</div>
+        <PowerSelect
+          id="expires-select"
+          @options={{this.expiresOptions}}
+          @selected={{this.tokenExpires}}
+          @placeholder="Leave unchanged"
+          @renderInPlace={{true}}
+          @onChange={{this.setTokenExpires}}
+          as |option|
+        >
+          {{option.label}}
+        </PowerSelect>
+      </div>
+      <div class="powerselect-wrap">
         <div>Permission:</div>
-        <Input
-          id="token-permission-input"
-          @type="text"
-          @value={{@token.options.permission}}
-          disabled={{true}}
-        />
-      </label>
+        <div class="current-token-value">
+          Current: {{@token.options.permission}}
+        </div>
+        <PowerSelect
+          id="token-permission-select"
+          @options={{this.tokenPermissionOptions}}
+          @selected={{this.tokenPermission}}
+          @placeholder="Leave unchanged"
+          @renderInPlace={{true}}
+          @onChange={{this.setTokenPermission}}
+          as |option|
+        >
+          {{option}}
+        </PowerSelect>
+      </div>
     </div>
   </modal.body>
   <modal.footer>
