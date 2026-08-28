@@ -7,14 +7,8 @@ export default class V2PipelineChildPipelinesRoute extends Route {
   @service('pipeline-page-state') pipelinePageState;
 
   beforeModel() {
-    const pipeline = this.pipelinePageState.getPipeline();
-
-    if (!pipeline.childPipelines) {
-      this.replaceWith('v2.pipeline.events.index');
-    } else {
-      this.pipelinePageState.setRoute(this.routeName);
-      this.pipelinePageState.forceReloadPipelineHeader();
-    }
+    this.pipelinePageState.setRoute(this.routeName);
+    this.pipelinePageState.forceReloadPipelineHeader();
   }
 
   async model() {

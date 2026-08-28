@@ -6,15 +6,13 @@
   >
     <FaIcon @icon="cubes" @size="16x" />
   </LinkTo>
-  {{#if this.hasChildPipelines}}
-    <LinkTo
-      id="child-pipelines-nav-link"
-      title="Child pipelines"
-      @route="v2.pipeline.child-pipelines"
-    >
-      <FaIcon @icon="sitemap" @size="16x" />
-    </LinkTo>
-  {{/if}}
+  <LinkTo
+    id="child-pipelines-nav-link"
+    title="Child pipelines"
+    @route="v2.pipeline.child-pipelines"
+  >
+    <FaIcon @icon="sitemap" @size="16x" />
+  </LinkTo>
   <LinkTo
     id="secrets-nav-link"
     title="Secrets"

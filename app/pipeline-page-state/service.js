@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 export default class PipelinePageStateService extends Service {
   pipeline;
 
-  childPipelines;
+  @tracked childPipelines;
 
   triggers;
 

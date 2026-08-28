@@ -2,7 +2,10 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { hasInactivePipelines } from 'screwdriver-ui/utils/pipeline';
+import {
+  hasActivePipelines,
+  hasInactivePipelines
+} from 'screwdriver-ui/utils/pipeline';
 
 export default class PipelineChildrenComponent extends Component {
   @tracked isStartAllChildrenModalOpen;
@@ -24,6 +27,17 @@ export default class PipelineChildrenComponent extends Component {
 
   get hasInactivePipelines() {
     return hasInactivePipelines(this.pipelinePageState.getChildPipelines());
+  }
+
+  get hasChildPipelines() {
+    return this.pipelinePageState.getChildPipelines().length > 0;
+  }
+
+  get isStartAllButtonDisabled() {
+    return (
+      this.childrenPipelineStarted ||
+      !hasActivePipelines(this.pipelinePageState.getChildPipelines())
+    );
   }
 
   rerenderTable() {
