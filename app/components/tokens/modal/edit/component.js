@@ -9,8 +9,6 @@ export default class TokensModalEditComponent extends Component {
 
   @service('tokens') tokensService;
 
-  @service pipelinePageState;
-
   @tracked errorMessage;
 
   @tracked tokenName;
@@ -59,7 +57,7 @@ export default class TokensModalEditComponent extends Component {
     this.isAwaitingResponse = true;
 
     const updateUrl = `/tokens/${this.args.token.id}`;
-    const pipelineId = this.pipelinePageState.getPipelineId();
+    const { pipelineId } = this.args;
     const url = pipelineId ? `/pipelines/${pipelineId}${updateUrl}` : updateUrl;
 
     return this.shuttle
