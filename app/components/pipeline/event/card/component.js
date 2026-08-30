@@ -9,6 +9,7 @@ import {
   isSkipped
 } from 'screwdriver-ui/utils/pipeline/event';
 import { getTruncatedSha } from 'screwdriver-ui/utils/git';
+import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import {
   getDurationText,
   getExternalPipelineId,
@@ -286,6 +287,10 @@ export default class PipelineEventCardComponent extends Component {
 
   get isPR() {
     return this.event.type === 'pr';
+  }
+
+  get isStartButtonDisabled() {
+    return !isActivePipeline(this.pipelinePageState.getPipeline());
   }
 
   get prTitle() {

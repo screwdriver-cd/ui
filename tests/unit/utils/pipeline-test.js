@@ -35,6 +35,8 @@ module('Unit | Utility | pipeline', function () {
 
     assert.notOk(isInactivePipeline(ACTIVE_PIPELINE_1));
     assert.notOk(isInactivePipeline(ACTIVE_PIPELINE_2));
+    assert.notOk(isInactivePipeline(DISABLED_PIPELINE_1));
+    assert.notOk(isInactivePipeline(DISABLED_PIPELINE_2));
   });
 
   test('it checks if inactive pipeline exists', assert => {
@@ -55,6 +57,8 @@ module('Unit | Utility | pipeline', function () {
 
     assert.notOk(isActivePipeline(INACTIVE_PIPELINE_1));
     assert.notOk(isActivePipeline(INACTIVE_PIPELINE_2));
+    assert.notOk(isActivePipeline(DISABLED_PIPELINE_1));
+    assert.notOk(isActivePipeline(DISABLED_PIPELINE_2));
   });
 
   test('it checks if active pipeline exists', assert => {

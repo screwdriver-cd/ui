@@ -19,17 +19,17 @@ export const canJobBeTriggered = job => {
 
 /**
  * Check if the start button should be disabled
- * @param isPipelineInactive {boolean} Boolean indicating if the pipeline is inactive
+ * @param isPipelineActive {boolean} Boolean indicating if the pipeline is active
  * @param canStartFromView {boolean} Boolean indicating if the job can be started from the current view
  * @param job {object} Job object in the shape returned by the API
  * @returns {boolean}
  */
 export const isStartButtonDisabled = (
-  isPipelineInactive,
+  isPipelineActive,
   canStartFromView,
   job
 ) => {
-  if (isPipelineInactive || !canStartFromView) {
+  if (!isPipelineActive || !canStartFromView) {
     return true;
   }
 
