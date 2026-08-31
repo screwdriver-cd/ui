@@ -2,7 +2,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { isInactivePipeline } from 'screwdriver-ui/utils/pipeline';
+import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import { isStartButtonDisabled, isStopButtonDisabled } from './util';
 
 export default class PipelineJobsTableCellActionsComponent extends Component {
@@ -16,8 +16,6 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
 
   pipeline;
 
-  isPipelineInactive = true;
-
   @tracked confirmAction;
 
   @tracked event = null;
@@ -28,7 +26,10 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
     super(...arguments);
 
     this.pipeline = this.pipelinePageState.getPipeline();
-    this.isPipelineInactive = isInactivePipeline(this.pipeline);
+  }
+
+  get isPipelineActive() {
+    return isActivePipeline(this.pipeline);
   }
 
   get startEventTitle() {
@@ -37,7 +38,7 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
 
   get startButtonDisabled() {
     return isStartButtonDisabled(
-      this.isPipelineInactive,
+      this.isPipelineActive,
       this.args.record.canStartFromView,
       this.args.record.job
     );

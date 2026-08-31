@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import { isActivePipeline } from 'screwdriver-ui/utils/pipeline';
 import { canJobStart } from 'screwdriver-ui/utils/pipeline-workflow';
 import { getTruncatedSha } from 'screwdriver-ui/utils/git';
 
@@ -9,6 +10,8 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
   @service router;
 
   @service session;
+
+  @service('pipeline-page-state') pipelinePageState;
 
   @tracked showConfirmActionModal = false;
 
@@ -19,10 +22,13 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
       ? 'events'
       : 'pulls';
 
-    return canJobStart(
-      activeTab,
-      this.args.workflowGraph,
-      this.stage.setup.name
+    return (
+      isActivePipeline(this.pipelinePageState.getPipeline()) &&
+      canJobStart(
+        activeTab,
+        this.args.workflowGraph,
+        this.stage.setup.name
+      )
     );
   }
 
