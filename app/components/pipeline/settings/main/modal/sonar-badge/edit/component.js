@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import { getPipelineErrorMessage } from 'screwdriver-ui/utils/pipeline';
 
 export default class PipelineSettingsMainModalSonarBadgeEditComponent extends Component {
   @service('shuttle') shuttle;
@@ -73,7 +74,7 @@ export default class PipelineSettingsMainModalSonarBadgeEditComponent extends Co
         this.args.closeModal(true);
       })
       .catch(err => {
-        this.errorMessage = err.message;
+        this.errorMessage = getPipelineErrorMessage(err);
         this.isAwaitingResponse = false;
       });
   }
