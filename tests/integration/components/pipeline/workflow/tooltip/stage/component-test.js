@@ -172,7 +172,7 @@ module(
       assert.dom('#restart-stage-link').doesNotExist();
       assert
         .dom('#workflow-graph-tooltip')
-        .hasText('Can not start/restart stage');
+        .hasText('Can not run at this stage');
     });
   }
 );
