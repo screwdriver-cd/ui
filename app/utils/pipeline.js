@@ -109,7 +109,7 @@ const getPipelineErrorMessage = err => {
     return 'The repository was not found. It might have been deleted.';
   }
 
-  return err?.message ?? err?.payload?.message ?? 'Unknown error';
+  return err?.payload?.message ?? err?.message ?? 'Unknown error';
 };
 
 export {
