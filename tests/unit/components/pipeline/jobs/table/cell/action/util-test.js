@@ -24,11 +24,15 @@ module('Unit | Component | pipeline/jobs/table/cell/action/util', function () {
     assert.equal(isStartButtonDisabled(true, false, null), true);
     assert.equal(isStartButtonDisabled(false, false, null), true);
     assert.equal(
-      isStartButtonDisabled(false, true, { state: 'DISABLED' }),
+      isStartButtonDisabled(false, true, { state: 'ENABLED' }),
       true
     );
     assert.equal(
-      isStartButtonDisabled(false, true, { state: 'ENABLED' }),
+      isStartButtonDisabled(true, true, { state: 'DISABLED' }),
+      true
+    );
+    assert.equal(
+      isStartButtonDisabled(true, true, { state: 'ENABLED' }),
       false
     );
   });
