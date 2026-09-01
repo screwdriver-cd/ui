@@ -40,36 +40,40 @@
         />
       </label>
       <div class="powerselect-wrap">
-        <div>Expires in:</div>
+        <div class="powerselect-label">Expires in:</div>
         <div class="current-token-value">Current: {{this.expiresDate}}</div>
-        <PowerSelect
-          id="expires-select"
-          @options={{this.expiresOptions}}
-          @selected={{this.tokenExpires}}
-          @placeholder="Leave unchanged"
-          @renderInPlace={{true}}
-          @onChange={{this.setTokenExpires}}
-          as |option|
-        >
-          {{option.label}}
-        </PowerSelect>
+        <div class="powerselect-control">
+          <PowerSelect
+            id="expires-select"
+            @options={{this.expiresOptions}}
+            @selected={{this.tokenExpires}}
+            @placeholder="Leave unchanged"
+            @renderInPlace={{true}}
+            @onChange={{this.setTokenExpires}}
+            as |option|
+          >
+            {{option.label}}
+          </PowerSelect>
+        </div>
       </div>
       <div class="powerselect-wrap">
-        <div>Permission:</div>
+        <div class="powerselect-label">Permission:</div>
         <div class="current-token-value">
           Current: {{@token.options.permission}}
         </div>
-        <PowerSelect
-          id="token-permission-select"
-          @options={{this.tokenPermissionOptions}}
-          @selected={{this.tokenPermission}}
-          @placeholder="Leave unchanged"
-          @renderInPlace={{true}}
-          @onChange={{this.setTokenPermission}}
-          as |option|
-        >
-          {{option}}
-        </PowerSelect>
+        <div class="powerselect-control">
+          <PowerSelect
+            id="token-permission-select"
+            @options={{this.tokenPermissionOptions}}
+            @selected={{this.tokenPermission}}
+            @placeholder="Leave unchanged"
+            @renderInPlace={{true}}
+            @onChange={{this.setTokenPermission}}
+            as |option|
+          >
+            {{option}}
+          </PowerSelect>
+        </div>
       </div>
     </div>
   </modal.body>

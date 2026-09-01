@@ -15,6 +15,21 @@
       Are you sure you want to refresh this token?
     </div>
 
+    <div class="powerselect-wrap">
+      <div>Expires in:</div>
+      <PowerSelect
+        id="expires-select"
+        @options={{this.expiresOptions}}
+        @selected={{this.tokenExpires}}
+        @placeholder="Leave unchanged"
+        @renderInPlace={{true}}
+        @onChange={{this.setTokenExpires}}
+        as |option|
+      >
+        {{option.label}}
+      </PowerSelect>
+    </div>
+
     {{#if this.errorMessage}}
       <InfoMessage
         id="error-message"

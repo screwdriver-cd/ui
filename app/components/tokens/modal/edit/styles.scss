@@ -10,24 +10,30 @@
             flex-direction: column;
 
             .powerselect-wrap {
-              display: flex;
+              display: grid;
+              grid-template-columns: 6rem minmax(0, 1fr);
+              column-gap: 0.5rem;
+              align-items: center;
               margin-bottom: 0.5rem;
 
-              > div:first-child {
-                width: 6rem;
+              .powerselect-label {
+                grid-column: 1;
               }
 
               .current-token-value {
-                width: auto;
-                margin-right: 0.5rem;
+                grid-column: 2;
                 white-space: nowrap;
               }
 
-              .ember-basic-dropdown {
-                flex: 1;
+              .powerselect-control {
+                grid-column: 2;
 
-                .ember-power-select-trigger {
+                .ember-basic-dropdown {
                   width: 100%;
+
+                  .ember-power-select-trigger {
+                    width: 100%;
+                  }
                 }
               }
             }

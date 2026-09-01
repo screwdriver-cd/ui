@@ -49,6 +49,8 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
     assert.dom('#expires-select').exists({ count: 1 });
     assert.dom('#token-permission-select').exists({ count: 1 });
     assert.dom('.current-token-value').exists({ count: 2 });
+    assert.dom('.powerselect-label').exists({ count: 2 });
+    assert.dom('.powerselect-control').exists({ count: 2 });
     assert.dom('#submit-token').isDisabled();
   });
 
