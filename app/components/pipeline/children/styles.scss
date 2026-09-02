@@ -1,3 +1,4 @@
+@use 'variables';
 @use 'table/styles' as table;
 
 @mixin styles {
@@ -19,6 +20,15 @@
       height: calc(100% - $start-children-button-container-height - $margin);
 
       @include table.styles;
+    }
+
+    #no-child-pipelines-message {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      font-size: 2.5rem;
+      font-weight: variables.$weight-bold;
     }
   }
 }
