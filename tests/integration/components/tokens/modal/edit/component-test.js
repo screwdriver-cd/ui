@@ -49,8 +49,11 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
     assert
       .dom('#token-description-input')
       .hasAttribute('placeholder', 'test-description');
-    assert.dom('#token-expires-input').hasValue('08/02/2026, 03:14 AM UTC');
-    assert.dom('#token-permission-input').hasValue('read');
+    assert.dom('#expires-select').exists({ count: 1 });
+    assert.dom('#token-permission-select').exists({ count: 1 });
+    assert.dom('.current-token-value').exists({ count: 2 });
+    assert.dom('.powerselect-label').exists({ count: 2 });
+    assert.dom('.powerselect-control').exists({ count: 2 });
     assert.dom('#submit-token').isDisabled();
   });
 
@@ -75,6 +78,70 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
     await fillIn('#token-name-input', '');
     await fillIn('#token-description-input', 'description');
     assert.dom('#submit-token').isEnabled();
+
+    await fillIn('#token-description-input', '');
+    await click('#token-permission-select');
+    await click('.ember-power-select-options li:nth-child(3)');
+    assert.dom('#submit-token').isEnabled();
+  });
+
+  test('it updates only selected token options', async function (assert) {
+    const fetchStub = sinon.stub(shuttle, 'fetchFromApi').resolves({});
+
+    await render(
+      hbs`<Tokens::Modal::Edit
+        @token={{this.token}}
+        @closeModal={{this.closeModal}}
+      />`
+    );
+
+    await click('#token-permission-select');
+    await click('.ember-power-select-options li:nth-child(3)');
+    await click('#submit-token');
+
+    const body = fetchStub.firstCall.args[2];
+
+    assert.strictEqual(body.options.permission, 'write');
+    assert.notOk(Object.prototype.hasOwnProperty.call(body, 'expiresAt'));
+  });
+
+  test('it updates expiration without changing permission', async function (assert) {
+    const fetchStub = sinon.stub(shuttle, 'fetchFromApi').resolves({});
+
+    await render(
+      hbs`<Tokens::Modal::Edit
+        @token={{this.token}}
+        @closeModal={{this.closeModal}}
+      />`
+    );
+
+    await click('#expires-select');
+    await click('.ember-power-select-options li:last-child');
+    await click('#submit-token');
+
+    const body = fetchStub.firstCall.args[2];
+
+    assert.strictEqual(body.expiresAt, '');
+    assert.notOk(Object.prototype.hasOwnProperty.call(body, 'options'));
+  });
+
+  test('it does not send unselected token options', async function (assert) {
+    const fetchStub = sinon.stub(shuttle, 'fetchFromApi').resolves({});
+
+    await render(
+      hbs`<Tokens::Modal::Edit
+        @token={{this.token}}
+        @closeModal={{this.closeModal}}
+      />`
+    );
+
+    await fillIn('#token-name-input', 'updated');
+    await click('#submit-token');
+
+    const body = fetchStub.firstCall.args[2];
+
+    assert.notOk(Object.prototype.hasOwnProperty.call(body, 'expiresAt'));
+    assert.notOk(Object.prototype.hasOwnProperty.call(body, 'options'));
   });
 
   test('it handles API error', async function (assert) {

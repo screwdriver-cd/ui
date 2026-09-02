@@ -3,8 +3,16 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
+import {
+  expiresOptions,
+  tokenPermissionOptions
+} from 'screwdriver-ui/components/tokens/modal/token-options';
 
 export default class TokensModalEditComponent extends Component {
+  expiresOptions = expiresOptions;
+
+  tokenPermissionOptions = tokenPermissionOptions;
+
   @service shuttle;
 
   @service('tokens') tokensService;
@@ -14,6 +22,10 @@ export default class TokensModalEditComponent extends Component {
   @tracked tokenName;
 
   @tracked tokenDescription;
+
+  @tracked tokenExpires;
+
+  @tracked tokenPermission;
 
   @tracked isAwaitingResponse;
 
@@ -40,7 +52,11 @@ export default class TokensModalEditComponent extends Component {
     }
 
     return (
-      this.isTokenNameInvalid() || (!this.tokenName && !this.tokenDescription)
+      this.isTokenNameInvalid() ||
+      (!this.tokenName &&
+        !this.tokenDescription &&
+        !this.tokenExpires &&
+        !this.tokenPermission)
     );
   }
 
@@ -53,6 +69,16 @@ export default class TokensModalEditComponent extends Component {
   }
 
   @action
+  setTokenExpires(option) {
+    this.tokenExpires = option;
+  }
+
+  @action
+  setTokenPermission(permission) {
+    this.tokenPermission = permission;
+  }
+
+  @action
   async editToken() {
     this.isAwaitingResponse = true;
 
@@ -60,11 +86,23 @@ export default class TokensModalEditComponent extends Component {
     const { pipelineId } = this.args;
     const url = pipelineId ? `/pipelines/${pipelineId}${updateUrl}` : updateUrl;
 
+    const body = {
+      name: this.tokenName,
+      description: this.tokenDescription
+    };
+
+    if (this.tokenExpires) {
+      body.expiresAt = this.tokenExpires.getExpiresAt();
+    }
+
+    if (this.tokenPermission) {
+      body.options = {
+        permission: this.tokenPermission
+      };
+    }
+
     return this.shuttle
-      .fetchFromApi('put', url, {
-        name: this.tokenName,
-        description: this.tokenDescription
-      })
+      .fetchFromApi('put', url, body)
       .then(response => {
         this.wasActionSuccessful = true;
 

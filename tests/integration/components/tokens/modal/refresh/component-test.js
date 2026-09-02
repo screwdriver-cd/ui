@@ -34,6 +34,7 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     assert.dom('#error-message').doesNotExist();
     assert.dom('#success-container').doesNotExist();
     assert.dom('#refresh-token').exists({ count: 1 });
+    assert.dom('#expires-select').exists({ count: 1 });
     assert.dom('#refresh-token').isEnabled();
   });
 
@@ -72,5 +73,43 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     assert.dom('#success-container').exists({ count: 1 });
     assert.dom('#success-container .token-value').hasText(tokenValue);
     assert.dom('#refresh-token').isDisabled();
+  });
+
+  test('it refreshes token with the selected expiration', async function (assert) {
+    const fetchStub = sinon
+      .stub(shuttle, 'fetchFromApi')
+      .resolves({ value: 'new-value' });
+
+    await render(
+      hbs`<Tokens::Modal::Refresh
+        @token={{this.token}}
+        @closeModal={{this.closeModal}}
+      />`
+    );
+    await click('#expires-select');
+    await click('.ember-power-select-options li:last-child');
+    await click('#refresh-token');
+
+    const body = fetchStub.firstCall.args[2];
+
+    assert.strictEqual(body.expiresAt, '');
+  });
+
+  test('it refreshes token without an expiration parameter when unchanged', async function (assert) {
+    const fetchStub = sinon
+      .stub(shuttle, 'fetchFromApi')
+      .resolves({ value: 'new-value' });
+
+    await render(
+      hbs`<Tokens::Modal::Refresh
+        @token={{this.token}}
+        @closeModal={{this.closeModal}}
+      />`
+    );
+    await click('#refresh-token');
+
+    const body = fetchStub.firstCall.args[2];
+
+    assert.notOk(Object.prototype.hasOwnProperty.call(body, 'expiresAt'));
   });
 });

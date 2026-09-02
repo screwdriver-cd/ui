@@ -2,56 +2,15 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import {
+  expiresOptions,
+  tokenPermissionOptions
+} from 'screwdriver-ui/components/tokens/modal/token-options';
 
 export default class TokensModalCreateComponent extends Component {
-  expiresOptions = [
-    {
-      label: '1 day',
-      getExpiresAt: () => {
-        const now = new Date();
+  expiresOptions = expiresOptions;
 
-        now.setDate(now.getDate() + 1);
-
-        return now.toISOString();
-      }
-    },
-    {
-      label: '30 days',
-      getExpiresAt: () => {
-        const now = new Date();
-
-        now.setDate(now.getDate() + 30);
-
-        return now.toISOString();
-      }
-    },
-    {
-      label: '90 days',
-      getExpiresAt: () => {
-        const now = new Date();
-
-        now.setDate(now.getDate() + 90);
-
-        return now.toISOString();
-      }
-    },
-    {
-      label: '1 year',
-      getExpiresAt: () => {
-        const now = new Date();
-
-        now.setFullYear(now.getFullYear() + 1);
-
-        return now.toISOString();
-      }
-    },
-    {
-      label: 'No expiration',
-      getExpiresAt: () => ''
-    }
-  ];
-
-  tokenPermissionOptions = ['read', 'execute', 'write', 'all'];
+  tokenPermissionOptions = tokenPermissionOptions;
 
   @service shuttle;
 
