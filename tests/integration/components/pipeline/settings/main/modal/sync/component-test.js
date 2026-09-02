@@ -61,6 +61,35 @@ module(
       assert.dom('#submit-sync-button').isNotDisabled();
     });
 
+    test('it handles 404 API error correctly', async function (assert) {
+      sinon.stub(shuttle, 'fetchFromApi').rejects({
+        payload: {
+          statusCode: 404,
+          message: 'Not Found'
+        }
+      });
+
+      this.setProperties({
+        syncType: 'webhooks',
+        closeModal: () => {}
+      });
+
+      await render(
+        hbs`<Pipeline::Settings::Main::Modal::Sync
+            @syncType={{this.syncType}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      await click('#submit-sync-button');
+
+      assert.dom('#error-message').exists();
+      assert
+        .dom('#error-message')
+        .hasText('The repository was not found. It might have been deleted.');
+      assert.dom('#submit-sync-button').isNotDisabled();
+    });
+
     test('it handles API success correctly', async function (assert) {
       const closeModalSpy = sinon.spy();
 
