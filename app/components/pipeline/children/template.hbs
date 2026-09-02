@@ -2,27 +2,41 @@
   id="child-pipelines-container"
   {{did-update this.update @pipelineId}}
 >
-  {{#if this.hasInactivePipelines}}
-    {{info-message message="You have one or more inactive pipelines. You can activate these by adding back the corresponding SCM URL in the yaml configuration." type="info" icon="triangle-exclamation"}}
-  {{/if}}
-  <div id="start-all-button-container">
-    <BsButton
-      id="start-all-button"
-      @type="primary"
-      @outline={{true}}
-      @disabled={{this.childrenPipelineStarted}}
-      @onClick={{this.showStartAllChildrenModal}}
-    >
-      Start all child pipelines
-      {{#if this.isStartAllChildrenModalOpen}}
-        <Pipeline::Children::Modal::StartChildren
-          @closeModal={{this.closeStartAllChildrenModal}}
-        />
-      {{/if}}
-    </BsButton>
-  </div>
+  {{#if this.hasChildPipelines}}
+    {{#if this.hasInactivePipelines}}
+      <InfoMessage
+        @message="You have one or more inactive pipelines. You can activate these by adding back the corresponding SCM URL in the yaml configuration."
+        @type="info"
+        @icon="triangle-exclamation"
+      />
+    {{/if}}
+    <div id="start-all-button-container">
+      <BsButton
+        id="start-all-button"
+        @type="primary"
+        @outline={{true}}
+        disabled={{this.isStartAllButtonDisabled}}
+        @onClick={{this.showStartAllChildrenModal}}
+      >
+        Start all child pipelines
+        {{#if this.isStartAllChildrenModalOpen}}
+          <Pipeline::Children::Modal::StartChildren
+            @closeModal={{this.closeStartAllChildrenModal}}
+          />
+        {{/if}}
+      </BsButton>
+    </div>
 
-  <div id="child-pipeline-table-container">
+  {{else}}
+    <div id="no-child-pipelines-message">
+      No child pipeline(s) created
+    </div>
+  {{/if}}
+
+  <div
+    id="child-pipeline-table-container"
+    hidden={{if this.hasChildPipelines false true}}
+  >
     {{#if this.showTable}}
       <Pipeline::Children::Table
         @onDestroy={{this.onTableDestroy}}
