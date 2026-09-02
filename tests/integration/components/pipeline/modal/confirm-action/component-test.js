@@ -364,10 +364,11 @@ module(
 
     test('it switches Yes to Close on 404 and closes modal', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
-      const errorMessage = 'Not found';
+      const errorMessage =
+        'The repository was not found. It might have been deleted.';
       const shuttleStub = sinon
         .stub(shuttle, 'fetchFromApi')
-        .rejects({ payload: { statusCode: 404, message: errorMessage } });
+        .rejects({ payload: { statusCode: 404, message: 'Not Found' } });
       const closeModalSpy = sinon.spy();
 
       this.setProperties({
