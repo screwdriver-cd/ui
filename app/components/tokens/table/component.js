@@ -74,6 +74,7 @@ export default class TokensTableComponent extends Component {
           ...(token.options || {}),
           permission: token.options?.permission || 'all'
         },
+        pipelineId: this.args.pipelineId,
         type: this.args.type,
         onSuccess: this.mapTokens
       };
