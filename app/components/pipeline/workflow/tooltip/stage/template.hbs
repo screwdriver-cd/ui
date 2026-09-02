@@ -1,23 +1,63 @@
 <div id="workflow-graph-tooltip" {{did-insert this.setTooltipPosition}}>
   <div class="triangle" />
-
-  {{#if this.canStartStageFromView}}
-    <a
-      id="start-stage-link"
-      href="#"
-      {{on "click" (fn this.openConfirmActionModal 'start')}}
-    >
-      Start pipeline from this stage
-    </a>
-    <a
-      id="restart-stage-link"
-      href="#"
-      {{on "click" (fn this.openConfirmActionModal 'restart')}}
-    >
-      Restart pipeline from this stage
-    </a>
+  {{#if (not this.stage.manualStartDisabled)}}
+    {{#if this.canStartStageFromView}}
+      <p id="run-stage-label" class="run-build-label">
+        Run stage at {{this.truncatedSha}}
+      </p>
+      <ul id="run-stage-block" class="run-build-block">
+        <li>
+          <a
+            id="restart-stage-link"
+            class="run-stage-help"
+            href="#"
+            {{on "click" (fn this.openConfirmActionModal 'restart')}}
+          >
+            <FaIcon
+              @icon="rotate-right"
+              @fixedWidth="true"
+              @prefix="fas"
+            />
+            Restart (Inherit)
+          </a>
+          <BsTooltip
+            @placement="right"
+            @triggerElement="#restart-stage-link"
+            @renderInPlace={{false}}
+            @delayHide="100"
+          >
+            Use this event's metadata and build statuses.
+          </BsTooltip>
+        </li>
+        <li>
+          <a
+            id="start-stage-link"
+            class="run-stage-help"
+            href="#"
+            {{on "click" (fn this.openConfirmActionModal 'start')}}
+          >
+            <FaIcon
+              @icon="circle-play"
+              @fixedWidth="true"
+              @prefix="far"
+            />
+            New Run (Fresh)
+          </a>
+          <BsTooltip
+            @placement="right"
+            @triggerElement="#start-stage-link"
+            @renderInPlace={{false}}
+            @delayHide="100"
+          >
+            Clean start from this stage. No metadata or build statuses.
+          </BsTooltip>
+        </li>
+      </ul>
+    {{else}}
+      <p>Can not run at this stage</p>
+    {{/if}}
   {{else}}
-    <div>Can not start/restart stage</div>
+    <p>Disabled manually starting by annotation</p>
   {{/if}}
 </div>
 
@@ -26,7 +66,7 @@
     @action={{this.stageAction}}
     @event={{@event}}
     @job={{this.job}}
-    @stage={{@d3Data.stage}}
+    @stage={{this.stage}}
     @closeModal={{this.closeConfirmActionModal}}
   />
 {{/if}}

@@ -6,5 +6,6 @@ export default Model.extend({
   description: attr('string'),
   jobIds: attr(),
   setup: attr('number'),
-  teardown: attr('number')
+  teardown: attr('number'),
+  annotations: attr()
 });

@@ -990,7 +990,10 @@ module('Unit | Utility | graph tools', function () {
         name: 'production',
         jobs: [31, 32],
         setup: 38,
-        teardown: 39
+        teardown: 39,
+        annotations: {
+          'screwdriver.cd/manualStartEnabled': false
+        }
       },
       {
         id: 9,
@@ -1359,7 +1362,8 @@ module('Unit | Utility | graph tools', function () {
           name: 'stage@production:teardown',
           stageName: 'production'
         },
-        isCollapsed: false
+        isCollapsed: false,
+        manualStartDisabled: true
       }
     ];
 

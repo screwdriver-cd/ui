@@ -41,10 +41,10 @@
 
     {{#if (and (not this.tooltipData.job.manualStartDisabled) (not this.tooltipData.job.isDisabled))}}
       {{#if (and this.displayRestartButton this.canJobStartFromView)}}
-        <p id="run-job-label">
+        <p id="run-job-label" class="run-build-label">
           Run job at {{this.truncatedSha}}
         </p>
-        <ul id="run-job-block">
+        <ul id="run-job-block" class="run-build-block">
           <li>
             <a
               id="restart-job-link"
