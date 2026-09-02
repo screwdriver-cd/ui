@@ -31,6 +31,12 @@ module('Acceptance | tokens', function (hooks) {
     await visit('/user-settings/access-tokens');
 
     assert.dom('#tokens-table tbody tr').exists({ count: 2 });
+    assert
+      .dom('#tokens-table tbody tr:nth-child(1) .permission-column')
+      .hasText('read');
+    assert
+      .dom('#tokens-table tbody tr:nth-child(2) .permission-column')
+      .hasText('all');
     assert.equal(
       getPageTitle(),
       'User Settings > Access Tokens',

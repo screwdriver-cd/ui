@@ -848,15 +848,21 @@ const decorateGraph = ({
 
   // Decorate stages with status
   graph.stages.forEach(s => {
-    // Get build information
-    if (stageBuildsAvailable) {
-      const stageName = prNum ? `PR-${prNum}:${s.name}` : s.name;
-      const stage = findStage(pipelineStages, stageName);
+    const stageName = prNum ? `PR-${prNum}:${s.name}` : s.name;
+    const stage = findStage(pipelineStages, stageName);
 
-      if (stage) {
+    if (stage) {
+      s.id = stage.id;
+
+      // Set manualStartEnabled on the stage
+      if (stage.annotations) {
+        s.manualStartDisabled =
+          !stage.annotations?.['screwdriver.cd/manualStartEnabled'] ?? false;
+      }
+
+      // Get build information
+      if (stageBuildsAvailable) {
         const stageBuild = findStageBuild(stageBuilds, stage.id);
-
-        s.id = stage.id;
 
         if (stageBuild) {
           s.status = stageBuild.status;

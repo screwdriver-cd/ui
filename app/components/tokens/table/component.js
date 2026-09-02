@@ -70,7 +70,10 @@ export default class TokensTableComponent extends Component {
         description: token.description,
         lastUsed: token.lastUsed,
         expiresAt: token.expiresAt,
-        options: token.options,
+        options: {
+          ...(token.options || {}),
+          permission: token.options?.permission || 'all'
+        },
         pipelineId: this.args.pipelineId,
         type: this.args.type,
         onSuccess: this.mapTokens
