@@ -19,12 +19,14 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
 
     this.setProperties({
       token: {
+        id: 123,
         name: 'test',
         description: 'test-description',
         expiresAt: '2026-08-02T03:14:08.131Z',
         options: { permission: 'read' },
         type: 'pipeline'
       },
+      pipelineId: 1,
       closeModal: () => {}
     });
 
@@ -35,6 +37,7 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
     await render(
       hbs`<Tokens::Modal::Edit
         @token={{this.token}}
+        @pipelineId={{this.pipelineId}}
         @closeModal={{this.closeModal}}
       />`
     );
@@ -58,6 +61,7 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
     await render(
       hbs`<Tokens::Modal::Edit
         @token={{this.token}}
+        @pipelineId={{this.pipelineId}}
         @closeModal={{this.closeModal}}
       />`
     );
@@ -146,6 +150,7 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
     await render(
       hbs`<Tokens::Modal::Edit
         @token={{this.token}}
+        @pipelineId={{this.pipelineId}}
         @closeModal={{this.closeModal}}
       />`
     );
@@ -154,6 +159,52 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
 
     assert.dom('#error-message').exists({ count: 1 });
     assert.dom('#submit-token').isEnabled();
+  });
+
+  test('it uses the user token endpoint when pipelineId is not provided', async function (assert) {
+    const fetchStub = sinon.stub(shuttle, 'fetchFromApi').resolves({});
+
+    this.setProperties({
+      token: {
+        id: 456,
+        name: 'user-token',
+        description: 'description',
+        options: { permission: 'read' },
+        type: 'user'
+      },
+      pipelineId: undefined
+    });
+
+    await render(
+      hbs`<Tokens::Modal::Edit
+        @token={{this.token}}
+        @pipelineId={{this.pipelineId}}
+        @closeModal={{this.closeModal}}
+      />`
+    );
+
+    await fillIn('#token-name-input', 'updated');
+    await click('#submit-token');
+
+    assert.strictEqual(fetchStub.firstCall.args[0], 'put');
+    assert.strictEqual(fetchStub.firstCall.args[1], '/tokens/456');
+  });
+
+  test('it uses the pipeline token endpoint when pipelineId is provided', async function (assert) {
+    const fetchStub = sinon.stub(shuttle, 'fetchFromApi').resolves({});
+
+    await render(
+      hbs`<Tokens::Modal::Edit
+        @token={{this.token}}
+        @pipelineId={{this.pipelineId}}
+        @closeModal={{this.closeModal}}
+      />`
+    );
+
+    await fillIn('#token-name-input', 'updated');
+    await click('#submit-token');
+
+    assert.strictEqual(fetchStub.firstCall.args[1], '/pipelines/1/tokens/123');
   });
 
   test('it handles API success', async function (assert) {
@@ -170,6 +221,7 @@ module('Integration | Component | tokens/modal/edit', function (hooks) {
     await render(
       hbs`<Tokens::Modal::Edit
         @token={{this.token}}
+        @pipelineId={{this.pipelineId}}
         @closeModal={{this.closeModal}}
       />`
     );
