@@ -11,6 +11,7 @@
     {{#if this.isEditTokenModalOpen}}
       <Tokens::Modal::Edit
         @token={{@record}}
+        @pipelineId={{@record.pipelineId}}
         @closeModal={{this.closeEditTokenModal}}
       />
     {{/if}}

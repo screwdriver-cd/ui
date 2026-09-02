@@ -71,6 +71,7 @@ export default class TokensTableComponent extends Component {
         lastUsed: token.lastUsed,
         expiresAt: token.expiresAt,
         options: token.options,
+        pipelineId: this.args.pipelineId,
         type: this.args.type,
         onSuccess: this.mapTokens
       };
