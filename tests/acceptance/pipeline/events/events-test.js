@@ -14,6 +14,13 @@ module('Acceptance | pipelines/:id/events', hooks => {
   setupApplicationTest(hooks);
 
   const BASE_URL = `/v2/pipelines/${PIPELINE_ID}/events`;
+  const V1_BASE_URL = `/pipelines/${PIPELINE_ID}/events`;
+
+  test('visiting /pipelines/:id/events/:eventId redirects to the same event in v2', async assert => {
+    await visit(`${V1_BASE_URL}/${DEFAULT_EVENT_ID}`);
+
+    assert.strictEqual(currentURL(), `${BASE_URL}/${DEFAULT_EVENT_ID}`);
+  });
 
   test('visiting /pipelines/:id/events requires being logged in', async assert => {
     await invalidateSession();
