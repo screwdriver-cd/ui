@@ -6,7 +6,6 @@ import {
   extractDefaultJobParameters,
   extractDefaultParameters
 } from 'screwdriver-ui/utils/pipeline/parameters';
-import { getPipelineErrorMessage } from 'screwdriver-ui/utils/pipeline';
 import {
   buildPostBody,
   capitalizeFirstLetter,
@@ -225,7 +224,8 @@ export default class PipelineModalConfirmActionComponent extends Component {
       })
       .catch(err => {
         this.wasActionSuccessful = false;
-        this.errorMessage = getPipelineErrorMessage(err);
+        this.errorMessage =
+          err?.payload?.message || err?.message || 'Unknown error';
 
         const statusCode = err?.payload?.statusCode || err?.status;
 

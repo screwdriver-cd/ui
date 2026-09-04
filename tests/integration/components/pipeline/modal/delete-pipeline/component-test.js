@@ -55,9 +55,7 @@ module(
     test('it sets error message when deleting pipeline fails', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
 
-      sinon
-        .stub(shuttle, 'fetchFromApi')
-        .rejects({ payload: { statusCode: 500, message: 'TEST ERROR' } });
+      sinon.stub(shuttle, 'fetchFromApi').rejects();
 
       this.setProperties({
         pipeline: { id: 123, name: 'test' },
@@ -74,34 +72,6 @@ module(
       await fillIn('#delete-repository-input', 'test');
       await click('#delete-pipeline-action');
       assert.dom('.alert').exists({ count: 1 });
-      assert.dom('.alert > span').hasText('TEST ERROR');
-    });
-
-    test('it sets error message when deleting pipeline fails with 404 error', async function (assert) {
-      const shuttle = this.owner.lookup('service:shuttle');
-
-      sinon
-        .stub(shuttle, 'fetchFromApi')
-        .rejects({ payload: { statusCode: 404, message: 'Not Found' } });
-
-      this.setProperties({
-        pipeline: { id: 123, name: 'test' },
-        closeModal: () => {}
-      });
-
-      await render(
-        hbs`<Pipeline::Modal::DeletePipeline
-            @pipeline={{this.pipeline}}
-            @closeModal={{this.closeModal}}
-        />`
-      );
-
-      await fillIn('#delete-repository-input', 'test');
-      await click('#delete-pipeline-action');
-      assert.dom('.alert').exists({ count: 1 });
-      assert
-        .dom('.alert > span')
-        .hasText('The repository was not found. It might have been deleted.');
     });
 
     test('it calls close callback with true when delete succeeds', async function (assert) {

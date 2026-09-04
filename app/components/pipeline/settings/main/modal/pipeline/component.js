@@ -4,7 +4,6 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 import { getCheckoutUrl } from 'screwdriver-ui/utils/git';
-import { getPipelineErrorMessage } from 'screwdriver-ui/utils/pipeline';
 
 export default class PipelineSettingsMainModalPipelineComponent extends Component {
   @service('shuttle') shuttle;
@@ -61,7 +60,7 @@ export default class PipelineSettingsMainModalPipelineComponent extends Componen
         this.args.closeModal(true);
       })
       .catch(err => {
-        this.errorMessage = getPipelineErrorMessage(err);
+        this.errorMessage = err.message;
         this.isAwaitingResponse = false;
       });
   }

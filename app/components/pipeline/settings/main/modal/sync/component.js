@@ -2,7 +2,6 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { getPipelineErrorMessage } from 'screwdriver-ui/utils/pipeline';
 
 export default class PipelineSettingsMainModalSyncComponent extends Component {
   @service('shuttle') shuttle;
@@ -81,7 +80,7 @@ export default class PipelineSettingsMainModalSyncComponent extends Component {
       })
       .catch(err => {
         this.wasActionSuccessful = false;
-        this.errorMessage = getPipelineErrorMessage(err);
+        this.errorMessage = err.message;
       })
       .finally(() => {
         this.isAwaitingResponse = false;

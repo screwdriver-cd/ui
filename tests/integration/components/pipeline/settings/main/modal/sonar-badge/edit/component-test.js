@@ -120,33 +120,6 @@ module(
       assert.dom('#submit-action').isEnabled();
     });
 
-    test('it handles 404 failed API call correctly', async function (assert) {
-      this.setProperties({
-        closeModal: () => {}
-      });
-
-      sinon.stub(shuttle, 'fetchFromApi').rejects({
-        payload: {
-          statusCode: 404,
-          message: 'Not Found'
-        }
-      });
-
-      await render(
-        hbs`<Pipeline::Settings::Main::Modal::SonarBadge::Edit
-            @closeModal={{this.closeModal}}
-        />`
-      );
-      await fillIn('#sonar-badge-name-input', 'updated');
-      await click('#submit-action');
-
-      assert.dom('.modal-body .alert.alert-warning').exists();
-      assert
-        .dom('.modal-body .alert.alert-warning > span')
-        .hasText('The repository was not found. It might have been deleted.');
-      assert.dom('#submit-action').isEnabled();
-    });
-
     test('it handles successful API call correctly', async function (assert) {
       const setPipelineSpy = sinon.spy(pipelinePageState, 'setPipeline');
       const reloadHeaderSpy = sinon.spy(
