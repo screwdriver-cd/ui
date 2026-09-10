@@ -4,6 +4,10 @@ import { tracked } from '@glimmer/tracking';
 export default class PipelinePageStateService extends Service {
   pipeline;
 
+  // Used only to trigger rerendering when navigating between pipelines.
+  // Keep pipeline itself untracked because it can temporarily be null while loading.
+  @tracked pipelineTrackingKey = null;
+
   @tracked childPipelines;
 
   triggers;
@@ -33,9 +37,15 @@ export default class PipelinePageStateService extends Service {
 
   setPipeline(pipeline) {
     this.pipeline = pipeline;
+    this.pipelineTrackingKey = pipeline.id;
   }
 
   getPipeline() {
+    // Read pipelineTrackingKey to register it as a tracked dependency.
+    if (this.pipelineTrackingKey === null) {
+      return null;
+    }
+
     return this.pipeline;
   }
 
