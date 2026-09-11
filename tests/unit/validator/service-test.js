@@ -13,6 +13,11 @@ const sessionStub = Service.extend({
 
 let server;
 
+const EXAMPLE_COMMAND_PAYLOAD = {
+  errors: [],
+  command: {}
+};
+
 const EXAMPLE_CONFIG_PAYLOAD = {
   errors: [],
   jobs: {},
@@ -26,7 +31,9 @@ const EXAMPLE_TEMPLATE_PAYLOAD = {
 
 const EXAMPLE_PIPELINE_TEMPLATE_PAYLOAD = {
   errors: [],
-  template: {}
+  template: {
+    workflowGraph: {}
+  }
 };
 
 module('Unit | Service | validator', function (hooks) {
@@ -44,12 +51,28 @@ module('Unit | Service | validator', function (hooks) {
       JSON.stringify(EXAMPLE_CONFIG_PAYLOAD)
     ]);
 
+    server.post('http://localhost:8080/v4/validator/command', () => {
+      return [
+        200,
+        { 'Content-Type': 'application/json' },
+        JSON.stringify(EXAMPLE_COMMAND_PAYLOAD)
+      ];
+    });
+
     server.post('http://localhost:8080/v4/validator/template', request => {
+      if (request.requestBody === '{"yaml":"name: hoge"}') {
+        return [
+          500,
+          { 'Content-Type': 'application/json' },
+          JSON.stringify({ error: 'Internal Server Error test' })
+        ];
+      }
+
       if (request.requestBody === '{"yaml":"name: joker"}') {
         return [
           400,
           { 'Content-Type': 'application/json' },
-          JSON.stringify({ error: 'villains' })
+          JSON.stringify({ message: 'YAMLException test' })
         ];
       }
 
@@ -106,6 +129,20 @@ module('Unit | Service | validator', function (hooks) {
     assert.notOk(service.isPipelineTemplate('name: bananas'));
   });
 
+  test('it uploads a command to the validator', function (assert) {
+    const service = this.owner.lookup('service:validator');
+
+    server.handledRequest = function (verb, path, request) {
+      assert.equal(verb, 'POST');
+      assert.equal(request.withCredentials, true);
+      assert.ok(request.requestHeaders.Authorization);
+    };
+
+    return service.getValidationResults('format: binary').then(response => {
+      assert.deepEqual(response, EXAMPLE_COMMAND_PAYLOAD);
+    });
+  });
+
   test('it uploads a template to the validator', function (assert) {
     const service = this.owner.lookup('service:validator');
 
@@ -118,6 +155,24 @@ module('Unit | Service | validator', function (hooks) {
     return service.getValidationResults('name: batman').then(response => {
       assert.deepEqual(response, EXAMPLE_TEMPLATE_PAYLOAD);
     });
+  });
+
+  test('it uploads a pipeline template to the validator', function (assert) {
+    const service = this.owner.lookup('service:validator');
+
+    server.handledRequest = function (verb, path, request) {
+      assert.equal(verb, 'POST');
+      assert.equal(request.withCredentials, true);
+      assert.ok(request.requestHeaders.Authorization);
+    };
+
+    return service
+      .getValidationResults(
+        'namespace: screwdriver-cd-samples name: sum config: build jobs: test'
+      )
+      .then(response => {
+        assert.deepEqual(response, EXAMPLE_PIPELINE_TEMPLATE_PAYLOAD);
+      });
   });
 
   test('it uploads a config to the validator', function (assert) {
@@ -134,11 +189,19 @@ module('Unit | Service | validator', function (hooks) {
     });
   });
 
-  test('it handles validator failure', function (assert) {
+  test('it handles 400 validator error', function (assert) {
     const service = this.owner.lookup('service:validator');
 
-    return service.getValidationResults('name: joker').catch(response => {
-      assert.equal(response, '400 villains');
+    return service.getValidationResults('name: joker').then(response => {
+      assert.deepEqual(response.errors, ['YAMLException test']);
+    });
+  });
+
+  test('it handles 500 validator error', function (assert) {
+    const service = this.owner.lookup('service:validator');
+
+    return service.getValidationResults('name: hoge').then(response => {
+      assert.deepEqual(response.errors, ['500 - Internal Server Error test']);
     });
   });
 });
