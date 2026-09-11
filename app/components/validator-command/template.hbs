@@ -1,0 +1,83 @@
+{{#if this.collapsible}}
+  <h4 class="command" {{action "nameClick"}}>
+    <FaIcon @icon={{if this.isOpen "square-minus" "square-plus"}} />
+    {{#if this.name}}
+        {{this.name}}
+    {{else}}
+      Command Settings
+    {{/if}}
+  </h4>
+{{/if}}
+{{#if this.command}}
+  {{#if this.command.description}}
+    <div
+      class="command-description"
+      title="This is the description of the command"
+    >
+      <span class="label">
+        Description:
+      </span>
+      <span class="value">
+        {{this.command.description}}
+      </span>
+    </div>
+  {{/if}}
+  {{#if this.command.maintainer}}
+    <div
+      class="command-maintainer"
+      title="This is the maintainer of the command"
+    >
+      <span class="label">
+        Maintainer:
+      </span>
+      <span class="value">
+        {{this.command.maintainer}}
+      </span>
+    </div>
+  {{/if}}
+  {{#if this.command.version}}
+    <div
+      class="command-version"
+      title="This is the version of the command"
+    >
+      <span class="label">
+        Version:
+      </span>
+      <span class="value">
+        {{this.command.version}}
+      </span>
+    </div>
+  {{/if}}
+  {{#if this.command.format}}
+    <div
+      class="command-format"
+      title="This is the format of the command"
+    >
+      <span class="label">
+        format:
+      </span>
+      <span class="value">
+        {{this.command.format}}
+      </span>
+    </div>
+  {{/if}}
+  {{#if this.getBodyLabel}}
+    <div
+      class="command-body"
+      title="This is the {{this.getBodyLabel}} of the command"
+    >
+      <span class="label">
+        {{this.getBodyLabel}}:
+      </span>
+      <span class="value">
+        {{#if (is-object this.getBodyValue)}}
+          <ObjectTree @data={{this.getBodyValue}} />
+        {{else}}
+          {{this.getBodyValue}}
+        {{/if}}
+      </span>
+    </div>
+  {{/if}}
+{{/if}}
+
+{{yield}}

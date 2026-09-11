@@ -8,6 +8,7 @@
   <div class="col-12 col-md-{{if this.spreadView '12' '6' }}">
     <ValidatorResults
       @results={{this.results}}
+      @isCommand={{this.isCommand}}
       @isJobTemplate={{this.isJobTemplate}}
       @isPipelineTemplate={{this.isPipelineTemplate}}
       @isOpen={{true}}

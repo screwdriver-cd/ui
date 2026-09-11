@@ -11,6 +11,16 @@ export default Service.extend({
    * @param  {String}   yaml Raw yaml text
    * @return {Boolean}
    */
+  isCommand(yaml) {
+    return /^format:\s*(binary|habitat|docker)/m.test(yaml);
+  },
+
+  /**
+   * Simple test to determine if yaml looks like a template file
+   * @method isJobTemplate
+   * @param  {String}   yaml Raw yaml text
+   * @return {Boolean}
+   */
   isJobTemplate(yaml) {
     return /^name|\n+name: |\n+namespace: /.test(yaml);
   },
@@ -36,7 +46,9 @@ export default Service.extend({
   getValidationResults(yaml) {
     let url = `${ENV.APP.SDAPI_HOSTNAME}/v4`;
 
-    if (this.isPipelineTemplate(yaml)) {
+    if (this.isCommand(yaml)) {
+      url += '/validator/command';
+    } else if (this.isPipelineTemplate(yaml)) {
       url += '/pipeline/template/validate';
     } else if (this.isJobTemplate(yaml)) {
       url += '/validator/template';
@@ -58,18 +70,18 @@ export default Service.extend({
       data: JSON.stringify({ yaml })
     };
 
-    return new EmberPromise((resolve, reject) => {
+    return new EmberPromise(resolve => {
       // Call the token api to get the session info
       $.ajax(ajaxConfig)
         .done(content => resolve(content))
         .fail(response => {
-          let message = `${response.status} Request Failed`;
+          const statusCode = response.status;
+          const body = response?.responseJSON ?? {};
+          const errorReason = body.message ?? body.error ?? 'Request Failed';
+          const errorMessage =
+            statusCode === 400 ? errorReason : `${statusCode} - ${errorReason}`;
 
-          if (response && response.responseJSON) {
-            message = `${response.status} ${response.responseJSON.error}`;
-          }
-
-          return reject(message);
+          return resolve({ errors: [errorMessage] });
         });
     });
   }
