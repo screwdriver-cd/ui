@@ -200,6 +200,14 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   @action
+  onHide() {
+    this.args.closeModal();
+    if (this.isNoJobsToStart) {
+      this.transitionToEvent(this.eventToTransitionTo);
+    }
+  }
+
+  @action
   async startBuild() {
     this.isAwaitingResponse = true;
     this.isNotFoundError = false;
