@@ -1,0 +1,43 @@
+& {
+  margin: 10px 10px 0 0;
+  color: $sd-text;
+  overflow-x: auto;
+
+  &.collapsible {
+    border-radius: 3px;
+    border: 1px solid $sd-separator;
+    padding: 10px;
+  }
+
+  > div {
+    padding: 3px;
+    border-radius: 3px;
+    width: fit-content;
+  }
+
+  > div:hover {
+    background-color: $sd-highlight;
+  }
+
+  ul {
+    margin: 0;
+  }
+
+  h4 {
+    padding: 0;
+    margin: 0 0 10px;
+  }
+
+  .label {
+    color: $sd-text;
+    font-weight: $weight-bold;
+  }
+
+  ul .value {
+    color: $sd-text-med;
+  }
+
+  div.hidden {
+    display: none !important;
+  }
+}

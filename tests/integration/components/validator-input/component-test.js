@@ -13,7 +13,12 @@ module('Integration | Component | validator input', function (hooks) {
     assert
       .dom('h5')
       .hasText(
-        'Paste a screwdriver.yaml or a template yaml below to verify.Template yamls must contain the "name" field.'
+        'Paste a screwdriver.yaml, a template yaml or a command yaml below to verify.'
+      );
+    assert
+      .dom('h6')
+      .hasText(
+        'Template yamls must contain the "name" field. Command yamls must conatin the "format" field.'
       );
   });
 });

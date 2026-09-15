@@ -85,8 +85,22 @@ export default Component.extend({
   warnMessages: map('results.warnMessages', w =>
     typeof w === 'string' ? w : w.message
   ),
+  commandName: computed('results.command.{namespace,name,version}', {
+    get() {
+      if (this.get('results.command') === undefined) return '';
+
+      const fullName = getFullName({
+        name: this.get('results.command.name'),
+        namespace: this.get('results.command.namespace')
+      });
+
+      return `${fullName}@${get(this, 'results.command.version')}`;
+    }
+  }),
   templateName: computed('results.template.{namespace,name,version}', {
     get() {
+      if (this.get('results.template') === undefined) return '';
+
       // construct full template name
       const fullName = getFullName({
         name: this.get('results.template.name'),

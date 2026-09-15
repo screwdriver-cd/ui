@@ -8,7 +8,12 @@
     {{msg}}
   </div>
 {{/each}}
-{{#if this.isPipelineTemplate}}
+{{#if this.isCommand}}
+  <ValidatorCommand
+    @name={{this.commandName}}
+    @command={{this.results.command}}
+  />
+{{else if this.isPipelineTemplate}}
   <ValidatorPipeline
     @name={{this.templateName}}
     @template={{this.results.template}}

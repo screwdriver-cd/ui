@@ -95,7 +95,7 @@ export default Component.extend({
 
       const sdCommands = [];
 
-      if (commands === []) {
+      if (commands?.length === 0) {
         return [];
       }
 

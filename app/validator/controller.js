@@ -21,6 +21,11 @@ export default Controller.extend({
   yaml: '',
   results: '',
   spreadView: false,
+  isCommand: computed('yaml', {
+    get() {
+      return this.validator.isCommand(this.yaml);
+    }
+  }),
   isJobTemplate: computed('yaml', {
     get() {
       return this.validator.isJobTemplate(this.yaml);

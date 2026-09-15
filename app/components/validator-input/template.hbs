@@ -20,8 +20,12 @@
   </div>
 </div>
 <h5 class="pipeline">
-  Paste a screwdriver.yaml or a template yaml below to verify.<br />Template yamls must contain the "name" field.
+  Paste a screwdriver.yaml, a template yaml or a command yaml below to verify.
 </h5>
+<h6>
+  Template yamls must contain the "name" field.<br />
+  Command yamls must conatin the "format" field.
+</h6>
 <div id="validator-ace-editor">
   <AceEditor
     @value={{this.yaml}}

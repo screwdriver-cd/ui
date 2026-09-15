@@ -1,7 +1,11 @@
 {{#if this.collapsible}}
   <h4 class="job" {{action "nameClick"}}>
     <FaIcon @icon={{if this.isOpen "square-minus" "square-plus"}} />
-    {{this.name}}{{#if this.index}}.{{this.index}}{{/if}}
+    {{#if this.name}}
+      {{this.name}}{{#if this.index}}.{{this.index}}{{/if}}
+    {{else}}
+      Job Settings
+    {{/if}}
   </h4>
 {{/if}}
 {{#if this.getTemplateName}}

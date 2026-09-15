@@ -542,7 +542,11 @@ export default Component.extend({
     },
 
     logScroll() {
-      const container = this.element.querySelectorAll('.wrap')[0];
+      const container = this.element?.querySelector('.wrap');
+
+      if (!container) {
+        return;
+      }
 
       // plugin stop autoscroll feature
       this.scrollDirectionDetector();
