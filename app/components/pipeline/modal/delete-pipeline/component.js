@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import { getPipelineErrorMessage } from 'screwdriver-ui/utils/pipeline';
 
 export default class PipelineModalDeletePipelineComponent extends Component {
   @service router;
@@ -38,7 +39,7 @@ export default class PipelineModalDeletePipelineComponent extends Component {
       })
       .catch(err => {
         this.wasActionSuccessful = false;
-        this.errorMessage = err.message;
+        this.errorMessage = getPipelineErrorMessage(err);
       })
       .finally(() => {
         this.isAwaitingResponse = false;

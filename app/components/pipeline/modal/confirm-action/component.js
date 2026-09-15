@@ -6,6 +6,7 @@ import {
   extractDefaultJobParameters,
   extractDefaultParameters
 } from 'screwdriver-ui/utils/pipeline/parameters';
+import { getPipelineErrorMessage } from 'screwdriver-ui/utils/pipeline';
 import {
   buildPostBody,
   capitalizeFirstLetter,
@@ -32,7 +33,11 @@ export default class PipelineModalConfirmActionComponent extends Component {
 
   @tracked isNotFoundError = false;
 
+  @tracked isNoJobsToStart = false;
+
   @tracked reason = '';
+
+  eventToTransitionTo = null;
 
   pipeline;
 
@@ -148,6 +153,10 @@ export default class PipelineModalConfirmActionComponent extends Component {
       return false;
     }
 
+    if (this.isNoJobsToStart) {
+      return false;
+    }
+
     if (this.wasActionSuccessful || this.isAwaitingResponse) {
       return true;
     }
@@ -157,6 +166,10 @@ export default class PipelineModalConfirmActionComponent extends Component {
     }
 
     return false;
+  }
+
+  get isCloseAction() {
+    return this.isNotFoundError || this.isNoJobsToStart;
   }
 
   get pendingAction() {
@@ -169,9 +182,37 @@ export default class PipelineModalConfirmActionComponent extends Component {
   }
 
   @action
+  onConfirm() {
+    if (this.isNoJobsToStart) {
+      this.args.closeModal();
+      this.transitionToEvent(this.eventToTransitionTo);
+
+      return;
+    }
+
+    if (this.isCloseAction) {
+      this.args.closeModal();
+
+      return;
+    }
+
+    this.startBuild();
+  }
+
+  @action
+  onHide() {
+    this.args.closeModal();
+    if (this.isNoJobsToStart) {
+      this.transitionToEvent(this.eventToTransitionTo);
+    }
+  }
+
+  @action
   async startBuild() {
     this.isAwaitingResponse = true;
     this.isNotFoundError = false;
+    this.isNoJobsToStart = false;
+    this.eventToTransitionTo = null;
 
     const event =
       this.args.action === 'start' &&
@@ -205,27 +246,30 @@ export default class PipelineModalConfirmActionComponent extends Component {
     };
 
     await this.shuttle
-      .fetchFromApi('post', '/events', data)
-      .then(newEvent => {
+      .fetchFromApi('post', '/events', data, true)
+      .then(raw => {
+        const newEvent = raw.response;
+        const statusMessage = raw.jqXHR.getResponseHeader('X-Status-Message');
+
+        if (statusMessage !== null) {
+          this.wasActionSuccessful = false;
+          this.errorMessage = statusMessage;
+          this.isNoJobsToStart = true;
+          this.eventToTransitionTo = newEvent;
+
+          return;
+        }
         this.args.closeModal();
 
         if (this.pipelinePageState.route !== 'v2.pipeline.jobs') {
-          const route = this.pipelinePageState.getIsPr()
-            ? 'v2.pipeline.pulls.show'
-            : 'v2.pipeline.events.show';
-
           // When restarting a build from the "v2.pipeline.jobs" tab, it does not automatically transition to the 'v2.pipeline.events' tab.
-          this.router.transitionTo(route, {
-            event: newEvent,
-            reloadEventRail: true,
-            id: newEvent.id
-          });
+
+          this.transitionToEvent(newEvent);
         }
       })
       .catch(err => {
         this.wasActionSuccessful = false;
-        this.errorMessage =
-          err?.payload?.message || err?.message || 'Unknown error';
+        this.errorMessage = getPipelineErrorMessage(err);
 
         const statusCode = err?.payload?.statusCode || err?.status;
 
@@ -236,5 +280,21 @@ export default class PipelineModalConfirmActionComponent extends Component {
       .finally(() => {
         this.isAwaitingResponse = false;
       });
+  }
+
+  transitionToEvent(event) {
+    if (!event) {
+      return;
+    }
+
+    const route = this.pipelinePageState.getIsPr()
+      ? 'v2.pipeline.pulls.show'
+      : 'v2.pipeline.events.show';
+
+    this.router.transitionTo(route, {
+      event,
+      reloadEventRail: true,
+      id: event.id
+    });
   }
 }

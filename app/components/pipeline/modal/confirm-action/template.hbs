@@ -1,6 +1,6 @@
 <BsModal
   id="confirm-action-modal"
-  @onHide={{fn @closeModal}}
+  @onHide={{this.onHide}}
   as |modal|
 >
   <modal.header>
@@ -104,11 +104,11 @@
   <modal.footer>
     <BsButton
       id="submit-action"
-      disabled={{if this.isNotFoundError false this.isSubmitButtonDisabled}}
+      disabled={{this.isSubmitButtonDisabled}}
       @type="primary"
-      @defaultText={{if this.isNotFoundError "Close" "Yes"}}
-      @pendingText={{unless this.isNotFoundError this.pendingAction}}
-      @onClick={{if this.isNotFoundError (fn @closeModal) (fn this.startBuild)}}
+      @defaultText={{if this.isCloseAction "Close" "Yes"}}
+      @pendingText={{unless this.isCloseAction this.pendingAction}}
+      @onClick={{this.onConfirm}}
     />
   </modal.footer>
 </BsModal>
