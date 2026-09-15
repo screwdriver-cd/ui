@@ -8,7 +8,8 @@ const {
   hasActivePipelines,
   isDisabledPipeline,
   hasDisabledPipelines,
-  hasSonarBadge
+  hasSonarBadge,
+  getPipelineErrorMessage
 } = pipeline;
 
 module('Unit | Utility | pipeline', function () {
@@ -128,6 +129,52 @@ module('Unit | Utility | pipeline', function () {
     assert.equal(
       hasSonarBadge({ badges: { sonar: { name: 'test', uri: 'test.com' } } }),
       true
+    );
+  });
+
+  test('it gets the right error message for pipeline', assert => {
+    const testErrorMessage = 'Test Error Message';
+    const notFoundErrMessage =
+      'The repository was not found. It might have been deleted.';
+
+    assert.equal(getPipelineErrorMessage(), 'Unknown error');
+    assert.equal(
+      getPipelineErrorMessage({ message: testErrorMessage }),
+      testErrorMessage
+    );
+    assert.equal(getPipelineErrorMessage({ status: 404 }), notFoundErrMessage);
+    assert.equal(
+      getPipelineErrorMessage({ status: 404, message: testErrorMessage }),
+      notFoundErrMessage
+    );
+    assert.equal(getPipelineErrorMessage({ status: 500 }), 'Unknown error');
+    assert.equal(
+      getPipelineErrorMessage({ status: 500, message: testErrorMessage }),
+      testErrorMessage
+    );
+    assert.equal(
+      getPipelineErrorMessage({ payload: { message: testErrorMessage } }),
+      testErrorMessage
+    );
+    assert.equal(
+      getPipelineErrorMessage({ payload: { statusCode: 404 } }),
+      notFoundErrMessage
+    );
+    assert.equal(
+      getPipelineErrorMessage({
+        payload: { statusCode: 404, message: testErrorMessage }
+      }),
+      notFoundErrMessage
+    );
+    assert.equal(
+      getPipelineErrorMessage({ payload: { statusCode: 500 } }),
+      'Unknown error'
+    );
+    assert.equal(
+      getPipelineErrorMessage({
+        payload: { statusCode: 500, message: testErrorMessage }
+      }),
+      testErrorMessage
     );
   });
 });

@@ -109,6 +109,37 @@ module(
       assert.dom('.alert').exists({ count: 1 });
     });
 
+    test('it handles 404 failed API call', async function (assert) {
+      const pipelineMock = {
+        id: 123,
+        name: 'myOrg/myRepo',
+        state: 'ACTIVE'
+      };
+
+      sinon.stub(pipelinePageState, 'getPipeline').returns(pipelineMock);
+      sinon.stub(shuttle, 'fetchFromApi').rejects({
+        payload: {
+          statusCode: 404,
+          message: 'Not Found'
+        }
+      });
+
+      this.setProperties({ closeModal: () => {} });
+
+      await render(
+        hbs`<Pipeline::Settings::Main::Modal::TogglePipeline
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      await click('#toggle-pipeline-action');
+
+      assert.dom('.alert').exists({ count: 1 });
+      assert
+        .dom('.alert')
+        .hasText('The repository was not found. It might have been deleted.');
+    });
+
     test('it handles successful disable', async function (assert) {
       const pipelineMock = {
         id: 123,

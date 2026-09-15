@@ -310,7 +310,18 @@ module(
 
     test('it closes modal on success', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
-      const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves();
+      const router = this.owner.lookup('service:router');
+      const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves({
+        response: { id: 456 },
+        jqXHR: {
+          getResponseHeader: sinon
+            .stub()
+            .withArgs('X-Status-Message')
+            .returns(null),
+          getAllResponseHeaders: sinon.stub().returns('')
+        }
+      });
+      const transitionToStub = sinon.stub(router, 'transitionTo');
       const closeModalSpy = sinon.spy();
 
       this.setProperties({
@@ -331,6 +342,7 @@ module(
 
       assert.equal(shuttleStub.calledOnce, true);
       assert.equal(closeModalSpy.calledOnce, true);
+      assert.equal(transitionToStub.calledOnce, true);
     });
 
     test('it displays error message when API call fails', async function (assert) {
@@ -364,10 +376,11 @@ module(
 
     test('it switches Yes to Close on 404 and closes modal', async function (assert) {
       const shuttle = this.owner.lookup('service:shuttle');
-      const errorMessage = 'Not found';
+      const errorMessage =
+        'The repository was not found. It might have been deleted.';
       const shuttleStub = sinon
         .stub(shuttle, 'fetchFromApi')
-        .rejects({ payload: { statusCode: 404, message: errorMessage } });
+        .rejects({ payload: { statusCode: 404, message: 'Not Found' } });
       const closeModalSpy = sinon.spy();
 
       this.setProperties({
@@ -395,6 +408,69 @@ module(
 
       assert.equal(closeModalSpy.calledOnce, true);
       assert.equal(shuttleStub.calledOnce, true, 'no additional API call');
+    });
+
+    test('it switches Close to transition to the created event when no jobs are started', async function (assert) {
+      const shuttle = this.owner.lookup('service:shuttle');
+      const router = this.owner.lookup('service:router');
+      const newEvent = { id: 456 };
+      const statusMessage = 'No jobs to start';
+      const shuttleStub = sinon.stub(shuttle, 'fetchFromApi').resolves({
+        response: newEvent,
+        jqXHR: {
+          getResponseHeader: sinon
+            .stub()
+            .withArgs('X-Status-Message')
+            .returns(statusMessage),
+          getAllResponseHeaders: sinon.stub().returns('')
+        }
+      });
+      const transitionToStub = sinon.stub(router, 'transitionTo');
+      const closeModalSpy = sinon.spy();
+
+      this.setProperties({
+        action: 'start',
+        closeModal: closeModalSpy
+      });
+
+      await render(
+        hbs`<Pipeline::Modal::ConfirmAction
+            @action={{this.action}}
+            @closeModal={{this.closeModal}}
+        />`
+      );
+
+      assert.dom('#submit-action').hasText('Yes');
+
+      await click('#submit-action');
+
+      assert.equal(shuttleStub.calledOnce, true);
+      assert.dom('#confirm-action-error').exists({ count: 1 });
+      assert.dom('#confirm-action-error .alert > span').hasText(statusMessage);
+      assert.dom('#submit-action').hasText('Close');
+
+      await click('#submit-action');
+
+      assert.equal(shuttleStub.calledOnce, true, 'no additional API call');
+      assert.equal(
+        closeModalSpy.calledOnce,
+        true,
+        'modal is closed before transition'
+      );
+      assert.equal(
+        transitionToStub.calledOnce,
+        true,
+        'transitions to the created event'
+      );
+      assert.equal(
+        transitionToStub.firstCall.args[0],
+        'v2.pipeline.events.show'
+      );
+      assert.deepEqual(transitionToStub.firstCall.args[1], {
+        event: newEvent,
+        reloadEventRail: true,
+        id: newEvent.id
+      });
     });
   }
 );

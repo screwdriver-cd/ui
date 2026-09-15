@@ -102,6 +102,16 @@ const hasSonarBadge = pipeline => {
   return false;
 };
 
+const getPipelineErrorMessage = err => {
+  const statusCode = err?.payload?.statusCode || err?.status;
+
+  if (statusCode === 404) {
+    return 'The repository was not found. It might have been deleted.';
+  }
+
+  return err?.payload?.message ?? err?.message ?? 'Unknown error';
+};
+
 export {
   getStateIcon,
   isInactivePipeline,
@@ -111,5 +121,6 @@ export {
   isDisabledPipeline,
   hasDisabledPipelines,
   getDisabledPipelineMessage,
-  hasSonarBadge
+  hasSonarBadge,
+  getPipelineErrorMessage
 };
