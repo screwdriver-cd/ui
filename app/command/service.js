@@ -71,7 +71,7 @@ export default Service.extend({
             if (command.createTime) {
               // Add last updated time
               command.lastUpdated = getLastUpdatedTime({
-                createTime: command.createTime
+                updateTime: command.createTime
               });
             }
           });

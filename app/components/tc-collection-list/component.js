@@ -127,47 +127,53 @@ export default Component.extend({
       return this.model.mapBy('maintainer').uniq().sort();
     }
   }),
-  columns: computed(() => [
-    {
-      title: 'Name',
-      propertyName: 'name',
-      component: 'tcCollectionLinker',
-      resizable: true,
-      width: '20%',
-      minResizeWidth: 175
-    },
-    {
-      title: 'Description',
-      propertyName: 'description',
-      disableSorting: true,
-      resizable: true,
-      width: '30%',
-      minResizeWidth: 350
-    },
-    {
-      title: 'Namespace',
-      propertyName: 'namespace',
-      component: 'tcCollectionNamespaceLinker',
-      resizable: true,
-      width: '15%',
-      minResizeWidth: 150
-    },
-    {
-      title: 'Updated',
-      propertyName: 'lastUpdated',
-      sortBy: 'createTime',
-      resizable: true,
-      width: '15%',
-      minResizeWidth: 100
-    },
-    {
-      title: 'Released By',
-      propertyName: 'maintainer',
-      resizable: true,
-      width: '20%',
-      minResizeWidth: 150
+  columns: computed('collectionType', {
+    get() {
+      const collectionType = this.collectionType.toLowerCase();
+
+      return [
+        {
+          title: 'Name',
+          propertyName: 'name',
+          component: 'tcCollectionLinker',
+          resizable: true,
+          width: '20%',
+          minResizeWidth: 175
+        },
+        {
+          title: 'Description',
+          propertyName: 'description',
+          disableSorting: true,
+          resizable: true,
+          width: '30%',
+          minResizeWidth: 350
+        },
+        {
+          title: 'Namespace',
+          propertyName: 'namespace',
+          component: 'tcCollectionNamespaceLinker',
+          resizable: true,
+          width: '15%',
+          minResizeWidth: 150
+        },
+        {
+          title: 'Updated',
+          propertyName: 'lastUpdated',
+          sortBy: collectionType === 'pipeline' ? 'updateTime' : 'createTime',
+          resizable: true,
+          width: '15%',
+          minResizeWidth: 100
+        },
+        {
+          title: 'Released By',
+          propertyName: 'maintainer',
+          resizable: true,
+          width: '20%',
+          minResizeWidth: 150
+        }
+      ];
     }
-  ]),
+  }),
   refineModel() {
     this.data = this.refinedModel;
   },

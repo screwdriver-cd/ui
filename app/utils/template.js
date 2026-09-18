@@ -21,15 +21,15 @@ const getFullName = config => {
 /**
  * Get the humanized last update time
  * @param  {Object} config
- * @param  {String} config.createTime   Template create time
+ * @param  {String} config.updateTime   Template create time
  * @return {String}                     Returns humanized last update time
  */
-const getLastUpdatedTime = ({ createTime }) => {
-  if (!createTime) {
+const getLastUpdatedTime = ({ updateTime }) => {
+  if (!updateTime) {
     return null;
   }
 
-  const timeDiff = Date.now() - new Date(createTime).getTime();
+  const timeDiff = Date.now() - new Date(updateTime).getTime();
   const lastUpdated = `${humanizeDuration(timeDiff, {
     round: true,
     largest: 1
@@ -51,9 +51,12 @@ const templatesFormatter = templates => {
       namespace: t.namespace
     });
 
-    if (t.createTime) {
-      // Add last updated time
-      t.lastUpdated = getLastUpdatedTime({ createTime: t.createTime });
+    // Add last updated time
+    if (t.updateTime) {
+      t.lastUpdated = getLastUpdatedTime({ updateTime: t.updateTime });
+    } else if (t.createTime) {
+      // Using createTime if it does not have updateTime (job template)
+      t.lastUpdated = getLastUpdatedTime({ updateTime: t.createTime });
     }
 
     if (!t.description) {
