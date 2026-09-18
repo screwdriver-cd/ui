@@ -126,7 +126,7 @@ export default class PipelineJobsTableComponent extends Component {
         component: 'startTimeCell',
         componentForSortCell: 'pipeline/jobs/table/sort-header',
         propertyName: 'startTime',
-        sortBy: 'startTime'
+        sortedBy: 'startTime'
       },
       {
         title: 'COVERAGE',

@@ -159,7 +159,7 @@ export default Component.extend({
         {
           title: 'Updated',
           propertyName: 'lastUpdated',
-          sortBy: collectionType === 'pipeline' ? 'updateTime' : 'createTime',
+          sortedBy: collectionType === 'pipeline' ? 'updateTime' : 'createTime',
           resizable: true,
           width: '15%',
           minResizeWidth: 100
