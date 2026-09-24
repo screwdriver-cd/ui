@@ -1,7 +1,8 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { render, settled } from '@ember/test-helpers';
+import { click, render, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import sinon from 'sinon';
 
 module('Integration | Component | pipeline/children', function (hooks) {
   setupRenderingTest(hooks);
@@ -58,5 +59,35 @@ module('Integration | Component | pipeline/children', function (hooks) {
     await render(hbs`<Pipeline::Children />`);
 
     assert.dom('#start-all-button').isDisabled();
+  });
+
+  test('it opens the modal again after successfully starting all child pipelines', async function (assert) {
+    const pipelinePageState = this.owner.lookup('service:pipeline-page-state');
+    const shuttle = this.owner.lookup('service:shuttle');
+
+    pipelinePageState.setPipeline({ id: 123 });
+    pipelinePageState.setChildPipelines([
+      {
+        id: 124,
+        name: 'child124',
+        scmRepo: {
+          branch: 'main',
+          url: 'https://github.com/test'
+        },
+        scmContext: 'github:github.com',
+        state: 'ACTIVE'
+      }
+    ]);
+    sinon.stub(shuttle, 'fetchFromApi').resolves();
+
+    await render(hbs`<Pipeline::Children />`);
+    await click('#start-all-button-container > #start-all-button');
+    await click('#start-all-children-modal #start-all-button');
+
+    assert.dom('#start-all-children-modal').doesNotExist();
+
+    await click('#start-all-button-container > #start-all-button');
+
+    assert.dom('#start-all-children-modal').exists({ count: 1 });
   });
 });
