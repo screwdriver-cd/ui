@@ -57,7 +57,7 @@ module(
       assert.dom('.alert').exists({ count: 1 });
     });
 
-    test('it closes modal with correct value on successful start', async function (assert) {
+    test('it closes modal on successful start', async function (assert) {
       const closeModalSpy = sinon.spy();
 
       sinon.stub(pipelinePageState, 'getPipelineId').returns(123);
@@ -75,7 +75,6 @@ module(
 
       await click('#start-all-button');
       assert.equal(closeModalSpy.calledOnce, true);
-      assert.equal(closeModalSpy.calledWith(true), true);
     });
   }
 );
