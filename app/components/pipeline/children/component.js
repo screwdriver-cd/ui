@@ -10,8 +10,6 @@ import {
 export default class PipelineChildrenComponent extends Component {
   @tracked isStartAllChildrenModalOpen;
 
-  @tracked childrenPipelineStarted = false;
-
   @tracked showTable;
 
   @service('pipeline-page-state') pipelinePageState;
@@ -34,10 +32,7 @@ export default class PipelineChildrenComponent extends Component {
   }
 
   get isStartAllButtonDisabled() {
-    return (
-      this.childrenPipelineStarted ||
-      !hasActivePipelines(this.pipelinePageState.getChildPipelines())
-    );
+    return !hasActivePipelines(this.pipelinePageState.getChildPipelines());
   }
 
   rerenderTable() {
@@ -58,12 +53,8 @@ export default class PipelineChildrenComponent extends Component {
   }
 
   @action
-  closeStartAllChildrenModal(childrenPipelineStarted) {
+  closeStartAllChildrenModal() {
     this.isStartAllChildrenModalOpen = false;
-
-    if (childrenPipelineStarted) {
-      this.childrenPipelineStarted = true;
-    }
   }
 
   @action
