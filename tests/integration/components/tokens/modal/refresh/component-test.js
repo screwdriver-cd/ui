@@ -17,12 +17,17 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     sinon.stub(pipelinePageState, 'getPipelineId').returns(1);
 
     this.setProperties({
-      token: { name: 'test', type: 'pipeline' },
-      closeModal: () => {}
+      token: { name: 'test', type: 'pipeline' }
     });
   });
 
   test('it renders', async function (assert) {
+    this.setProperties({
+      closeModal: refreshedToken => {
+        assert.notOk(refreshedToken);
+      }
+    });
+
     await render(
       hbs`<Tokens::Modal::Refresh
         @token={{this.token}}
@@ -36,12 +41,19 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     assert.dom('#refresh-token').exists({ count: 1 });
     assert.dom('#expires-select').exists({ count: 1 });
     assert.dom('#refresh-token').isEnabled();
+
+    await click('button.close');
   });
 
   test('it displays error message on error', async function (assert) {
     const errorMessage = 'Error refreshing token';
 
     sinon.stub(shuttle, 'fetchFromApi').rejects({ message: errorMessage });
+    this.setProperties({
+      closeModal: refreshedToken => {
+        assert.notOk(refreshedToken);
+      }
+    });
 
     await render(
       hbs`<Tokens::Modal::Refresh
@@ -54,6 +66,8 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     assert.dom('#error-message').exists({ count: 1 });
     assert.dom('#error-message').hasText(`× ${errorMessage}`);
     assert.dom('#refresh-token').isEnabled();
+
+    await click('button.close');
   });
 
   test('it refreshes token on success', async function (assert) {
@@ -61,6 +75,11 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     const newToken = { value: tokenValue };
 
     sinon.stub(shuttle, 'fetchFromApi').resolves(newToken);
+    this.setProperties({
+      closeModal: refreshedToken => {
+        assert.deepEqual(refreshedToken, newToken);
+      }
+    });
 
     await render(
       hbs`<Tokens::Modal::Refresh
@@ -73,12 +92,19 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     assert.dom('#success-container').exists({ count: 1 });
     assert.dom('#success-container .token-value').hasText(tokenValue);
     assert.dom('#refresh-token').isDisabled();
+
+    await click('button.close');
   });
 
   test('it refreshes token with the selected expiration', async function (assert) {
-    const fetchStub = sinon
-      .stub(shuttle, 'fetchFromApi')
-      .resolves({ value: 'new-value' });
+    const newToken = { value: 'new-value', expiresAt: '2000-01-01 00:00:00' };
+    const fetchStub = sinon.stub(shuttle, 'fetchFromApi').resolves(newToken);
+
+    this.setProperties({
+      closeModal: refreshedToken => {
+        assert.deepEqual(refreshedToken, newToken);
+      }
+    });
 
     await render(
       hbs`<Tokens::Modal::Refresh
@@ -93,12 +119,19 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     const body = fetchStub.firstCall.args[2];
 
     assert.strictEqual(body.expiresAt, '');
+
+    await click('button.close');
   });
 
   test('it refreshes token without an expiration parameter when unchanged', async function (assert) {
-    const fetchStub = sinon
-      .stub(shuttle, 'fetchFromApi')
-      .resolves({ value: 'new-value' });
+    const newToken = { value: 'new-value' };
+    const fetchStub = sinon.stub(shuttle, 'fetchFromApi').resolves(newToken);
+
+    this.setProperties({
+      closeModal: refreshedToken => {
+        assert.deepEqual(refreshedToken, newToken);
+      }
+    });
 
     await render(
       hbs`<Tokens::Modal::Refresh
@@ -111,5 +144,7 @@ module('Integration | Component | tokens/modal/refresh', function (hooks) {
     const body = fetchStub.firstCall.args[2];
 
     assert.notOk(Object.prototype.hasOwnProperty.call(body, 'expiresAt'));
+
+    await click('button.close');
   });
 });
