@@ -41,8 +41,13 @@ export default class TokensTableCellActionsComponent extends Component {
   }
 
   @action
-  closeRefreshTokenModal() {
+  closeRefreshTokenModal(refreshedToken) {
     this.isRefreshTokenModalOpen = false;
+
+    if (refreshedToken) {
+      this.tokensService.updateToken(refreshedToken);
+      this.args.record.onSuccess();
+    }
   }
 
   @action
