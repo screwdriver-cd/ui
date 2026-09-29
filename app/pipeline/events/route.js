@@ -23,7 +23,13 @@ export default Route.extend({
       return;
     }
 
-    this.replaceWith('v2.pipeline.events', pipeline.id);
+    const { event_id: eventId } = this.paramsFor('pipeline.events.show');
+
+    if (eventId) {
+      this.replaceWith('v2.pipeline.events.show', pipeline.id, eventId);
+    } else {
+      this.replaceWith('v2.pipeline.events', pipeline.id);
+    }
   },
   setupController(controller, model = {}) {
     this._super(controller, model);
