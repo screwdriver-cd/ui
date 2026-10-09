@@ -23,12 +23,15 @@ export default class TokensModalRefreshComponent extends Component {
 
   @tracked tokenExpires;
 
+  refreshedToken;
+
   constructor() {
     super(...arguments);
 
     this.isAwaitingResponse = false;
     this.wasActionSuccessful = false;
     this.isCopyButtonDisabled = false;
+    this.refreshedToken = null;
   }
 
   get isSubmitButtonDisabled() {
@@ -66,6 +69,7 @@ export default class TokensModalRefreshComponent extends Component {
     return this.shuttle
       .fetchFromApi('put', url, body)
       .then(response => {
+        this.refreshdToken = response;
         this.tokenValue = response.value;
         this.wasActionSuccessful = true;
       })
