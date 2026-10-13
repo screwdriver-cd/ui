@@ -77,19 +77,17 @@ export default Service.extend({
   session: service(),
 
   /**
-   * Calls the store api service to fetch build artifact manifest
+   * Calls the api to fetch build artifact manifest (the api checks pipeline access
+   * and proxies the request to the store with a build-scoped token)
    * @method fetchManifest
    * @param  {Integer}  buildId     Build id
    * @return {Promise}              Resolves to a tree representaion of the dir/file structure
    */
   fetchManifest(buildId) {
-    let manifest = [];
-
-    // Fetch the manifest directly from the store to prevent CORS issues
-    const manifestUrl = `${ENV.APP.SDSTORE_HOSTNAME}/${ENV.APP.SDSTORE_NAMESPACE}/builds/${buildId}/ARTIFACTS/manifest.txt`;
-
-    // Set artifact file links to api to get redirects to store with short-lived jwt tokens
+    // Store only accepts tokens bound to the build, so fetch the manifest through the api
+    // Artifact file links also go to api to get redirects to store with short-lived jwt tokens
     const baseUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/builds/${buildId}/artifacts/`;
+    const manifestUrl = `${baseUrl}manifest.txt?type=download`;
 
     return new EmberPromise((resolve, reject) => {
       if (!this.get('session.isAuthenticated')) {
@@ -98,6 +96,7 @@ export default Service.extend({
 
       return $.ajax({
         url: manifestUrl,
+        dataType: 'text',
         headers: {
           Authorization: `Bearer ${this.session.get(
             'data.authenticated.token'
@@ -107,9 +106,16 @@ export default Service.extend({
         .done(data => {
           const paths = data.split('\n').sort(); // sort in alphabetical order
 
-          manifest = arrangeIntoTree(paths, baseUrl);
+          resolve(arrangeIntoTree(paths, baseUrl));
         })
-        .always(() => resolve(manifest));
+        .fail(jqXHR => {
+          // No manifest means no artifacts; anything else is a real failure
+          if (jqXHR.status === 404) {
+            resolve([]);
+          } else {
+            reject(new Error(`Failed to fetch artifacts: ${jqXHR.status}`));
+          }
+        });
     });
   }
 });
