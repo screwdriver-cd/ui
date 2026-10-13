@@ -2,7 +2,11 @@
   Artifacts
 </h4>
 
-{{#if this.treedata.content.length}}
+{{#if this.treedata.isRejected}}
+  <span class="artifact-error">
+    Failed to load artifacts
+  </span>
+{{else if this.treedata.content.length}}
   <BasicTree
     @contentComponent={{component "artifact-tree-content"}}
     @childrenComponent={{component "artifact-tree-children"}} as |tree|
@@ -14,10 +18,8 @@
       @childrenComponent={{component "artifact-tree-children" selectedArtifactRelative=this.selectedArtifact parentAbsolutePath='' fileName=''}}
     />
   </BasicTree>
-{{/if}}
-
-{{#unless this.treedata.content.length}}
+{{else}}
   <span>
     No artifacts yet
   </span>
-{{/unless}}
+{{/if}}

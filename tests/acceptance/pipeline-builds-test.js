@@ -37,6 +37,11 @@ module('Acceptance | pipeline build', function (hooks) {
     };
 
     mockApi.get('/jobs/:jobId', () => [200, mockJobs[0]]);
+    mockApi.get(`/builds/${buildId}/artifacts/manifest.txt`, () => [
+      200,
+      { 'Content-Type': 'text/plain' },
+      ''
+    ]);
     mockApi.get(`/builds/${buildId}`, () => {
       const build = makeBuilds(desiredEventId)[0];
 

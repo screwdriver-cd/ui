@@ -36,7 +36,7 @@ const parsedManifest = [
 
 const getManifest = () => {
   server.get(
-    `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/manifest.txt`,
+    `http://localhost:8080/v4/builds/${buildId}/artifacts/manifest.txt`,
     () => [
       200,
       {
@@ -103,9 +103,36 @@ module('Unit | Service | build artifact', function (hooks) {
 
       assert.equal(
         request.url,
-        `http://localhost:8081/v1/builds/${buildId}/ARTIFACTS/manifest.txt`
+        `http://localhost:8080/v4/builds/${buildId}/artifacts/manifest.txt?type=download`
       );
       assert.deepEqual(data, parsedManifest);
     });
+  });
+
+  test('it resolves to an empty list when the manifest is not found', async function (assert) {
+    this.session.set('isAuthenticated', true);
+    server.get(
+      `http://localhost:8080/v4/builds/${buildId}/artifacts/manifest.txt`,
+      () => [404, {}, '']
+    );
+    const service = this.owner.lookup('service:build-artifact');
+
+    assert.deepEqual(await service.fetchManifest(buildId), []);
+  });
+
+  test('it rejects when the manifest request is forbidden', async function (assert) {
+    assert.expect(1);
+    this.session.set('isAuthenticated', true);
+    server.get(
+      `http://localhost:8080/v4/builds/${buildId}/artifacts/manifest.txt`,
+      () => [403, {}, '']
+    );
+    const service = this.owner.lookup('service:build-artifact');
+
+    try {
+      await service.fetchManifest(buildId);
+    } catch (e) {
+      assert.equal(e.message, 'Failed to fetch artifacts: 403');
+    }
   });
 });
