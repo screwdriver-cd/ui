@@ -81,7 +81,9 @@ module('Unit | Service | scm', function (hooks) {
   test('it clears the warning on navigation', function (assert) {
     scm.canStartPipeline(pipeline);
 
-    this.owner.lookup('service:router').trigger('routeDidChange');
+    this.owner.lookup('service:router').trigger('routeDidChange', {
+      to: { name: 'v2.pipeline.events.index', parent: null }
+    });
 
     assert.strictEqual(scm.startWarning, null);
   });

@@ -67,7 +67,9 @@ module('Integration | Component | pipeline/header', function (hooks) {
 
     assert.dom('#pipeline-header .alert-warning').exists();
 
-    this.owner.lookup('service:router').trigger('routeDidChange');
+    this.owner.lookup('service:router').trigger('routeDidChange', {
+      to: { name: 'v2.pipeline.events.index', parent: null }
+    });
     await rerender();
 
     assert.dom('#pipeline-header .alert-warning').doesNotExist();
