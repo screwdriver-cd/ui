@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { render } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
@@ -13,6 +14,44 @@ module(
       this.owner
         .lookup('service:pipeline-page-state')
         .setPipeline({ id: 123, state: 'ACTIVE' });
+    });
+
+    ['start', 'restart'].forEach(action => {
+      test(`it blocks stage ${action} before opening a modal for another SCM account`, async function (assert) {
+        await authenticateSession({ scmContext: 'github:github.com' });
+        this.owner.lookup('service:pipeline-page-state').setPipeline({
+          id: 123,
+          state: 'ACTIVE',
+          scmContext: 'github:target.example'
+        });
+        sinon.stub(this.owner.lookup('service:router'), 'currentRoute').value({
+          name: 'events'
+        });
+        this.setProperties({
+          d3Data: {
+            d3Event: { target: null },
+            stage: { setup: { name: 'setup' } }
+          },
+          event: { sha: '1234567890abcdefg' },
+          builds: [],
+          workflowGraph: { nodes: [], edges: [] }
+        });
+
+        await render(hbs`<Pipeline::Workflow::Tooltip::Stage
+          @d3Data={{this.d3Data}}
+          @event={{this.event}}
+          @builds={{this.builds}}
+          @workflowGraph={{this.workflowGraph}}
+        />`);
+        await click(`#${action}-stage-link`);
+
+        assert.dom('.modal-dialog').doesNotExist();
+        assert.strictEqual(
+          this.owner.lookup('service:scm').startWarning.pipelineId,
+          123
+        );
+        assert.true(this.owner.lookup('service:session').isAuthenticated);
+      });
     });
 
     test('it renders an empty stage tooltip', async function (assert) {

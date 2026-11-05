@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { render } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
@@ -48,6 +49,28 @@ module(
       assert.dom('#search-for-event-button').isDisabled();
       assert.dom('#start-event-button').doesNotExist();
       assert.dom('#event-cards-container').exists({ count: 1 });
+    });
+
+    test('it blocks start before opening a modal for another SCM account', async function (assert) {
+      await authenticateSession({ scmContext: 'github:github.com' });
+      pipelinePageState.getPipeline.returns({
+        id: pipelineId,
+        state: 'ACTIVE',
+        scmContext: 'github:target.example'
+      });
+      sinon.stub(pipelinePageState, 'getIsPr').returns(false);
+
+      await render(hbs`<Pipeline::Workflow::EventRail />`);
+      shuttle.fetchFromApi.resetHistory();
+      await click('#start-event-button');
+
+      assert.dom('.modal-dialog').doesNotExist();
+      assert.strictEqual(
+        this.owner.lookup('service:scm').startWarning.pipelineId,
+        pipelineId
+      );
+      assert.notOk(shuttle.fetchFromApi.called);
+      assert.true(this.owner.lookup('service:session').isAuthenticated);
     });
 
     test('it renders disable event start button', async function (assert) {

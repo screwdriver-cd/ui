@@ -3,6 +3,7 @@ import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
 import { click, render, rerender } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 
 module('Integration | Component | pipeline/header', function (hooks) {
   setupRenderingTest(hooks);
@@ -17,6 +18,7 @@ module('Integration | Component | pipeline/header', function (hooks) {
     });
 
     pipeline.id = pipelineId;
+    pipeline.state = 'ACTIVE';
     pipeline.scmContext = 'github:github.com';
     pipeline.scmRepo = { url, branch: 'main' };
     pipeline.annotations = {};
@@ -38,6 +40,49 @@ module('Integration | Component | pipeline/header', function (hooks) {
     assert.dom('#repo-pipelines').exists({ count: 1 });
     assert.dom('#repo-pipelines .branch').hasText('main');
     assert.dom('#add-to-collection').exists({ count: 1 });
+  });
+
+  test('it shows the SCM warning after an attempt and can dismiss and show it again', async function (assert) {
+    await authenticateSession({ scmContext: 'github:other.example' });
+
+    const scm = this.owner.lookup('service:scm');
+
+    await render(hbs`<Pipeline::Header @pipeline={{this.pipeline}} />`);
+
+    assert.dom('#pipeline-header .alert-warning').doesNotExist();
+
+    scm.canStartPipeline(pipeline);
+    await rerender();
+
+    assert
+      .dom('#pipeline-header .alert-warning')
+      .includesText('To start this pipeline, sign in to github:github.com.');
+
+    await click('#pipeline-header .alert-warning .close');
+
+    assert.dom('#pipeline-header .alert-warning').doesNotExist();
+
+    scm.canStartPipeline(pipeline);
+    await rerender();
+
+    assert.dom('#pipeline-header .alert-warning').exists();
+
+    this.owner.lookup('service:router').trigger('routeDidChange');
+    await rerender();
+
+    assert.dom('#pipeline-header .alert-warning').doesNotExist();
+  });
+
+  test('it does not display another pipeline warning', async function (assert) {
+    await authenticateSession({ scmContext: 'github:other.example' });
+    this.owner.lookup('service:scm').canStartPipeline({
+      id: 999,
+      scmContext: pipeline.scmContext
+    });
+
+    await render(hbs`<Pipeline::Header @pipeline={{this.pipeline}} />`);
+
+    assert.dom('#pipeline-header .alert-warning').doesNotExist();
   });
 
   test('it renders link to parent pipeline', async function (assert) {

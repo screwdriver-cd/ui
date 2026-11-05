@@ -8,6 +8,8 @@ import { isStartButtonDisabled, isStopButtonDisabled } from './util';
 export default class PipelineJobsTableCellActionsComponent extends Component {
   @service shuttle;
 
+  @service scm;
+
   @service('pipeline-page-state') pipelinePageState;
 
   @tracked showConfirmActionModal = false;
@@ -68,6 +70,10 @@ export default class PipelineJobsTableCellActionsComponent extends Component {
 
   @action
   async openConfirmActionModal(actionType) {
+    if (!this.scm.canStartPipeline(this.pipeline)) {
+      return;
+    }
+
     this.confirmAction = actionType;
     this.event = this.args.record.event || null;
     this.latestCommitEvent = null;

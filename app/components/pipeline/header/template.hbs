@@ -1,6 +1,15 @@
 <div id="pipeline-header"
   {{did-update this.updatePipeline @pipeline}}
 >
+  {{#if (eq this.scm.startWarning.pipelineId this.pipeline.id)}}
+    <BsAlert
+      @type="warning"
+      @onDismissed={{this.scm.clearStartWarning}}
+    >
+      <FaIcon @icon="triangle-exclamation" />
+      <span>{{this.scm.startWarning.message}}</span>
+    </BsAlert>
+  {{/if}}
   {{#if this.isInactivePipeline}}
     <InfoMessage
         @message="Pipeline is inactive and no new events can be started. You can activate the pipeline by adding the SCM URL in the parent pipeline yaml configuration."

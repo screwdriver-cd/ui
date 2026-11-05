@@ -11,6 +11,8 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
 
   @service session;
 
+  @service scm;
+
   @service('pipeline-page-state') pipelinePageState;
 
   @tracked showConfirmActionModal = false;
@@ -24,11 +26,7 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
 
     return (
       isActivePipeline(this.pipelinePageState.getPipeline()) &&
-      canJobStart(
-        activeTab,
-        this.args.workflowGraph,
-        this.stage.setup.name
-      )
+      canJobStart(activeTab, this.args.workflowGraph, this.stage.setup.name)
     );
   }
 
@@ -76,6 +74,10 @@ export default class PipelineWorkflowTooltipStageComponent extends Component {
 
   @action
   openConfirmActionModal(stageAction) {
+    if (!this.scm.canStartPipeline(this.pipelinePageState.getPipeline())) {
+      return;
+    }
+
     this.stageAction = stageAction;
     this.showConfirmActionModal = true;
   }

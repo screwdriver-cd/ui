@@ -20,12 +20,14 @@
   @pipelineId={{this.pipeline.id}}
   @pipelineName={{this.pipeline.name}}
   @pipelineState={{this.pipeline.state}}
+  @pipelineScmContext={{this.pipeline.scmContext}}
   @isAuthenticated={{this.session.isAuthenticated}}
   @event={{this.event}}
   @prEvents={{this.prEvents}}
   @prNumber={{this.job.prNumber}}
   @templateId={{this.build.templateId}}
   @onStart={{action "startBuild"}}
+  @onStartBlocked={{fn (mut this.model.scmMismatchMessage)}}
   @onStop={{action "stopBuild"}}
   @reloadBuild={{action "reload"}}
   @changeBuild={{action "changeBuild"}}
@@ -42,6 +44,15 @@
 {{/if}}
 
 <div class="padded-container">
+  {{#if this.model.scmMismatchMessage}}
+    <BsAlert
+      @type="warning"
+      @onDismissed={{fn (mut this.model.scmMismatchMessage) null}}
+    >
+      <FaIcon @icon="triangle-exclamation" />
+      <span>{{this.model.scmMismatchMessage}}</span>
+    </BsAlert>
+  {{/if}}
   <InfoMessage
     @message={{this.errorMessage}}
     @type="warning"
