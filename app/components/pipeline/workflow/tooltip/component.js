@@ -12,6 +12,8 @@ export default class PipelineWorkflowTooltipComponent extends Component {
 
   @service session;
 
+  @service scm;
+
   @service pipelinePageState;
 
   @tracked showToggleJobModal = false;
@@ -159,6 +161,10 @@ export default class PipelineWorkflowTooltipComponent extends Component {
 
   @action
   openConfirmActionModal(eventAction) {
+    if (!this.scm.canStartPipeline(this.pipeline)) {
+      return;
+    }
+
     this.showConfirmActionModal = true;
     this.eventAction = eventAction;
   }

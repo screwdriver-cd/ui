@@ -114,6 +114,34 @@ module(
       assert.dom('.modal-title').hasText('Are you sure you want to restart?');
     });
 
+    ['start', 'restart'].forEach(action => {
+      test(`it blocks ${action} before fetching or opening a modal for another SCM account`, async function (assert) {
+        await authenticateSession({ scmContext: 'github:github.com' });
+        pipeline.scmContext = 'github:target.example';
+        this.set('record', {
+          job: { id: 123, name: 'main', state: 'ENABLED' },
+          build: { id: 999, meta: {}, status: 'SUCCESS' },
+          canStartFromView: true,
+          onCreate: () => {},
+          onDestroy: () => {}
+        });
+
+        await render(hbs`<Pipeline::Jobs::Table::Cell::Actions
+          @record={{this.record}}
+        />`);
+        await click(`button:nth-of-type(${action === 'start' ? 1 : 3})`);
+
+        assert.dom('.modal-dialog').doesNotExist();
+        assert.strictEqual(
+          this.owner.lookup('service:scm').startWarning.pipelineId,
+          pipelineId
+        );
+        assert.notOk(shuttleStub.called);
+        assert.notOk(latestCommitEventStub.called);
+        assert.true(this.owner.lookup('service:session').isAuthenticated);
+      });
+    });
+
     test('it does not fetch an event for start without an event context', async function (assert) {
       const job = { id: 123, name: 'main', state: 'ENABLED' };
 

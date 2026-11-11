@@ -7,6 +7,7 @@ import { resolve, Promise as EmberPromise } from 'rsvp';
 import Service from '@ember/service';
 import sinon from 'sinon';
 import { toCustomLocaleString } from 'screwdriver-ui/utils/time-range';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 
 const coverageService = Service.extend({
   getCoverageInfo() {
@@ -105,6 +106,73 @@ module('Integration | Component | build banner', function (hooks) {
 
   hooks.beforeEach(function () {
     this.owner.register('service:coverage', coverageService);
+  });
+
+  [
+    { status: 'ABORTED', scmContext: 'github:target.example', blocked: true },
+    { status: 'ABORTED', scmContext: 'github:github.com', blocked: false },
+    { status: 'RUNNING', scmContext: 'github:target.example', blocked: false }
+  ].forEach(({ status, scmContext, blocked }) => {
+    test(`it ${blocked ? 'blocks' : 'allows'} ${
+      status === 'RUNNING' ? 'stop' : 'restart'
+    } for ${scmContext}`, async function (assert) {
+      await authenticateSession({ scmContext: 'github:github.com' });
+      const onStart = sinon.spy();
+      const onStop = sinon.spy();
+      const onStartBlocked = sinon.spy();
+
+      this.setProperties({
+        buildSteps: buildStepsMock,
+        event: eventMock,
+        status,
+        scmContext,
+        prEvents: resolve([]),
+        jobDisabled: resolve(false),
+        onStart,
+        onStop,
+        onStartBlocked,
+        reloadBuild: () => {}
+      });
+
+      await render(hbs`<BuildBanner
+        @buildStatus={{this.status}}
+        @buildStart="2016-11-04T20:09:41.238Z"
+        @buildSteps={{this.buildSteps}}
+        @jobName="main"
+        @jobDisabled={{this.jobDisabled}}
+        @isAuthenticated={{true}}
+        @event={{this.event}}
+        @pipelineScmContext={{this.scmContext}}
+        @prEvents={{this.prEvents}}
+        @onStart={{this.onStart}}
+        @onStop={{this.onStop}}
+        @onStartBlocked={{this.onStartBlocked}}
+        @reloadBuild={{this.reloadBuild}}
+      />`);
+      await click('.call-to-action button');
+
+      if (blocked) {
+        assert.dom('.ember-modal-dialog').doesNotExist();
+        assert.true(onStartBlocked.calledOnce);
+        assert.true(
+          onStartBlocked.firstCall.args[0].includes(
+            'sign in to github:target.example'
+          )
+        );
+        assert.notOk(onStart.called);
+      } else {
+        assert.dom('.ember-modal-dialog').exists();
+        await click('.build-action-yes');
+
+        assert.strictEqual(onStart.callCount, status === 'RUNNING' ? 0 : 1);
+        assert.strictEqual(onStop.callCount, status === 'RUNNING' ? 1 : 0);
+        if (status === 'RUNNING') {
+          assert.notOk(onStartBlocked.called);
+        }
+      }
+
+      assert.true(this.owner.lookup('service:session').isAuthenticated);
+    });
   });
 
   test('it renders', async function (assert) {

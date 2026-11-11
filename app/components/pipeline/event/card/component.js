@@ -27,6 +27,8 @@ import {
 export default class PipelineEventCardComponent extends Component {
   @service router;
 
+  @service scm;
+
   @service('workflow-data-reload') workflowDataReload;
 
   @service('pipeline-page-state') pipelinePageState;
@@ -420,6 +422,10 @@ export default class PipelineEventCardComponent extends Component {
 
   @action
   openStartEventModal() {
+    if (!this.scm.canStartPipeline(this.pipelinePageState.getPipeline())) {
+      return;
+    }
+
     this.showStartEventModal = true;
   }
 

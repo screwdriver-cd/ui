@@ -11,6 +11,8 @@ const LATEST_COMMIT_EVENT_QUEUE_NAME = 'eventRailLatestCommitEvent';
 export default class PipelineWorkflowEventRailComponent extends Component {
   @service router;
 
+  @service scm;
+
   @service('shuttle') shuttle;
 
   @service('workflow-data-reload') workflowDataReload;
@@ -267,6 +269,10 @@ export default class PipelineWorkflowEventRailComponent extends Component {
 
   @action
   openStartEventModal() {
+    if (!this.scm.canStartPipeline(this.pipelinePageState.getPipeline())) {
+      return;
+    }
+
     this.showStartEventModal = true;
   }
 

@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'screwdriver-ui/config/environment';
-import { get } from '@ember/object';
+import { action, get } from '@ember/object';
 const scmUrl = `${ENV.APP.SDAPI_HOSTNAME}/${ENV.APP.SDAPI_NAMESPACE}/auth/contexts`;
 
 /**
@@ -23,8 +23,41 @@ function getIconType(scmContext) {
 }
 
 export default Service.extend({
+  router: service(),
   session: service(),
   store: service(),
+
+  startWarning: null,
+
+  init() {
+    this._super(...arguments);
+    this.router.on('routeDidChange', this, this.clearStartWarning);
+  },
+
+  willDestroy() {
+    this.router.off('routeDidChange', this, this.clearStartWarning);
+    this._super(...arguments);
+  },
+
+  clearStartWarning: action(function clearStartWarning() {
+    this.set('startWarning', null);
+  }),
+
+  /**
+   * Check the SCM account before opening a V2 start or restart modal.
+   * @param {Object} pipeline Pipeline to start
+   * @return {Boolean} Whether the start action can proceed
+   */
+  canStartPipeline(pipeline) {
+    const message = this.getScmMismatchMessage(pipeline.scmContext);
+
+    this.set(
+      'startWarning',
+      message ? { pipelineId: pipeline.id, message } : null
+    );
+
+    return !message;
+  },
 
   /**
    * Get all scms from sd api server,
@@ -100,6 +133,36 @@ export default Service.extend({
     });
 
     return ret;
+  },
+
+  /**
+   * Get a warning when starting a pipeline requires switching SCM accounts.
+   * @method getScmMismatchMessage
+   * @param  {String} scmContext SCM context of the pipeline
+   * @return {String} Warning message, or an empty string when no switch is needed
+   */
+  getScmMismatchMessage(scmContext) {
+    const currentContext = get(this.session, 'data.authenticated.scmContext');
+
+    if (
+      !this.session.isAuthenticated ||
+      !currentContext ||
+      !scmContext ||
+      currentContext === scmContext
+    ) {
+      return '';
+    }
+
+    const { displayName, readOnly } = this.getScm(scmContext);
+
+    // Event creation for read-only SCMs does not require a matching login SCM.
+    if (readOnly) {
+      return '';
+    }
+
+    const scmName = displayName || scmContext;
+
+    return `To start this pipeline, sign in to ${scmName}. Switch accounts from the ACCOUNTS menu in the top-right corner.`;
   },
 
   /**

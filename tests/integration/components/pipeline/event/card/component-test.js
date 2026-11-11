@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { render, rerender } from '@ember/test-helpers';
+import { click, render, rerender } from '@ember/test-helpers';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 
@@ -531,6 +532,32 @@ module('Integration | Component | pipeline/event/card', function (hooks) {
     );
 
     assert.dom('.event-card-title .start-event-button').isDisabled();
+  });
+
+  test('it blocks PR start before opening a modal for another SCM account', async function (assert) {
+    await authenticateSession({ scmContext: 'github:github.com' });
+    this.owner.lookup('service:pipeline-page-state').setPipeline({
+      id: 1,
+      state: 'ACTIVE',
+      scmContext: 'github:target.example'
+    });
+    routerStub.value('/pipelines/1/pulls/2');
+    event.type = 'pr';
+    event.prNum = 4;
+    this.set('event', event);
+
+    await render(hbs`<Pipeline::Event::Card
+      @event={{this.event}}
+      @allowEventAction={{true}}
+    />`);
+    await click('.start-event-button');
+
+    assert.dom('.modal-dialog').doesNotExist();
+    assert.strictEqual(
+      this.owner.lookup('service:scm').startWarning.pipelineId,
+      1
+    );
+    assert.true(this.owner.lookup('service:session').isAuthenticated);
   });
 
   test('it renders card outline', async function (assert) {

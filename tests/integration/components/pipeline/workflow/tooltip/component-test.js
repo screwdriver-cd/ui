@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'screwdriver-ui/tests/helpers';
-import { render, triggerEvent } from '@ember/test-helpers';
+import { click, render, triggerEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import sinon from 'sinon';
@@ -16,6 +16,44 @@ module('Integration | Component | pipeline/workflow/tooltip', function (hooks) {
       .stub(pipelinePageState, 'getPipeline')
       .returns({ id: 987, state: 'ACTIVE' });
     sinon.stub(pipelinePageState, 'getJobs').returns([]);
+  });
+
+  ['start', 'restart'].forEach(action => {
+    test(`it blocks job ${action} before opening a modal for another SCM account`, async function (assert) {
+      await authenticateSession({ scmContext: 'github:github.com' });
+      this.owner.lookup('service:pipeline-page-state').getPipeline.returns({
+        id: 987,
+        state: 'ACTIVE',
+        scmContext: 'github:target.example'
+      });
+      sinon.stub(this.owner.lookup('service:router'), 'currentRoute').value({
+        name: 'events'
+      });
+      this.setProperties({
+        d3Data: {
+          node: { name: 'main', isDisabled: false },
+          d3Event: { target: null }
+        },
+        event: { sha: '1234567890abcdefg' },
+        builds: [],
+        workflowGraph: mockGraph
+      });
+
+      await render(hbs`<Pipeline::Workflow::Tooltip
+        @d3Data={{this.d3Data}}
+        @event={{this.event}}
+        @builds={{this.builds}}
+        @workflowGraph={{this.workflowGraph}}
+      />`);
+      await click(`#${action}-job-link`);
+
+      assert.dom('.modal-dialog').doesNotExist();
+      assert.strictEqual(
+        this.owner.lookup('service:scm').startWarning.pipelineId,
+        987
+      );
+      assert.true(this.owner.lookup('service:session').isAuthenticated);
+    });
   });
 
   test('it renders run job actions', async function (assert) {

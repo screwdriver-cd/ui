@@ -17,6 +17,7 @@ const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
 export default Component.extend({
   userSettings: service(),
   shuttle: service(),
+  scm: service(),
   classNames: ['build-banner', 'grid'],
   classNameBindings: ['buildStatus'],
   shouldSkipNextNotify: false,
@@ -349,6 +350,16 @@ export default Component.extend({
     },
 
     openBuildActionModal() {
+      if (this.buildAction === 'Restart') {
+        const message = this.scm.getScmMismatchMessage(this.pipelineScmContext);
+
+        this.onStartBlocked?.(message);
+
+        if (message) {
+          return;
+        }
+      }
+
       this.set('showBuildActionModal', true);
     },
 
