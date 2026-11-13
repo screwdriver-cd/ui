@@ -1,0 +1,118 @@
+$sd-text: #26282a;
+$sd-text-med: #979ba7;
+$sd-text-light: #d8dade;
+$sd-link: #188fff;
+$sd-success: #03af7a;
+$sd-failure: #ff4b00;
+$sd-running: #0f69ff;
+$sd-warning: #ffd333;
+$sd-highlight: #e7f4ff;
+
+.build-banner {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr) 2fr;
+  list-style: none;
+  margin: 0;
+  padding: 0 40px;
+  color: $sd-text;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+    padding: 5px 10px;
+    border-left: 1px solid $sd-text-med;
+    overflow-wrap: break-word;
+    vertical-align: top;
+  }
+  summary { display: list-item; }
+  .banner-label { order: 2; text-transform: uppercase; color: $sd-text-med; font-weight: 400; font-size: 10px; }
+  .job-name {
+    border-left-width: 3px;
+    .banner-value { font-weight: 600; }
+  }
+  &.build-SUCCESS .job-name { border-left-color: $sd-success; .banner-value { color: $sd-success; } }
+  &.build-FAILURE .job-name, &.build-ABORTED .job-name { border-left-color: $sd-failure; .banner-value { color: $sd-failure; } }
+  &.build-RUNNING .job-name, &.build-QUEUED .job-name, &.build-BLOCKED .job-name { border-left-color: $sd-running; .banner-value { color: $sd-running; } }
+  &.build-WARNING .job-name, &.build-UNSTABLE .job-name { border-left-color: $sd-warning; .banner-value { color: $sd-warning; } }
+  .call-to-action { grid-column: 10; border-left-width: 0; text-align: right; justify-content: center; }
+}
+
+.padded-container { padding: 0 1rem; }
+
+.build-step-collection {
+  display: grid;
+  grid-template-columns: minmax(200px, 25%) minmax(0, 1fr);
+  gap: 0 15px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  margin-top: 20px;
+  padding: 10px 25px;
+  background-color: #f8f8f8;
+
+  &__side { display: flex; flex-direction: column; min-height: 0; }
+  &__list { padding: 0.5rem 0; }
+  &__main { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+  .nav-item { padding: 10px; }
+  .nav-tabs { flex: none; }
+  .nav-tabs .nav-link { color: $sd-link; }
+  .nav-tabs .nav-link.active { color: $sd-text; font-weight: 600; }
+}
+
+.build-steps {
+  color: $sd-text;
+  h3 { font-size: 1.25rem; font-weight: 600; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  ul.indent { margin-left: 15px; padding-left: 0; }
+  .step-toggle { padding-left: 0; cursor: pointer; text-decoration: none; color: $sd-link; }
+}
+
+.build-step {
+  padding: 5px 0 0;
+  border-radius: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  &:hover { background-color: #d5d5d5; }
+  &.active { background-color: #e8e8e8; }
+  &__button {
+    display: flex; gap: 0.5rem; width: 100%; padding: 0 0.5rem 5px; align-items: baseline;
+    border: 0; background: transparent; text-align: left; font-size: 1rem;
+    .name { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; color: $sd-link; }
+    .duration { color: $sd-text-med; font-size: 10px; }
+  }
+  &.active .name { color: #303030; font-weight: 600; }
+  &.success svg { color: $sd-success; }
+  &.failure svg { color: $sd-failure; }
+  &.running svg { color: $sd-running; }
+}
+
+.artifact-tree { color: $sd-text; a, .btn-link { color: $sd-link; text-decoration: none; } }
+.artifact-tree__list { list-style: none; padding-left: 1rem; margin: 0; }
+.artifact-tree__file.is-selected > a { font-weight: 600; color: $sd-text; }
+.artifact-preview { display: flex; flex-direction: column; height: 100%; min-height: 0; padding: 0.5rem; gap: 0.5rem;
+  iframe { flex: 1 1 auto; min-height: 0; width: 100%; border: 1px solid var(--sd-border); } }
+
+.build-log {
+  display: flex; flex-direction: column; height: 100%; min-height: 0;
+  background: #303030; color: #fff; border-radius: 5px; padding: 0 15px 10px;
+  &--fullscreen { position: fixed; inset: 0; z-index: 1050; height: auto; border-radius: 0; }
+  &__toolbar { display: flex; align-items: center; gap: 0.25rem; padding: 5px 0;
+    .btn-link { color: #3697f2; &:hover, &:focus { color: #2a7cc7; } } }
+  &__spacer { flex: 1 1 auto; }
+  &__download { position: relative; }
+  &__download-menu { position: absolute; right: 0; z-index: 2; min-width: 16rem; gap: 0.5rem; color: #222; }
+  &__scroll { font-family: monospace; font-size: 1em; line-height: 20px; background: #333; color: #eee; }
+  &__lines { width: 100%; }
+  &__line { width: 100%; display: flex; gap: 10px; padding: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  &__scroll--nowrap &__line { white-space: pre; overflow-wrap: normal; width: max-content; min-width: 100%; }
+  &__time { flex: 0 0 auto; width: 70px; color: $sd-text-med; user-select: none; }
+}
+
+.build-log__earlier {
+  flex: none;
+  text-align: center;
+  border-bottom: 1px solid #444;
+  .btn-link { color: #3697f2; }
+}

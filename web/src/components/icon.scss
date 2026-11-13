@@ -1,0 +1,76 @@
+// Status colours of the Ember UI (app/styles/screwdriver-colors.scss).
+:root {
+  --sd-status-success: #03af7a;
+  --sd-status-failure: #ff4b00;
+  --sd-status-running: #0f69ff;
+  --sd-status-warning: #ffd333;
+  --sd-status-frozen: #acd9ff;
+  --sd-status-neutral: #979ba7;
+}
+
+.sd-status-icon {
+  display: inline-block;
+  text-align: center;
+  line-height: 1;
+
+  &.SUCCESS,
+  &.success {
+    color: var(--sd-status-success);
+  }
+
+  &.FAILURE,
+  &.ABORTED,
+  &.failure,
+  &.aborted {
+    color: var(--sd-status-failure);
+  }
+
+  &.RUNNING,
+  &.QUEUED,
+  &.running {
+    color: var(--sd-status-running);
+  }
+
+  &.WARNING,
+  &.UNSTABLE,
+  &.SKIPPED,
+  &.unstable {
+    color: var(--sd-status-warning);
+  }
+
+  &.FROZEN,
+  &.frozen {
+    color: var(--sd-status-frozen);
+  }
+
+  &.CREATED,
+  &.BLOCKED,
+  &.COLLAPSED,
+  &.UNKNOWN,
+  &.blocked,
+  &.unknown {
+    color: var(--sd-status-neutral);
+  }
+}
+
+.sd-trusted {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  background-color: #16c047;
+  mask: center / contain no-repeat;
+  -webkit-mask: center / contain no-repeat;
+
+  &.distrusted {
+    background-color: var(--sd-status-neutral);
+  }
+}
+
+.sd-svg-icon {
+  display: inline-block;
+  vertical-align: middle;
+  background-color: currentColor;
+  mask: center / contain no-repeat;
+  -webkit-mask: center / contain no-repeat;
+}

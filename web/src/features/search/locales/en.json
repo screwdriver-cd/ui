@@ -1,0 +1,15 @@
+{
+  "search.title": "Search",
+  "search.placeholder": "Search Screwdriver pipelines",
+  "search.submit": "Search",
+  "search.noResults": "No results",
+  "search.results": "{count, plural, one {Showing # result} other {Showing # results}}",
+  "search.column.name": "Name",
+  "search.column.branch": "Branch",
+  "search.column.account": "Account",
+  "search.column.add": "Add to Collection",
+  "search.addTo": "Add {name} to a collection",
+  "search.addSuccess": "Successfully added Pipeline to Collection {name}",
+  "search.addError": "Could not add Pipeline to Collection {name}",
+  "search.showMore": "Show more results..."
+}

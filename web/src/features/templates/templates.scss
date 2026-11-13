@@ -1,0 +1,250 @@
+$sd-text: #26282a;
+$sd-text-med: #979ba7;
+$sd-link: #188fff;
+$sd-failure: #ff4b00;
+$sd-running: #0f69ff;
+
+.collection-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 0.5rem 1rem;
+  color: $sd-text;
+  &__scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  &__table {
+    margin: 1rem 0;
+  }
+  &__table thead {
+    color: $sd-text-med;
+  }
+  &__table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--bs-body-bg, #fff);
+    z-index: 1;
+  }
+  &__table tbody tr {
+    height: 4rem;
+    color: $sd-text;
+    &:hover {
+      background-color: rgba($sd-running, 0.1);
+    }
+  }
+  &__table tbody td {
+    vertical-align: middle;
+  }
+  .total {
+    color: $sd-text-med;
+  }
+}
+
+.template-versions {
+  color: $sd-text;
+  table {
+    margin: 1rem 0;
+    thead {
+      color: $sd-text-med;
+    }
+    tbody tr {
+      height: 4rem;
+      &:hover {
+        background-color: rgba($sd-running, 0.1);
+      }
+    }
+    tbody td {
+      vertical-align: middle;
+    }
+  }
+  .version {
+    color: $sd-link;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .metric-cell,
+  .actions-cell,
+  .published-time-cell {
+    text-align: right;
+    padding-right: 5px;
+  }
+  .table-controls {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    > * {
+      margin-left: auto;
+    }
+  }
+}
+
+.templates,
+.commands {
+  color: $sd-text;
+  .nav-tabs {
+    border: none;
+    .nav-item {
+      border-bottom: 3px solid #fff;
+    }
+    .nav-link {
+      color: initial;
+      border: none;
+      padding: 8px 16px 9px;
+      background: transparent;
+    }
+    .nav-item:has(.nav-link.active) {
+      border-bottom-color: #1e293b;
+    }
+  }
+}
+.templates-header,
+.commands-header,
+.template-page__header {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.section-divider {
+  border: 1px solid #e8e8e8;
+  opacity: 1;
+}
+
+.template-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  color: $sd-text;
+}
+.template-page__header {
+  padding: 12px 1rem;
+}
+.template-page__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 1rem 1rem;
+}
+
+.template-header,
+.command-header {
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .danger {
+    color: $sd-failure;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  .trusted {
+    fill: #16c047;
+    height: 1em;
+    width: 1em;
+    vertical-align: middle;
+    svg {
+      fill: inherit;
+    }
+    &.distrusted {
+      fill: $sd-text-med;
+    }
+  }
+  .clickable {
+    cursor: pointer;
+  }
+  a {
+    color: $sd-link;
+  }
+  .template-stats,
+  .command-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  .template-version {
+    margin: 0;
+  }
+  .template-metrics {
+    font-size: 1.5em;
+    margin: 0;
+  }
+  .template-details--item {
+    display: flex;
+    gap: 0;
+    > span {
+      display: inline-block;
+    }
+  }
+  .template-details--label {
+    width: 10em;
+    flex: none;
+    font-weight: bold;
+    vertical-align: text-top;
+  }
+  .template-details--value {
+    margin-left: 10px;
+  }
+  pre,
+  & + pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.428571429;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+}
+.template-label {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 3px 5px;
+  border-radius: 3px;
+  background-color: #0071bc;
+  color: #fff;
+}
+.template-contents {
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  padding: 9.5px;
+  border-radius: 4px;
+  overflow: auto;
+  max-height: 24rem;
+  font-size: 13px;
+  line-height: 1.428571429;
+}
+
+.fill-col {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.collection-list__table .trusted-slot {
+  display: inline-block;
+  width: 1em;
+  margin-right: 0.25em;
+  text-align: center;
+  vertical-align: middle;
+}
+.template-source {
+  margin: 0.5rem 0 1rem;
+  summary {
+    cursor: pointer;
+  }
+}

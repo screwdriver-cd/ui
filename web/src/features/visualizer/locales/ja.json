@@ -1,0 +1,7 @@
+{
+  "visualizer.pipeline": "パイプライン",
+  "visualizer.searchPlaceholder": "パイプラインを検索...",
+  "visualizer.results": "検索結果",
+  "visualizer.connected": "接続されたパイプライン",
+  "visualizer.empty": "パイプラインを検索すると、そのパイプラインと接続先が表示されます。"
+}

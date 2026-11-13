@@ -1,0 +1,509 @@
+/* Same-origin icon font (CSP font-src 'self': no data: URIs). Served from public/assets. */
+@font-face {
+  font-family: 'screwdriver';
+  src: url('/assets/screwdriver.woff?anwrf') format('woff'),
+    url('/assets/screwdriver.ttf?anwrf') format('truetype');
+  font-style: normal;
+  font-display: block;
+}
+
+.wg-root {
+  --wg-bg: #f7f8fa;
+  --wg-fg: #1f2933;
+  --wg-muted: #6b7785;
+  --wg-card: #ffffff;
+  --wg-border: #c4ccd5;
+  --wg-success: #2e9e5b;
+  --wg-failure: #d64545;
+  --wg-running: #0b6bcb;
+  --wg-queued: #d9a100;
+  --wg-neutral: #9aa3ad;
+  --wg-accent: #0b6bcb;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  background: var(--wg-bg);
+  color: var(--wg-fg);
+  font-size: 13px;
+  /* Must match the font used to measure labels (layout/measure.ts). */
+  font-family: system-ui, sans-serif;
+}
+.wg-root .react-flow {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: transparent;
+}
+.wg-root--mini {
+  min-height: 24px;
+  pointer-events: none;
+  user-select: none;
+}
+.wg-mini {
+  padding: 0;
+  border-width: 1px;
+  border-radius: 3px;
+  cursor: default;
+  background: var(--wg-neutral);
+  border-color: var(--wg-neutral);
+}
+.wg-trigger.wg-mini {
+  border-radius: 50%;
+  border-style: solid;
+  background: var(--wg-border);
+  border-color: var(--wg-border);
+}
+.wg-external.wg-mini,
+.wg-downstream.wg-mini {
+  border-style: dashed;
+  background: var(--wg-card);
+}
+.wg-group.wg-mini {
+  border-width: 2px;
+}
+.wg-stage.wg-mini {
+  border-width: 1px;
+  border-radius: 4px;
+}
+.wg-mini.wg-status--SUCCESS {
+  background: var(--wg-success);
+  border-color: var(--wg-success);
+}
+.wg-mini.wg-status--FAILURE,
+.wg-mini.wg-status--ABORTED {
+  background: var(--wg-failure);
+  border-color: var(--wg-failure);
+}
+.wg-mini.wg-status--RUNNING {
+  background: var(--wg-running);
+  border-color: var(--wg-running);
+}
+.wg-mini.wg-status--QUEUED,
+.wg-mini.wg-status--BLOCKED,
+.wg-mini.wg-status--CREATED,
+.wg-mini.wg-status--WARNING,
+.wg-mini.wg-status--UNSTABLE {
+  background: var(--wg-queued);
+  border-color: var(--wg-queued);
+}
+.wg-mini.wg-status--STARTED_FROM {
+  background: var(--wg-accent);
+  border-color: var(--wg-accent);
+}
+.wg-mini.wg-status--DISABLED {
+  background: var(--wg-card);
+  border-style: dashed;
+}
+.wg-stage.wg-mini {
+  background: rgba(11, 107, 203, 0.05);
+  border-color: var(--wg-border);
+}
+.wg-edge--mini path.react-flow__edge-path {
+  stroke-width: 1;
+}
+
+.wg-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--wg-border);
+  background: var(--wg-card);
+  /* Ember: Bootstrap btn-sm text (.875rem / 1.5) */
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.wg-search {
+  min-width: 160px;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--wg-border);
+  border-radius: 0.25rem;
+  font: inherit;
+}
+.wg-muted {
+  color: var(--wg-muted);
+}
+.wg-btn {
+  padding: 0.25rem 0.5rem;
+  font: inherit;
+  border: 1px solid var(--wg-border);
+  border-radius: 0.25rem;
+  background: var(--wg-card);
+  color: inherit;
+  cursor: pointer;
+}
+.wg-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.wg-btn--danger {
+  color: var(--wg-failure);
+  border-color: var(--wg-failure);
+}
+.wg-progress {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.wg-chip {
+  box-sizing: border-box;
+  height: 1.5em;
+  padding: 0 0.625em;
+  font: inherit;
+  line-height: calc(1.5em - 2px);
+  border: 1px solid var(--wg-border);
+  border-radius: 0.75em;
+  background: var(--wg-card);
+  cursor: pointer;
+}
+.wg-chip[aria-pressed='true'] {
+  background: var(--wg-accent);
+  color: #fff;
+  border-color: var(--wg-accent);
+}
+.wg-chip--done {
+  border-color: var(--wg-success);
+}
+.wg-chip--failed {
+  border-color: var(--wg-failure);
+}
+.wg-chip--running {
+  border-color: var(--wg-running);
+}
+.wg-chip--queued {
+  border-color: var(--wg-queued);
+}
+.wg-lens {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  flex-basis: 100%;
+  /* One reserved line: the text comes and goes on hover, the box never does. */
+  min-height: 1.5em;
+  height: 1.5em;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--wg-muted);
+}
+.wg-empty {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  color: var(--wg-muted);
+}
+
+/* nodes */
+.wg-node {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 100%;
+  padding: 0 8px;
+  border: 2px solid var(--wg-neutral);
+  border-radius: 8px;
+  background: var(--wg-card);
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.wg-node:focus-visible {
+  outline: 3px solid var(--wg-accent);
+  outline-offset: 1px;
+}
+.wg-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wg-icon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  font-family: 'screwdriver';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--wg-neutral);
+}
+.wg-status--SUCCESS,
+.wg-status--WARNING {
+  border-color: var(--wg-success);
+}
+.wg-icon.wg-status--SUCCESS {
+  color: var(--wg-success);
+}
+.wg-icon.wg-status--WARNING,
+.wg-icon.wg-status--UNSTABLE {
+  color: var(--wg-queued);
+}
+.wg-status--FAILURE,
+.wg-status--ABORTED {
+  border-color: var(--wg-failure);
+}
+.wg-icon.wg-status--FAILURE,
+.wg-icon.wg-status--ABORTED {
+  color: var(--wg-failure);
+}
+.wg-status--RUNNING {
+  border-color: var(--wg-running);
+}
+.wg-icon.wg-status--RUNNING {
+  color: var(--wg-running);
+  animation: wg-pulse 1.4s ease-in-out infinite;
+}
+.wg-status--QUEUED,
+.wg-status--BLOCKED,
+.wg-status--CREATED {
+  border-color: var(--wg-queued);
+}
+.wg-icon.wg-status--QUEUED,
+.wg-icon.wg-status--BLOCKED,
+.wg-icon.wg-status--CREATED {
+  color: var(--wg-queued);
+}
+/* The node is dashed and dimmed; the status icon inside it carries the same class and must not be boxed. */
+.wg-status--DISABLED:not(.wg-icon) {
+  border-style: dashed;
+  opacity: 0.8;
+}
+.wg-status--STARTED_FROM {
+  border-color: var(--wg-accent);
+}
+.wg-icon.wg-status--STARTED_FROM {
+  color: var(--wg-accent);
+}
+@keyframes wg-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wg-icon {
+    animation: none !important;
+  }
+}
+
+.wg-trigger {
+  border-radius: 16px;
+  border-style: dotted;
+  font-weight: 400;
+  background: transparent;
+}
+/* Without a label the trigger is a 32px circle: the side padding would leave the 22px icon no
+   room and push it off centre. */
+.wg-trigger.wg-unlabelled {
+  justify-content: center;
+  padding: 0;
+}
+.wg-external {
+  border-style: dashed;
+}
+.wg-downstream {
+  border-style: dotted;
+  font-weight: 400;
+}
+.wg-group {
+  border-width: 3px;
+  /* a collapsed stage keeps the stage box's tint so it still reads as a stage */
+  background: rgba(11, 107, 203, 0.05);
+}
+.wg-join {
+  flex: none;
+  padding: 0 5px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+}
+.wg-join--and {
+  background: #1f2933;
+  color: #fff;
+}
+.wg-join--or {
+  background: transparent;
+  color: var(--wg-muted);
+  border: 1px dashed var(--wg-muted);
+}
+.wg-toggle {
+  flex: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+}
+
+/* stage box */
+.wg-stage {
+  display: block;
+  padding: 0;
+  border: 2px solid var(--wg-border);
+  border-radius: 12px;
+  background: rgba(11, 107, 203, 0.05);
+  cursor: default;
+}
+.wg-stage-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 10px;
+}
+.wg-stage-name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+/* lens */
+.wg-dim {
+  opacity: 0.18;
+}
+.wg-tier--focus {
+  box-shadow: 0 0 0 3px var(--wg-accent);
+}
+.wg-tier--upstream-taken {
+  box-shadow: 0 0 0 2px var(--wg-accent);
+}
+.wg-tier--upstream-possible {
+  opacity: 0.55;
+  border-style: dashed;
+}
+.wg-pinned {
+  box-shadow: 0 0 0 3px var(--wg-accent);
+}
+.wg-match {
+  box-shadow: 0 0 0 3px var(--wg-queued);
+}
+.wg-active:not(.wg-stage) {
+  box-shadow: 0 0 0 2px var(--wg-running);
+}
+
+/* edges */
+.wg-edge path.react-flow__edge-path {
+  stroke: var(--wg-neutral);
+  stroke-width: 2;
+}
+.wg-edge--SUCCESS path.react-flow__edge-path {
+  stroke: var(--wg-success);
+}
+.wg-edge--FAILURE path.react-flow__edge-path {
+  stroke: var(--wg-failure);
+}
+.wg-edge--STARTED_FROM path.react-flow__edge-path {
+  stroke: var(--wg-accent);
+}
+.wg-edge--and path.react-flow__edge-path {
+  stroke-width: 3;
+}
+.wg-edge--or path.react-flow__edge-path {
+  stroke-dasharray: 6 4;
+}
+.wg-edge--back path.react-flow__edge-path {
+  stroke-dasharray: 2 4;
+}
+.wg-edge.wg-tier--upstream-taken path.react-flow__edge-path,
+.wg-edge.wg-tier--downstream path.react-flow__edge-path {
+  stroke: var(--wg-accent);
+  stroke-width: 3;
+}
+.wg-edge.wg-tier--upstream-possible {
+  opacity: 0.4;
+}
+.wg-edge.wg-dim {
+  opacity: 0.1;
+}
+.wg-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* popover */
+.wg-popover {
+  position: absolute;
+  z-index: 20;
+  min-width: 200px;
+  max-width: 320px;
+  padding: 10px;
+  border: 1px solid var(--wg-border);
+  border-radius: 8px;
+  background: var(--wg-card);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+}
+.wg-popover-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.wg-popover-title strong {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wg-popover-status,
+.wg-popover-note {
+  margin-top: 4px;
+  color: var(--wg-muted);
+}
+.wg-popover-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.wg-popover-actions--list {
+  flex-direction: column;
+  align-items: stretch;
+}
+.wg-popover-actions--list > small.wg-popover-note {
+  margin-top: -4px;
+  font-size: 0.8em;
+}
+.wg-popover-run-label {
+  margin-top: 8px;
+  font-weight: 600;
+}
+.wg-popover-description {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.wg-popover-more {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  .wg-root {
+    --wg-bg: #14181d;
+    --wg-fg: #e6eaee;
+    --wg-muted: #94a0ad;
+    --wg-card: #1e242b;
+    --wg-border: #3a444f;
+  }
+  .wg-join--and {
+    background: #e6eaee;
+    color: #14181d;
+  }
+}
+.wg-root:not(.wg-root--mini) .react-flow__node {
+  pointer-events: all;
+}

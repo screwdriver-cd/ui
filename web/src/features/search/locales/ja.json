@@ -1,0 +1,15 @@
+{
+  "search.title": "検索",
+  "search.placeholder": "Screwdriver のパイプラインを検索",
+  "search.submit": "検索",
+  "search.noResults": "結果がありません",
+  "search.results": "{count} 件の結果を表示中",
+  "search.column.name": "名前",
+  "search.column.branch": "ブランチ",
+  "search.column.account": "アカウント",
+  "search.column.add": "コレクションに追加",
+  "search.addTo": "{name} をコレクションに追加",
+  "search.addSuccess": "パイプラインをコレクション {name} に追加しました",
+  "search.addError": "コレクション {name} にパイプラインを追加できませんでした",
+  "search.showMore": "さらに結果を表示..."
+}

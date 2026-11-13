@@ -1,0 +1,247 @@
+// The app shell owns the viewport. The page itself never scrolls vertically:
+// each screen declares its own scroll regions (see ScrollRegion).
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+// Ember sets a 14px root (Bootstrap 4 rem sizing) and Helvetica/Arial; Japanese falls back to system CJK faces.
+html {
+  font-size: 14px;
+}
+
+body {
+  font-family: Helvetica, Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', Meiryo, sans-serif;
+  font-weight: 400;
+  --bs-body-font-family: Helvetica, Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', Meiryo, sans-serif;
+  --bs-body-font-size: 1rem;
+  --bs-body-color: #26282a;
+}
+
+:root {
+  --sd-header-bg: #303030;
+  --sd-header-fg: #ffffff;
+  --sd-border: rgba(0, 0, 0, 0.15);
+  --sd-primary: #003abc;
+  --bs-primary: #003abc;
+  --bs-primary-rgb: 0, 60, 188;
+  --bs-link-color: #188fff;
+  --bs-link-color-rgb: 24, 143, 255;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100dvh;
+}
+
+// Banners (pipeline and global): Ember's info colours. Global: rendered by the app shell on every page.
+.pipeline-banners.alert-info {
+  color: #0b548c;
+  background-color: #daedf8;
+}
+
+.app-main {
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.page-layout__header {
+  flex: 0 0 auto;
+}
+
+.scroll-region {
+  // Positioned so absolutely placed descendants (e.g. .visually-hidden labels) scroll with it
+  // instead of stretching the document.
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.header-search {
+  // Takes the room that is left: 16rem when there is plenty, shrinking to 8rem before the header wraps.
+  flex: 0 1 16rem;
+  min-width: 8rem;
+  margin-block: 0.25rem;
+  margin-inline: 0.5rem;
+
+  input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  button {
+    white-space: nowrap;
+  }
+}
+
+// Header: Ember's grey-800 bar, 4rem tall, white links and the translucent search field.
+.app-shell > header .navbar {
+  min-height: 4rem;
+  padding-block: 0;
+  border-radius: 0;
+
+  .nav-link,
+  .navbar-nav .nav-link {
+    padding: 10px 15px;
+    color: #fff;
+
+    &:hover,
+    &:focus,
+    &.active,
+    &.show {
+      color: #fff;
+      opacity: 0.6;
+    }
+  }
+}
+
+.header-search-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 15px;
+  border: 0;
+  background: none;
+  color: #fff;
+
+  &:hover,
+  &:focus-visible {
+    opacity: 0.6;
+  }
+}
+
+.create-pipeline .sd-svg-icon,
+.help-menu .sd-svg-icon,
+.header-search-toggle .sd-svg-icon,
+.header-search button .sd-svg-icon {
+  background-color: #fff;
+  vertical-align: middle;
+}
+
+.header-search {
+  input {
+    height: 36px;
+    padding-left: 5px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    background: rgba(242, 242, 242, 0.1);
+    color: #fff;
+    font-size: 14px;
+    box-shadow: none;
+    transition: background 200ms;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    &:focus {
+      background: rgba(242, 242, 242, 0.1);
+      color: #fff;
+      border-bottom-color: #3570f4;
+      box-shadow: none;
+
+      &::placeholder {
+        color: #fff;
+      }
+    }
+  }
+
+  button {
+    height: 37px;
+    border: none;
+    border-radius: 0 2px 2px 0;
+    color: #fff;
+    background: linear-gradient(to bottom left, #3570f4, #3697f2);
+
+    &:hover {
+      color: #fff;
+      opacity: 0.9;
+    }
+  }
+}
+
+.profile-menu .avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-inline-end: 0.4rem;
+  border-radius: 50%;
+  background: var(--sd-primary);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.profile-menu .username {
+  display: inline-block;
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+
+// Sign-in page: the same centred block and button-styled links as the Ember login.
+.login-button {
+  margin: 10px auto;
+  padding: 0 16px;
+  width: 593px;
+  max-width: 100%;
+  text-align: center;
+  font-size: 14px;
+
+  h2 {
+    font-weight: 600;
+    font-size: 24px;
+  }
+
+  a {
+    display: inline-block;
+    color: #fff;
+    font-size: 16px;
+    padding: 5px 10px;
+    background-color: #003abc;
+    border-radius: 3px;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: #fff;
+      background-color: #002d94;
+    }
+  }
+
+  .login-button__icon {
+    vertical-align: -2px;
+    margin-right: 4px;
+  }
+}
+
+// Account list: only the active account is emphasised; the others are greyed out.
+.inactive-account {
+  color: #979ba7;
+
+  &:hover,
+  &:focus-visible {
+    color: #26282a;
+  }
+}
+
+.active-account {
+  font-weight: 600;
+}

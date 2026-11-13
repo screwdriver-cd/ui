@@ -1,0 +1,7 @@
+{
+  "visualizer.pipeline": "Pipeline",
+  "visualizer.searchPlaceholder": "Search pipeline...",
+  "visualizer.results": "Search results",
+  "visualizer.connected": "Connected Pipelines",
+  "visualizer.empty": "Search for a pipeline to see it and the pipelines it connects to."
+}

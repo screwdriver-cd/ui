@@ -1,0 +1,315 @@
+// Pipeline Metrics page (Ember app/pipeline/metrics). Chart chrome follows the
+// dataviz reference palette: hairline grid, recessive axes, text in ink tokens.
+.pipeline-metrics {
+  --viz-surface: #fcfcfb;
+  --viz-ink: #0b0b0b;
+  --viz-ink-2: #52514e;
+  --viz-muted: #898781;
+  --viz-grid: #e1e0d9;
+  --viz-axis: #c3c2b7;
+  --viz-border: rgba(11, 11, 11, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+  min-height: 0;
+  padding-bottom: 0;
+
+  > * {
+    flex: 0 0 auto;
+  }
+
+  > .metrics-charts {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding-bottom: 1rem;
+  }
+}
+
+:root[data-theme='dark'] .pipeline-metrics {
+  --viz-surface: #1a1a19;
+  --viz-ink: #f0efec;
+  --viz-ink-2: #c3c2b7;
+  --viz-grid: #2c2c2a;
+  --viz-axis: #383835;
+  --viz-border: rgba(255, 255, 255, 0.1);
+}
+
+.metrics-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+
+  .metrics-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .metrics-control__title {
+    color: var(--viz-ink-2);
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  input[type='date'] {
+    width: 9.5rem;
+  }
+}
+
+.metrics-error {
+  margin: 0;
+}
+
+.metrics-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+  margin: 0;
+
+  dt {
+    order: 2;
+    color: var(--viz-ink-2);
+    font-size: 0.8rem;
+    font-weight: normal;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--viz-ink);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
+
+.metrics-charts {
+  transition: opacity 0.2s;
+
+  &.is-refetching {
+    opacity: 0.6;
+  }
+}
+
+.metrics-group {
+  margin-bottom: 1rem;
+}
+
+.metrics-group__title,
+.metrics-panel__title {
+  margin: 0;
+  color: var(--viz-ink);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+h3.metrics-panel__title {
+  color: var(--viz-ink-2);
+  font-size: 0.875rem;
+}
+
+.chart-cta {
+  padding: 1rem;
+  color: var(--viz-ink-2);
+  text-align: center;
+
+  .metrics-job-select {
+    display: inline-block;
+    min-width: 12rem;
+  }
+}
+
+.metrics-panel {
+  margin-bottom: 1.25rem;
+  padding: 0.75rem;
+  background: var(--viz-surface);
+  border: 1px solid var(--viz-border);
+  border-radius: 6px;
+}
+
+.metrics-panel__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.25rem;
+
+  .form-check {
+    margin: 0;
+  }
+}
+
+.metrics-panel__actions {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.metrics-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  margin: 0 0 0.25rem;
+  padding: 0;
+  font-size: 0.8rem;
+}
+
+.metrics-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  button {
+    padding: 0;
+    color: var(--viz-ink-2);
+    background: none;
+    border: 0;
+  }
+
+  .metrics-legend__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .metrics-legend__only {
+    visibility: hidden;
+    color: var(--viz-muted);
+    text-decoration: underline;
+  }
+
+  &:hover .metrics-legend__only,
+  .metrics-legend__only:focus-visible {
+    visibility: visible;
+  }
+
+  &.unselected {
+    .metrics-legend__toggle {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+  }
+}
+
+.metrics-panel__plot {
+  position: relative;
+  min-width: 0;
+}
+
+.metrics-panel__ylabel,
+.metrics-panel__xlabel {
+  display: block;
+  color: var(--viz-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.metrics-panel__xlabel {
+  text-align: center;
+}
+
+.viz-chart {
+  display: block;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+
+  text {
+    fill: var(--viz-muted);
+    font-size: 11px;
+  }
+
+  .viz-grid line {
+    stroke: var(--viz-grid);
+    stroke-width: 1;
+  }
+
+  .viz-axis {
+    stroke: var(--viz-axis);
+    stroke-width: 1;
+  }
+
+  .viz-hover-band {
+    fill: var(--viz-ink);
+    opacity: 0.05;
+  }
+
+  .viz-dot {
+    stroke: var(--viz-surface);
+    stroke-width: 2;
+  }
+
+  .viz-brush {
+    fill: #2a78d6;
+    opacity: 0.12;
+  }
+
+  .viz-overlay {
+    cursor: crosshair;
+    touch-action: none;
+
+    &.clickable {
+      cursor: pointer;
+    }
+  }
+}
+
+.viz-tooltip {
+  position: absolute;
+  z-index: 2;
+  min-width: 12rem;
+  max-width: 240px;
+  padding: 0.5rem 0.625rem;
+  color: var(--viz-ink);
+  font-size: 0.8rem;
+  pointer-events: none;
+  background: var(--viz-surface);
+  border: 1px solid var(--viz-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  .viz-tooltip__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .viz-tooltip__row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    span:last-child {
+      overflow: hidden;
+      color: var(--viz-ink-2);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &.active span:last-child {
+      color: var(--viz-ink);
+      font-weight: 600;
+    }
+  }
+
+  .viz-tooltip__key {
+    flex: none;
+    width: 12px;
+    height: 2px;
+  }
+}
+
+.metrics-table {
+  max-height: 20rem;
+  overflow: auto;
+  font-size: 0.8rem;
+}

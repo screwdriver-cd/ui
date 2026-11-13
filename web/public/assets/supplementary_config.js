@@ -1,0 +1,1 @@
+window.SUPPLEMENTARY_CONFIG = {};

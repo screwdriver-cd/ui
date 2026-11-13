@@ -1,0 +1,110 @@
+// Ember UI tokens (app/styles/screwdriver-colors.scss) and the button/input look shared by the
+// collections, search, create, user-settings, validator and visualizer screens.
+$sd-primary: #003abc;
+$sd-link: #188fff;
+$sd-running: #0f69ff;
+$sd-success: #03af7a;
+$sd-failure: #ff4b00;
+$sd-warning: #ffd333;
+$sd-warn-bg: #cb2431;
+$sd-text: #26282a;
+$sd-text-med: #979ba7;
+$sd-text-light: #d8dade;
+$sd-separator: #f1f1f5;
+$sd-highlight: #e7f4ff;
+$sd-table-hover: #ecf1fd;
+$sd-flyout-bg: #f5f8fe;
+$sd-active-hl: #3570f4;
+$sd-info-bg: #daedf8;
+$sd-light-blue: #0071bc;
+$sd-lighter-blue: #63a4ee;
+$sd-pale-blue: #96c4e9;
+$sd-pale-purple: #b9ccf5;
+$sd-light-gray: #ccc;
+$sd-black: #303030;
+$weight-bold: 600;
+
+@mixin btn-colors($name, $color) {
+  :global(.btn-#{$name}) {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #{$color};
+    --bs-btn-border-color: #{$color};
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #{rgba($color, 0.75)};
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #{rgba($color, 0.75)};
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-disabled-bg: #{$color};
+    --bs-btn-disabled-border-color: #{$color};
+    --bs-btn-focus-shadow-rgb: 15, 105, 255;
+  }
+  :global(.btn-outline-#{$name}) {
+    --bs-btn-color: #{$color};
+    --bs-btn-border-color: #{$color};
+    --bs-btn-hover-color: #{$color};
+    --bs-btn-hover-bg: #{rgba($color, 0.1)};
+    --bs-btn-hover-border-color: #{$color};
+    --bs-btn-active-color: #{$color};
+    --bs-btn-active-bg: #{rgba($color, 0.1)};
+    --bs-btn-active-border-color: #{$color};
+    --bs-btn-disabled-color: #{$color};
+    --bs-btn-disabled-border-color: #{$color};
+  }
+}
+
+// app/styles/screwdriver-button.scss: apply inside a scoping class.
+@mixin ember-buttons {
+  @include btn-colors(primary, $sd-running);
+  @include btn-colors(danger, $sd-warn-bg);
+  @include btn-colors(success, $sd-success);
+}
+
+// The "blue-button" of create.scss / user-settings.scss.
+@mixin blue-button($height: 25px, $size: 14px, $pad: 15px) {
+  border: none;
+  border-radius: 3px;
+  height: $height;
+  padding: 0 $pad;
+  color: #fff;
+  font-size: $size;
+  background: $sd-running;
+  transition: all 50ms;
+
+  &:focus {
+    outline: none;
+  }
+  &:hover:not(:disabled) {
+    background: $sd-link;
+  }
+  &:disabled {
+    background: $sd-text-med;
+  }
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+}
+
+@mixin text-input($height: 34px, $border: $sd-separator) {
+  box-sizing: border-box;
+  margin-top: 10px;
+  outline: 0;
+  height: $height;
+  width: 100%;
+  border-radius: 2px;
+  border: 2px solid $border;
+  font-size: 14px;
+  padding: 0 0 0 10px;
+  color: $sd-text;
+  background: #fff;
+  box-shadow: none;
+
+  &:focus {
+    border-color: $sd-running;
+    box-shadow: none;
+    outline: 0;
+  }
+  &::placeholder {
+    color: $sd-text-med;
+  }
+}

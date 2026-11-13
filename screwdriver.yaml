@@ -10,21 +10,32 @@ shared:
 
 jobs:
   main:
-    image: node:18
+    image: node:22
     environment:
       COVERAGE: "true"
-      SD_SONAR_OPTS: "-Dsonar.sources=app -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
+      SD_SONAR_OPTS: "-Dsonar.sources=web/src -Dsonar.javascript.lcov.reportPaths=web/coverage/lcov.info"
     steps:
-      - install: npm install
-      - install-browsers: ./bin/setup_chrome.sh
-      - test: npm test
+      - install: npm --prefix web ci
+      - typecheck: npm --prefix web run typecheck
+      - lint: npm --prefix web run lint
+      - test: npm --prefix web test
+      # lcov paths are relative to web/; Sonar resolves them from the repo root
+      - lcov-paths: sed -i 's#^SF:#SF:web/#' web/coverage/lcov.info
+      - build: npm --prefix web run build
+      - install-e2e: npm --prefix e2e ci
+      # Playwright's own Chromium: setup_chrome.sh relies on apt-key, which newer Debian bases of node:22 no longer ship
+      - install-browsers: (cd e2e && npx playwright install --with-deps chromium)
+      # Serve the production build with the nginx CSP and run the Playwright suite against it, enforcing that CSP.
+      - e2e: |
+          E2E_CSP=1 npm --prefix web run preview -- --port 4173 --strictPort &
+          npx --prefix e2e wait-on --timeout 60000 http://localhost:4173 && E2E_ENFORCE_CSP=1 E2E_BASE_URL=http://localhost:4173 npm --prefix e2e test
     requires:
       - ~pr
       - ~commit
 
   # Publish the package to GitHub and build docker image
   publish:
-    image: node:18
+    image: node:22
     annotations:
       screwdriver.cd/ram: TURBO
     environment:
@@ -32,9 +43,9 @@ jobs:
       DOCKER_REPO: screwdrivercd/ui
     steps:
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
-      - install: npm install
-      - build: ./node_modules/.bin/ember build --environment production
-      - package: tar -C dist -cvzf $RELEASE_FILE .
+      - install: npm --prefix web ci
+      - build: npm --prefix web run build
+      - package: tar -C web/dist -cvzf $RELEASE_FILE .
       - tag: ./ci/git-tag.sh
       - publish: ./ci/git-release.sh
     secrets:
@@ -49,7 +60,7 @@ jobs:
     template: sd/dind@latest
   # Deploy to our beta environment and run tests
   beta:
-    image: node:18
+    image: node:22
     steps:
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
       - get-tag: ./ci/git-latest.sh
@@ -70,7 +81,7 @@ jobs:
 
   # Deploy to our prod environment and run tests
   prod:
-    image: node:18
+    image: node:22
     steps:
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git ci
       - get-tag: ./ci/git-latest.sh

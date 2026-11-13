@@ -1,0 +1,144 @@
+@use '../collections/ember';
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  &[data-authenticated='true'] {
+    grid-template-columns: minmax(180px, 16.667%) minmax(0, 1fr);
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  color: ember.$sd-text;
+}
+
+// Ember used a 640px centred list; use the room the page has instead, up to a readable cap.
+.list {
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 2rem;
+  margin: 1em auto 2em;
+
+  a {
+    text-decoration: none;
+    color: ember.$sd-link;
+    cursor: pointer;
+  }
+}
+
+.toolbar {
+  padding: 1rem 0 0;
+
+  input[type='search'] {
+    color: ember.$sd-text;
+    border-radius: 5px;
+    border: 2px solid ember.$sd-separator;
+    padding: 0 0.25rem;
+    box-shadow: none;
+
+    &:focus {
+      border-color: ember.$sd-running;
+    }
+  }
+}
+
+.numResults {
+  padding: 10px;
+  font-size: 14px;
+  color: ember.$sd-text-med;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+
+  th {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 300;
+    color: ember.$sd-text-med;
+    text-align: left;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    border-bottom: 1px solid ember.$sd-text-light;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  tbody tr:hover {
+    background-color: ember.$sd-separator;
+
+    .appId a {
+      text-decoration: underline;
+    }
+  }
+}
+
+.appId {
+  width: 40%;
+  text-align: left;
+
+  a {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.branch {
+  width: 25%;
+  text-align: right !important;
+
+  a {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.account {
+  width: 20%;
+  white-space: nowrap;
+}
+
+.showMore {
+  display: block;
+  background: none;
+  border: 0;
+  color: ember.$sd-link;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 10px 0 0;
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  background: ember.$sd-info-bg;
+  color: #0b548c;
+
+  &.warning {
+    background: #fafbfc;
+    color: ember.$sd-warn-bg;
+    border: 1px solid ember.$sd-warn-bg;
+  }
+
+  &.success {
+    background: #e6f7f1;
+    color: ember.$sd-success;
+  }
+}

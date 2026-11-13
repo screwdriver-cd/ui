@@ -1,0 +1,253 @@
+@use '../collections/ember';
+
+// app/validator + app/components/validator-*: two columns (col-md-6), each a bordered panel.
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  padding: 0 5px;
+  color: ember.$sd-text;
+}
+
+.pane > .pane {
+  flex: 1 1 0;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  padding: 0 10px;
+}
+
+// validator-input: margin 10px 10px 0 0; border 1px #f1f1f5; padding 10px
+.inputPane {
+  margin: 10px 0 0;
+  border: 1px solid ember.$sd-separator;
+  padding: 10px;
+}
+
+.resultsPane {
+  margin-top: 10px;
+}
+
+.paneHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem;
+  }
+}
+
+.hint {
+  color: ember.$sd-text;
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem;
+  flex: 0 0 auto;
+}
+
+.editor {
+  flex: 1 1 auto;
+  min-height: 0;
+  :global(.cm-editor) {
+    height: 100%;
+    background: #fff;
+    font-size: 12px;
+  }
+  :global(.cm-gutters) {
+    background: #ebebeb;
+    color: #333;
+    border-right: 0;
+  }
+  :global(.cm-activeLine),
+  :global(.cm-activeLineGutter) {
+    background: rgba(0, 0, 0, 0.07);
+  }
+  :global(.cm-scroller) {
+    overflow: auto;
+    font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro,
+      monospace;
+  }
+}
+
+.results {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+// Split results: the workflow graph stays put while the settings and jobs below it scroll.
+.splitResults {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.graphPane {
+  flex: 0 0 auto;
+  height: clamp(14rem, 40%, 28rem);
+  margin: 10px 10px 0 0;
+  border: 1px solid ember.$sd-separator;
+  border-radius: 3px;
+}
+
+.details {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+  padding-bottom: 10px;
+}
+
+.jobsBar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  margin: 10px 10px 0 0;
+
+  :global(.btn) {
+    padding: 0 0.25rem;
+  }
+}
+
+.error {
+  border: 1px solid ember.$sd-failure;
+  padding: 10px;
+}
+
+.warning {
+  border: 1px solid ember.$sd-warning;
+  padding: 10px;
+}
+
+// validator-job / validator-pipeline / validator-command
+.section {
+  margin: 10px 10px 0 0;
+  border-radius: 3px;
+  border: 1px solid ember.$sd-separator;
+  padding: 10px;
+  color: ember.$sd-text;
+  overflow-x: auto;
+
+  h3 {
+    padding: 0;
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: -4px -6px 0;
+    padding: 4px 6px;
+    border-radius: 3px;
+    &::-webkit-details-marker {
+      display: none;
+    }
+    &:hover {
+      background-color: ember.$sd-highlight;
+    }
+    &:focus-visible {
+      outline: 2px solid ember.$sd-active-hl;
+      outline-offset: -2px;
+    }
+  }
+
+  summary h3 {
+    display: inline-block !important;
+    margin: 0;
+  }
+}
+
+// The chevron points right when a job is collapsed and down when it is open.
+.chevron {
+  flex: 0 0 auto;
+  font-size: 0.875rem;
+  color: ember.$sd-text-med;
+  transition: transform 0.15s ease;
+
+  details[open] > summary > & {
+    transform: rotate(90deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.job {
+  scroll-margin-top: 10px;
+
+  &[open] > summary {
+    margin-bottom: 10px;
+  }
+
+  // The job selected in the workflow graph.
+  &[data-active] {
+    border-color: ember.$sd-active-hl;
+    box-shadow: inset 3px 0 0 ember.$sd-active-hl;
+  }
+}
+
+.field {
+  padding: 3px;
+  border-radius: 3px;
+  width: fit-content;
+  max-width: 100%;
+
+  &:hover {
+    background-color: ember.$sd-highlight;
+  }
+}
+
+.value {
+  color: ember.$sd-text-med;
+}
+
+.kv {
+  margin: 0 0 0.5rem;
+  padding-left: 1.25rem;
+  margin-bottom: 0;
+  li {
+    word-break: break-word;
+    color: ember.$sd-text-med;
+  }
+}
+
+.name {
+  font-weight: ember.$weight-bold;
+  color: ember.$sd-text;
+}
+
+.step {
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: inherit;
+  display: inline-block;
+  color: ember.$sd-text-med;
+  margin: 0 0 0.25rem;
+}
+
+// The workflow graph fills a fixed-height box (React Flow sizes to its parent).
+// The workflow field spans the panel instead of shrinking to its content.
+.field:has(.graph) {
+  width: auto;
+}
+
+.graph {
+  height: 24rem;
+  margin-top: 0.5rem;
+  border: 1px solid ember.$sd-separator;
+}

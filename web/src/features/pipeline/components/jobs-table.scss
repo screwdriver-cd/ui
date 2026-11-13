@@ -1,0 +1,291 @@
+// Jobs page table: Ember pipeline/jobs/table (ember-models-table)
+$sd-primary: #003abc;
+$sd-link: #188fff;
+$sd-text: #26282a;
+$sd-text-med: #979ba7;
+$sd-text-light: #d8dade;
+$sd-success: #03af7a;
+$sd-failure: #ff4b00;
+$sd-running: #0f69ff;
+$sd-warning: #ffd333;
+
+.jobs-page-table-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0;
+  padding: 1rem;
+}
+
+.jobs-table-body {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.jobs-grid {
+  width: 100%;
+  min-width: 70rem;
+  table-layout: fixed;
+  border-collapse: collapse;
+  color: $sd-text;
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #fff;
+    color: $sd-text-med;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: left;
+    vertical-align: top;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid $sd-text-light;
+
+    .form-control,
+    .form-select {
+      margin-top: 0.25rem;
+      font-weight: 400;
+      text-transform: none;
+    }
+  }
+
+  .job-column {
+    width: 20%;
+  }
+  .history-column {
+    width: 16%;
+  }
+  .duration-column {
+    width: 10%;
+  }
+  .startTime-column {
+    width: 16%;
+  }
+  .coverage-column {
+    width: 8%;
+  }
+  .stage-column {
+    width: 12%;
+  }
+  .metrics-column {
+    width: 7%;
+  }
+  .actions-column {
+    width: 11%;
+  }
+
+  tbody td {
+    height: 57px;
+    padding: 0 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid $sd-text-light;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  tbody tr:hover td {
+    background: #ecf1fd;
+  }
+
+  tbody tr.jobs-empty td {
+    color: $sd-text-med;
+    text-align: center;
+  }
+}
+
+.jobs-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: $sd-link;
+  }
+}
+
+.jobs-filter {
+  position: relative;
+  margin-top: 0.25rem;
+
+  .form-control {
+    margin-top: 0;
+    padding-right: 1.75rem;
+  }
+}
+
+.jobs-filter-clear {
+  position: absolute;
+  top: 50%;
+  right: 0.35rem;
+  transform: translateY(-50%);
+  padding: 0 0.25rem;
+  border: 0;
+  background: none;
+  color: $sd-text-med;
+  cursor: pointer;
+
+  &:hover {
+    color: $sd-text;
+  }
+}
+
+.job-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .job-status {
+    flex: 0 0 auto;
+    min-width: 1.25rem;
+  }
+
+  .job-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .job-state-toggle {
+    margin-left: auto;
+    padding: 0 0.25rem;
+    border: 0;
+    background: none;
+    color: $sd-text-med;
+    opacity: 0;
+    cursor: pointer;
+  }
+}
+
+tr:hover .job-state-toggle,
+.job-state-toggle:focus-visible {
+  opacity: 1;
+}
+
+.job-disabled .job-name {
+  color: $sd-text-med;
+}
+
+.history-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+
+  .history-build {
+    line-height: 1;
+
+    svg {
+      &.SUCCESS {
+        color: $sd-success;
+      }
+      &.WARNING,
+      &.UNSTABLE {
+        color: $sd-warning;
+      }
+      &.FAILURE,
+      &.ABORTED {
+        color: $sd-failure;
+      }
+      &.RUNNING,
+      &.QUEUED,
+      &.BLOCKED {
+        color: $sd-running;
+      }
+      &.COLLAPSED,
+      &.FROZEN {
+        color: $sd-text-light;
+      }
+    }
+  }
+}
+
+.metrics-column a {
+  color: $sd-link;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 0.25rem;
+
+  .job-action {
+    padding: 0.15rem 0.35rem;
+    border: 0;
+    background: none;
+    color: $sd-link;
+    font-size: 1.1rem;
+    cursor: pointer;
+
+    &.stop {
+      color: $sd-failure;
+    }
+
+    &:disabled {
+      color: $sd-text-med;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
+      color: $sd-primary;
+    }
+  }
+}
+
+.jobs-table-footer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 2.5rem;
+  color: $sd-text-med;
+
+  .entry-summary {
+    margin-right: auto;
+  }
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .form-select {
+    width: auto;
+  }
+
+  .page-navigation button {
+    padding: 0.15rem 0.5rem;
+    border: 0;
+    background: none;
+    color: $sd-text-med;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
+      color: $sd-link;
+    }
+  }
+}
+
+// The page never scrolls: the table body does, the footer stays put.
+.pipeline-jobs {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  height: 100%;
+  min-height: 0;
+}

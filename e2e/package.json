@@ -1,0 +1,18 @@
+{
+  "name": "screwdriver-ui-e2e",
+  "private": true,
+  "description": "End-to-end suite for the React UI (web/). The shared specs also run against the legacy Ember app.",
+  "scripts": {
+    "test": "playwright test",
+    "test:visual": "E2E_VISUAL=1 E2E_GRAPH=1 playwright test specs/visual.spec.ts specs/graph-visual.spec.ts",
+    "test:visual:update": "E2E_VISUAL=1 E2E_GRAPH=1 playwright test specs/visual.spec.ts specs/graph-visual.spec.ts --update-snapshots",
+    "test:graph": "E2E_GRAPH=1 playwright test specs/graph-perf.spec.ts specs/graph-visual.spec.ts",
+    "test:ember": "E2E_FRAMEWORK=ember E2E_BASE_URL=http://localhost:4200 playwright test",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "typescript": "^5.6.0",
+    "wait-on": "^9.0.0"
+  }
+}

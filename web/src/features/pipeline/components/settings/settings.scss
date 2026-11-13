@@ -1,0 +1,302 @@
+// Options (settings) pages: Ember v2 pipeline/settings
+$sd-primary: #003abc;
+$sd-link: #188fff;
+$sd-text: #26282a;
+$sd-text-med: #979ba7;
+$sd-border: #d8dade;
+$sd-flyout-bg: #f5f8fe;
+$sd-button: #3570f4;
+$sd-danger: #dc3545;
+$sd-success: #03af7a;
+$sd-highlight: #e7f4ff;
+
+.pipeline-page.pipeline-settings {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+
+  .settings-tabs-band {
+    flex: 0 0 auto;
+    background: $sd-flyout-bg;
+    padding: 0 1rem;
+  }
+
+  .settings-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 1rem;
+    color: $sd-text;
+  }
+}
+
+.settings-card {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 14px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid $sd-border;
+  border-radius: 4px;
+
+  &.danger {
+    border-color: $sd-danger;
+  }
+
+  .settings-card-text {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .settings-card-title {
+    font-weight: 600;
+  }
+
+  .settings-card-config {
+    margin: 0.5rem 0 0 1rem;
+    font-style: italic;
+    overflow-wrap: anywhere;
+
+    b {
+      font-weight: 700;
+    }
+  }
+
+  .settings-card-action {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .settings-card-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .settings-help-line {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .settings-help {
+    margin: 0 0.25rem;
+    color: $sd-text-med;
+    cursor: help;
+  }
+
+  .settings-admin-list {
+    margin: 0.5rem 0 0.25rem 1rem;
+    font-weight: 600;
+    max-height: 5rem;
+    overflow: auto;
+  }
+}
+
+.settings-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid $sd-button;
+  background: #fff;
+  color: $sd-button;
+  cursor: pointer;
+
+  &.small {
+    width: 30px;
+    height: 30px;
+  }
+
+  &:hover:not(:disabled) {
+    background: rgba($sd-button, 0.1);
+  }
+
+  &.danger {
+    border-color: $sd-danger;
+    background: $sd-danger;
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background: rgba($sd-danger, 0.85);
+    }
+  }
+
+  &.danger-outline {
+    border-color: $sd-danger;
+    color: $sd-danger;
+
+    &:hover:not(:disabled) {
+      background: rgba($sd-danger, 0.1);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.settings-selection-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 3rem;
+}
+
+.settings-job-list {
+  margin-bottom: 1rem;
+  max-height: 10rem;
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+
+.modal-error {
+  white-space: pre-line;
+}
+
+// ember-models-table look: uppercase grey headers, no outer border
+.settings-table-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 18rem;
+}
+
+.jobs-grid.settings-grid {
+  min-width: 0;
+
+  thead th {
+    border-bottom: 0;
+    padding-top: 0.5rem;
+  }
+
+  tbody td {
+    height: 55px;
+    border-bottom: 1px solid #f1f1f5;
+  }
+
+  tbody tr.selected-row td {
+    background: $sd-highlight;
+  }
+
+  .select-column {
+    width: 3rem;
+    text-align: center;
+  }
+
+  .job-column {
+    width: 24%;
+  }
+  .stage-column {
+    width: 14%;
+  }
+  .user-column {
+    width: 14%;
+  }
+  .date-column {
+    width: 12%;
+  }
+  .enabled-column,
+  .included-column,
+  .action-column {
+    width: 10rem;
+    text-align: center;
+  }
+
+  thead .enabled-column,
+  thead .included-column,
+  thead .action-column {
+    text-align: center;
+  }
+
+  tbody tr:hover td {
+    background: #ecf1fd;
+  }
+}
+
+.settings-action-cell,
+.settings-switch-cell {
+  display: flex;
+  justify-content: center;
+}
+
+// Bootstrap-style switch: off = grey knob on the left, on = coloured track
+.settings-switch {
+  margin: 0;
+  min-height: 0;
+
+  .form-check-input {
+    float: none;
+    margin: 0;
+    width: 2.4em;
+    height: 1.3em;
+    cursor: pointer;
+
+    &:checked {
+      background-color: $sd-button;
+      border-color: $sd-button;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba($sd-button, 0.25);
+    }
+  }
+
+  &.success .form-check-input:checked {
+    background-color: $sd-success;
+    border-color: $sd-success;
+  }
+}
+
+.settings-preferences {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+
+  .settings-section-header {
+    margin-bottom: 1rem;
+  }
+
+  .settings-section-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .settings-section-help {
+    margin-left: 1rem;
+  }
+
+  .settings-preference {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+
+    &:hover {
+      background: $sd-highlight;
+    }
+  }
+
+  .settings-preference-help {
+    color: $sd-text-med;
+  }
+
+  .settings-timestamp {
+    width: auto;
+  }
+}

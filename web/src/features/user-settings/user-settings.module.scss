@@ -1,0 +1,303 @@
+@use '../collections/ember';
+
+// app/styles/user-settings.scss (.user-preference) and app/components/tokens/**
+.header {
+  padding: 10px 15px 0;
+  color: ember.$sd-text;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem;
+  }
+}
+
+// column-tabs-view .nav-tabs
+.tabs {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+
+  li {
+    width: 18%;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 2px solid #e8e8e8;
+
+    a {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: #555;
+      text-decoration: none;
+    }
+
+    &:hover,
+    &.active {
+      border-bottom-color: #3697f2;
+
+      a {
+        color: #3697f2;
+      }
+    }
+  }
+}
+
+.page {
+  margin: 10px 15px;
+  color: ember.$sd-text;
+  min-width: 0;
+
+  @include ember.ember-buttons;
+}
+
+.prefs {
+  border-radius: 5px 5px 0 0;
+  border: 1px solid ember.$sd-separator;
+  margin-bottom: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.pref {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 1rem;
+  align-items: start;
+  font-size: 14px;
+  padding: 15px 10px;
+  border-bottom: 1px solid ember.$sd-separator;
+
+  &:last-child {
+    border-width: 0;
+  }
+
+  h2 {
+    font-weight: ember.$weight-bold;
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 4px 0;
+  }
+
+  p {
+    margin: 0;
+    padding: 6px 0;
+    color: ember.$sd-text-med;
+  }
+
+  input[type='number'],
+  select {
+    width: 100%;
+    min-height: 1.75em;
+    padding: 2px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    color: ember.$sd-text;
+    box-shadow: none;
+
+    &:focus {
+      border-color: ember.$sd-running;
+      outline: none;
+    }
+  }
+
+  :global(.form-check-input) {
+    cursor: pointer;
+
+    &:checked {
+      background-color: ember.$sd-success;
+      border-color: ember.$sd-success;
+    }
+
+    &:focus {
+      box-shadow: 0 0 2px 3px ember.$sd-running;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.resetButton {
+  cursor: pointer;
+  border: 1px solid ember.$sd-running;
+  border-radius: 3px;
+  font-size: 14px;
+  height: 25px;
+  padding: 0 10px;
+  color: ember.$sd-running;
+  background: transparent;
+
+  &:hover:not(:disabled) {
+    color: ember.$sd-link;
+  }
+  &:disabled {
+    background: ember.$sd-text-med;
+    border-color: ember.$sd-text-med;
+    color: #fff;
+  }
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+}
+
+.blueButton {
+  @include ember.blue-button(25px, 14px, 15px);
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 10px;
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  background: ember.$sd-info-bg;
+  color: #0b548c;
+
+  &.warning {
+    background: #fafbfc;
+    color: ember.$sd-warn-bg;
+    border: 1px solid ember.$sd-warn-bg;
+  }
+
+  &.success {
+    background: #e6f7f1;
+    color: ember.$sd-success;
+  }
+}
+
+// ---- Tokens ----------------------------------------------------------------------------------
+.tokensHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 5.25rem;
+}
+
+.tokensTitle {
+  font-size: 1.5rem;
+  font-weight: ember.$weight-bold;
+  margin: 0 0.5rem 0 1rem;
+}
+
+.tokensExplanation {
+  margin: 0 0.5rem 0 1rem;
+
+  a {
+    color: ember.$sd-link;
+    text-decoration: none;
+  }
+}
+
+.newToken {
+  margin-right: 1rem;
+  flex: 0 0 auto;
+}
+
+.tokenValue {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  word-break: break-all;
+  margin-left: 0;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+    border: none;
+    color: ember.$sd-text-med;
+    font-weight: ember.$weight-bold;
+    text-align: left;
+    padding: 0.75rem;
+  }
+
+  th:first-child,
+  td:first-child {
+    padding-left: 1rem;
+  }
+
+  td {
+    padding: 0.75rem;
+    text-align: left;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+    word-break: break-word;
+  }
+
+  tbody tr {
+    color: ember.$sd-text;
+    height: 4rem;
+
+    &:hover {
+      background-color: rgba(ember.$sd-running, 0.1);
+    }
+  }
+}
+
+.rowActions {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+// Token dialogs: app/components/tokens/modal/**
+.modal {
+  @include ember.ember-buttons;
+
+  :global(.modal-title) {
+    font-weight: ember.$weight-bold;
+  }
+
+  label {
+    font-weight: normal;
+  }
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+
+  > label {
+    width: 6rem;
+    flex: 0 0 6rem;
+    margin: 0;
+  }
+
+  > :not(label):not(:global(.invalid-feedback)) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  :global(.invalid-feedback) {
+    flex-basis: 100%;
+    margin-left: 6rem;
+  }
+}
+
+.warningText {
+  color: ember.$sd-warn-bg;
+}
+
+.tokensTable {
+  overflow: auto;
+}
+
+.tokensFilter {
+  max-width: 20rem;
+  margin-bottom: 0.5rem;
+}
